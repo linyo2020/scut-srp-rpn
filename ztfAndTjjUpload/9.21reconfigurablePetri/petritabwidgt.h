@@ -9,8 +9,8 @@
 #include "undostack.h"
 //#include "graphvisualizer.h"
 
-//#include "placeeditdialog.h"
-//#include "transitioneditdialog.h"
+#include "placeeditdialog.h"
+#include "transitioneditdialog.h"
 //#include "arceditdialog.h"
 #include <vector>
 
@@ -54,9 +54,9 @@ public:
 //    GraphVisualizer * createGraphVis ();
 //    GraphVisualizer * getGraphVis ();
 
-//    void placeDoubleClicked (QGraphicsItem* item);
-//    void transitionDoubleClicked (QGraphicsItem* item);
-//    void arcDoubleClicked (QGraphicsItem* item);
+    void placeDoubleClicked (QGraphicsItem* item);
+    void transitionDoubleClicked (QGraphicsItem* item);
+    void arcDoubleClicked (QGraphicsItem* item);
     void setName(QString);
     void setId(QString);
     //bool arcnoclicked=true;
@@ -71,7 +71,7 @@ public slots:
 
     void nodeInserted(const QPointF &itemPos, const QString &id);
     void nodesInserted (const QStringList& names);
- //   void itemDoubleClicked (QGraphicsItem* item);
+    void itemDoubleClicked (QGraphicsItem* item);
 
 private:
 
@@ -89,9 +89,9 @@ private:
     QStringList nodes_names;
     QString filename;
 
-//    PlaceEditDialog * placeEditDialog;
-//    TransitionEditDialog * transEditDialog;
-//    ArcEditDialog * arcEditDialog;
+    PlaceEditDialog * placeEditDialog;
+    TransitionEditDialog * transEditDialog;
+//  ArcEditDialog * arcEditDialog;
     //vector<Place> m_PlaceVector;
     //vector<Transition> m_TransitionVector;
 

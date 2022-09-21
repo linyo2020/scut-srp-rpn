@@ -30,17 +30,20 @@ SOURCES += \
     command.cpp \
     graphedge.cpp \
     graphgenerator.cpp \
+    graphicsedittab.cpp \
     graphnode.cpp \
     graphvisualizer.cpp \
         main.cpp \
         mainwindow.cpp \
     place.cpp \
+    placeeditdialog.cpp \
     ptnscene.cpp \
     sceneselectionrectangle.cpp \
     tabwidget.cpp \
     petritabwidgt.cpp \
     dockwidget.cpp \
     transition.cpp \
+    transitioneditdialog.cpp \
     undostack.cpp
 
 HEADERS += \
@@ -50,16 +53,19 @@ HEADERS += \
     defs.h \
     graphedge.h \
     graphgenerator.h \
+    graphicsedittab.h \
     graphnode.h \
     graphvisualizer.h \
         mainwindow.h \
     place.h \
+    placeeditdialog.h \
     ptnscene.h \
     sceneselectionrectangle.h \
     tabwidget.h \
     petritabwidgt.h \
     dockwidget.h \
     transition.h \
+    transitioneditdialog.h \
     undostack.h
 
 # Default rules for deployment.
@@ -69,3 +75,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+FORMS += graphicsedittab.ui
