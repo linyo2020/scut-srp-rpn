@@ -347,35 +347,23 @@ void PetriTabWidget::showErrorMessage (const QString &title, const QString &erro
 
 void PetriTabWidget::connect_sigs_slots ()
 {
-    connect (scene, SIGNAL (nodeInserted(const QPointF&, const QString&)),
-             this,  SLOT (nodeInserted(const QPointF&, const QString&)));
+    connect (scene, &PTNscene::nodeInserted, this,  &PetriTabWidget::nodeInserted);
 
-    connect (scene, SIGNAL (arcInserted(QGraphicsItem *, QGraphicsItem *,
-                    const QPainterPath &, const QString &, PTNscene *, int)),
-             undostack,  SLOT (arcInserted(QGraphicsItem *, QGraphicsItem *,
-                    const QPainterPath &, const QString &, PTNscene *, int)));
+    connect (scene, &PTNscene::arcInserted, undostack,  &UndoStack::arcInserted);
 
-    connect (scene, SIGNAL (itemMoved(QGraphicsItem*, QPointF)),
-             undostack,  SLOT (itemMoved(QGraphicsItem*, QPointF)));
+    connect (scene, &PTNscene::itemMoved, undostack,  &UndoStack::itemMoved);
 
-    connect (scene, SIGNAL (nodeRemoved(QGraphicsItem*, PTNscene*)),
-             undostack, SLOT (nodeRemoved(QGraphicsItem*, PTNscene*)));
+    connect (scene, &PTNscene::nodeRemoved, undostack, &UndoStack::nodeRemoved);
 
-    connect (scene, SIGNAL (arcRemoved(QGraphicsItem*, PTNscene*)),
-             undostack,  SLOT (arcRemoved(QGraphicsItem*, PTNscene*)));
+    connect (scene, &PTNscene::arcRemoved, undostack,  &UndoStack::arcRemoved);
 
-    connect (scene, SIGNAL (nodesInserted(const QStringList&)),
-             this,  SLOT (nodesInserted(const QStringList&)));
+    connect (scene, &PTNscene::nodesInserted, this,  &PetriTabWidget::nodesInserted);
 
-    connect (undostack, SIGNAL(canRedoChanged (bool)),
-                  this, SIGNAL(canRedoChange (bool)));
-    connect (undostack, SIGNAL(canUndoChanged (bool)),
-                  this, SIGNAL(canUndoChange (bool)));
-    connect (undostack, SIGNAL(cleanChanged (bool)),
-                  this, SIGNAL(netChanged (bool)));
+    connect (undostack, &QUndoStack::canRedoChanged, this, &PetriTabWidget::canRedoChange);
+    connect (undostack, &QUndoStack::canUndoChanged, this, &PetriTabWidget::canUndoChange);
+    connect (undostack, &QUndoStack::cleanChanged, this, &PetriTabWidget::netChanged);
 
-    connect (scene, SIGNAL(itemDoubleClicked (QGraphicsItem*)),
-                  this, SLOT(itemDoubleClicked (QGraphicsItem*)));
+    connect (scene, &PTNscene::itemDoubleClicked, this, &PetriTabWidget::itemDoubleClicked );
 }
 
 void PetriTabWidget::itemDoubleClicked (QGraphicsItem* item)
