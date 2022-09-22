@@ -39,7 +39,7 @@ void TabWidget::redo()
 }
 void TabWidget::removeItems()
 {
-
+    qobject_cast<PetriTabWidget*>(currentWidget ())->removeItems ();
 }
 
 
