@@ -96,6 +96,7 @@ private:
     //vector<Transition> m_TransitionVector;
 
     void createTab ();
+    //用于连接场景和撤销栈的信号和槽函数连接，传递恢复、撤销、删除功能信息
     void connect_sigs_slots ();
 };
 
