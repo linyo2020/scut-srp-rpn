@@ -98,9 +98,9 @@ TransitionEditDialog::TransitionEditDialog(QWidget *parent) :
 
     setLayout(vlayout);
 
-    connect (validateButton, SIGNAL (clicked ()), this, SLOT (accept ()));
-    connect (cancelButton, SIGNAL (clicked ()), this, SLOT (reject ()));
-    connect (slider, SIGNAL(valueChanged(int)), this, SLOT(showRotDegree(int)));
+    connect (validateButton, &QPushButton::clicked , this, &TransitionEditDialog::accept);
+    connect (cancelButton, &QPushButton::clicked, this, &TransitionEditDialog::reject);
+    connect (slider, &QSlider::valueChanged, this, &TransitionEditDialog::showRotDegree);
 }
 
 void TransitionEditDialog::showRotDegree(int d)

@@ -9,6 +9,5 @@ int main(int argc, char *argv[])
     w.setMinimumSize(1440,900);
     w.showMaximized();
     w.show();
-
     return a.exec();
 }

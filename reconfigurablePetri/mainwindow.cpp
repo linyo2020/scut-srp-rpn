@@ -118,7 +118,6 @@ void MainWindow::createToolBar ()
     buttonGroup->addButton(animateToolButton,animationMode);
     //设定按钮组互斥,设置为true，按钮组中的按钮每次都只能够有一个被选中
     buttonGroup->setExclusive(true);
-    connect(buttonGroup, SIGNAL(buttonClicked (int)),this, SLOT(buttonGroupClicked(int)));
     void (QButtonGroup::*btnClicked)(int)=&QButtonGroup::buttonClicked;
     void (MainWindow::*btnOnClicked)(int)=&MainWindow::buttonGroupClicked;
     connect(buttonGroup, btnClicked,this, btnOnClicked);
@@ -265,12 +264,13 @@ void MainWindow::createStatusBar ()
     connect(slider, &QSlider::valueChanged, this, &MainWindow::sliderValueChanged);
 
 }
-/* create dock widget */
+/* 可移动控件 */
 void MainWindow::createDocks ()
 {
     buttomDock = new DockWidget(this);
     addDockWidget(Qt::BottomDockWidgetArea, buttomDock);
     buttomDock->setAllowedAreas(Qt::BottomDockWidgetArea);
+    buttomDock->setMaximumHeight(150);
     buttomDock->show ();
 
 }

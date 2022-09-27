@@ -18,28 +18,29 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     GraphicsEditTab * l_tab2 = new GraphicsEditTab;
     m_graphicsEditTab = l_tab2;
 
+    QWidget * l_tab3=new QWidget;
+
     l_tabWidget->addTab(l_tab1,tr("General"));
     l_tabWidget->addTab(l_tab2,tr("Graphic"));
+    l_tabWidget->addTab(l_tab3,tr("Port"));
+
+    //布局设置
     m_plainTextEdit=new QTextEdit;
     m_commentLabel=new QLabel("Comment  : ");
     m_showComment=new QCheckBox("show");
+    m_inputPort=new QCheckBox("Input port");
+    m_outputPort=new QCheckBox("Output port");
+    //设置互斥勾选框
+    m_inputPort->setAutoExclusive(true);
+    m_outputPort->setAutoExclusive(true);
 
     inputLabel = new QLineEdit(tr("labeltext"), 0);
     inputLabel->setFixedSize(150, 25);
 
     inputTokens = new QLineEdit(tr("input"), 0);
     inputTokens->setFixedSize(150, 25);
-    /*inputCapacity = new QSpinBox;
-    inputCapacity->setMinimum(0);
-    inputCapacity->setMaximum(100);
-    inputCapacity->setFixedSize(120, 25);*/
-
-    /*chckBox = new QCheckBox(tr("Show Attributes"), 0);
-    chckBox->setChecked (false);
-    label = new QLabel (tr("(k = 0 : No capacity restriction)"));*/
 
     validateButton = new QPushButton(tr("OK"));
-    //validateButton->setDefault(true);
     cancelButton = new QPushButton(tr("Cancel"));
 
     vlayout  = new QVBoxLayout;
@@ -63,25 +64,20 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     flayout->addRow(m_plainTextEdit);
     l_tab1->setLayout(flayout);
 
-    /*hlayout->addWidget (inputCapacity);
-    hlayout->addWidget (label);
-    flayout->addRow (tr("<span style=\"text-decoration:\
-                     underline;\">C</span>apacity : "), hlayout);*/
+    //端口界面布局
+    m_portlayout = new QVBoxLayout;
+    m_portlayout->addWidget(m_inputPort);
+    m_portlayout->addWidget(m_outputPort);
+    l_tab3->setLayout(m_portlayout);
+
 
     QFormLayout * temp=new QFormLayout;
     temp->addRow(l_tabWidget);
     vlayout->addLayout(temp);
-    //vlayout->addLayout(flayout);
-    //vlayout->addWidget(chckBox);
-
-
 
     groupBox = new QGroupBox (this);
     groupBox->setFlat (false);
     groupBox->setLayout (vlayout);
-
-
-
 
     hlayout2->addWidget(validateButton);
     hlayout2->addWidget(cancelButton);
@@ -90,13 +86,12 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     hlayout2->setAlignment (validateButton, Qt::AlignRight);
 
     vlayout2->addWidget(groupBox);
-    //vlayout2->addWidget(m_groupBox_1);
     vlayout2->addLayout(hlayout2);
 
     setLayout(vlayout2);
 
-    connect (validateButton, SIGNAL (clicked ()), this, SLOT (accept ()));
-    connect (cancelButton, SIGNAL (clicked ()), this, SLOT (reject ()));
+    connect (validateButton, &QPushButton::clicked, this, &PlaceEditDialog::accept);
+    connect (cancelButton, &QPushButton::clicked, this,  &PlaceEditDialog::reject);
 }
 
 /*

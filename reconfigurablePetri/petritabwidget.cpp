@@ -45,7 +45,8 @@ void PetriTabWidget::createTab ()
     placeEditDialog = new PlaceEditDialog(this);
     transEditDialog = new TransitionEditDialog(this);
 
-    connect_sigs_slots ();        //这里面把主页面点击工具栏按钮的信号全都连接上了
+    //这里面把主页面点击工具栏按钮的信号全都连接上了
+    connect_sigs_slots ();
 }
 
 void PetriTabWidget::nodesInserted (const QStringList& names)
@@ -388,6 +389,8 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     /////placeEditDialog->m_placeID->setText(QString::number(nodes_names.indexOf(old_name)));
     placeEditDialog->m_plainTextEdit->setText(place->getComment());
     placeEditDialog->m_showComment->setChecked(place->getShow());
+//    placeEditDialog->m_inputPort->setChecked(place->setInputPort());
+//    placeEditDialog->m_outputPort->setChecked(place->setOuputPort());
     //set Color
     placeEditDialog->m_graphicsEditTab->setBrushColor(place->getBrushColor());
     placeEditDialog->m_graphicsEditTab->setPenColor(place->getPenColor());
@@ -486,11 +489,15 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
         place->setShow(true);
         place->setLabel_2();
     }
-
-    /*if(!placeEditDialog->chckBox->isChecked ())
-    place->setLabel_1();
-    else
-    place->setLabel_2();*/
+    //端口
+    if(placeEditDialog->m_inputPort->isChecked())
+    {
+        place->setInputport();
+    }
+    if(placeEditDialog->m_outputPort->isChecked())
+    {
+        place->setOutputport();
+    }
 }
 
 void PetriTabWidget::transitionDoubleClicked (QGraphicsItem* item)

@@ -35,6 +35,10 @@ class Place : public QGraphicsEllipseItem
     void setLabel_1();
     void setLabel_2();
 
+    //设置端口
+    void setInputport();
+    void setOutputport();
+
     bool reachCapacity(Arc* arc);
     bool hasRelations ();
 

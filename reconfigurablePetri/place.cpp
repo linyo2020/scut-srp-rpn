@@ -204,22 +204,37 @@ void Place::setLabel_1()
 
 void Place::setLabel_2()
 {
+    //文本设置
     QString lb;
-
-       /*if(capacity == 0)
-        {
-            lb = QString (name+"\n"+"k = "+QObject::trUtf8("\u221e"));
-        }
-        else
-        {
-            QVariant v(capacity);
-            lb = QString (name+"\n"+"k = "+v.toString());
-        }*/
 
         lb=QString (name+"\n"+f_getComment());
 
    label->setText(lb);
+
 }
+void Place::setInputport()
+{
+    QString lb;
+
+        lb=QString (name+"\n"+"inputPort");
+
+   label->setText(lb);
+
+    m_brushColor = QColor(170, 255, 127);
+    update();
+}
+void Place::setOutputport()
+{
+    QString lb;
+
+        lb=QString (name+"\n"+"outputPort");
+
+   label->setText(lb);
+
+   m_brushColor = QColor(255, 170, 127);
+   update();
+}
+
 
 /* set comment */
 void Place::f_setComment(QString str)

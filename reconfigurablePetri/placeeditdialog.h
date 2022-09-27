@@ -54,8 +54,11 @@ class PlaceEditDialog : public QDialog
     QLabel      * m_placeID;
     QTextEdit * m_plainTextEdit;
     QCheckBox   * m_showComment;
+    QCheckBox   * m_inputPort;
+    QCheckBox   * m_outputPort;
     QLabel      * m_commentLabel;
     QHBoxLayout * m_commentHlayout;
+    QVBoxLayout * m_portlayout;
     //QGroupBox   * m_groupBox_1;
     //QFormLayout * m_flayout_1;
     //QSpinBox    * m_radiusSpinBox;

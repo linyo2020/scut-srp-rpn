@@ -62,9 +62,9 @@ ArcEditDialog::ArcEditDialog(QWidget * parent):QDialog(parent)
 
     //this->setLayout(layout);
 
-    connect(outputButton,SIGNAL(clicked()),this,SLOT(output()));
-    connect(validateButton, SIGNAL(clicked()), this, SLOT(accept()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+//    connect(outputButton,SIGNAL(clicked()),this,SLOT(output()));
+    connect(validateButton, &QPushButton::clicked, this, &ArcEditDialog::accept);
+    connect(cancelButton, &QPushButton::clicked, this, &ArcEditDialog::reject);
 }
 
 /*
