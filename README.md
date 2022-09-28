@@ -1,2 +1,2 @@
-# scut-srp-vpn
+# scut-srp-rpn
 reconfigurable petri nets tool
