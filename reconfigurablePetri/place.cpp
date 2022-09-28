@@ -50,6 +50,27 @@ void Place::setShow(bool flag)
 {
     show = flag;
 }
+//判断端口
+bool Place::isInputPort()
+{
+    return inputPort;
+}
+
+void Place::setInputPort(bool flag)
+{
+    inputPort = flag;
+}
+
+bool Place::isOutputPort()
+{
+    return outputPort;
+}
+
+void Place::setOutputPort(bool flag)
+{
+    outputPort = flag;
+}
+
 
 QColor Place::getBrushColor() const
 {
@@ -82,6 +103,7 @@ void Place::createPlace()
 {
     setRect(0, 0, place_diameter, place_diameter);
 
+
     setZValue(1000.0);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -93,26 +115,6 @@ void Place::createPlace()
     label->setText(name);
 }
 
-/* return place attributes as a structure */
-//PLACE_ATTR Place::toXml() const
-//{
-//  PLACE_ATTR place;
-
-//  place.id = id;
-//  place.name = name;
-//  place.initmark = tokens;
-//  place.capacity = capacity;
-//  place.x = pos().x();
-//  place.y = pos().y();
-//  place.offsetx = label->x();
-//  place.offsety = label->y();
-//  place.comment = m_comment;
-//  place.show = show;
-//  place.brushColor = m_brushColor;
-//  place.penColor = m_penColor;
-
-//  return place;
-//}
 
 /* add input arc */
 void Place::addInputArc(QGraphicsItem * arc)
@@ -221,6 +223,8 @@ void Place::setInputport()
    label->setText(lb);
 
     m_brushColor = QColor(170, 255, 127);
+    setInputPort(true);
+    setOutputPort(false);
     update();
 }
 void Place::setOutputport()
@@ -232,9 +236,19 @@ void Place::setOutputport()
    label->setText(lb);
 
    m_brushColor = QColor(255, 170, 127);
+   setOutputPort(true);
+   setInputPort(false);
    update();
 }
+void Place::cancelSetPort()
+{
+     setInputPort(false);
+     setOutputPort(false);
 
+     m_brushColor =defalut_brushColor;
+     m_penColor =defalut_penColor;
+     update();
+}
 
 /* set comment */
 void Place::f_setComment(QString str)
@@ -340,7 +354,28 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     label->setBrush (PenColor);
     painter->setBrush (BrushColor);
     painter->setRenderHint (QPainter::Antialiasing);
-    painter->drawEllipse (0, 0, place_diameter, place_diameter);
+    //判断是否为端口再画图
+    if(isInputPort())
+    {
+        painter->drawEllipse (0, 0, place_diameter, place_diameter);
+        painter->drawEllipse (3, 3, place_diameter-6, place_diameter-6);
+    }
+    else if (isOutputPort()) {
+        painter->drawEllipse (0, 0, place_diameter, place_diameter);
+        //用drawConvexPolygon画三角形
+            static const QPointF points[3] = {
+                  QPointF(place_diameter/2-place_diameter*0.866/2, place_diameter*1.5/2),
+                  QPointF(place_diameter/2, 0),
+                  QPointF(place_diameter/2+place_diameter*0.866/2,place_diameter*1.5/2)
+              };
+            painter->drawConvexPolygon(points, 3);
+
+    }
+    else {
+        painter->drawEllipse (0, 0, place_diameter, place_diameter);
+    }
+
+
 
     painter->setBrush (PenColor);
 

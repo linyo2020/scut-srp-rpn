@@ -56,6 +56,7 @@ class PlaceEditDialog : public QDialog
     QCheckBox   * m_showComment;
     QCheckBox   * m_inputPort;
     QCheckBox   * m_outputPort;
+    QCheckBox   * m_notPort;
     QLabel      * m_commentLabel;
     QHBoxLayout * m_commentHlayout;
     QVBoxLayout * m_portlayout;

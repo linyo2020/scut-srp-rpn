@@ -389,20 +389,13 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     /////placeEditDialog->m_placeID->setText(QString::number(nodes_names.indexOf(old_name)));
     placeEditDialog->m_plainTextEdit->setText(place->getComment());
     placeEditDialog->m_showComment->setChecked(place->getShow());
-//    placeEditDialog->m_inputPort->setChecked(place->setInputPort());
-//    placeEditDialog->m_outputPort->setChecked(place->setOuputPort());
+
     //set Color
     placeEditDialog->m_graphicsEditTab->setBrushColor(place->getBrushColor());
     placeEditDialog->m_graphicsEditTab->setPenColor(place->getPenColor());
     placeEditDialog->m_graphicsEditTab->setBrushColorOrin(place->getBrushColor());
     placeEditDialog->m_graphicsEditTab->setPenColorOrin(place->getPenColor());
-    //qDebug() <<old_name<<endl<<endl;
-    //for(int i=0;i<nodes_names.size();++i)qDebug()<<nodes_names[i]<<endl;
-    /*int c = place->getCapacity();
-    if(c == omega)
-    c=0;
 
-    placeEditDialog->inputCapacity->setValue(c);*/
     placeEditDialog->exec();
 
     if(placeEditDialog->result() == QDialog::Rejected)
@@ -410,7 +403,6 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
 
     QString new_name = placeEditDialog->inputLabel->text();
     place->setTokens(placeEditDialog->inputTokens->text().toDouble());
-    //place->setCapacity(placeEditDialog->inputCapacity->value());
 
     //set color
     place->setPenColor(placeEditDialog->m_graphicsEditTab->getPenColor());
@@ -432,51 +424,6 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     {
         QMessageBox::about(this,tr("Same Name Exists"),tr("Nodes will be synchronized."));
     }
-
-    /*
-    int index = nodes_names.indexOf (old_name);
-
-    if (new_name != old_name)
-    {
-        if(!nodes_names.contains(new_name))
-        {
-            nodes_names.replace (index, new_name);
-            place->setName(new_name);
-        }
-        else
-        {
-            QMessageBox::StandardButton button = QMessageBox::warning(this, "Not a unique name", "The place name <strong>"+new_name+"</strong> is already being used. Use it anyway?", QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
-            if(button == QMessageBox::Yes)
-            {
-                nodes_names.replace (index, new_name);
-                place->setName(new_name);
-                foreach(QGraphicsItem * item, scene->items())
-                {
-                    if(item->type() == Place::Type)
-                    {
-                        if(qgraphicsitem_cast<Place*>(item)->getName()==new_name&&qgraphicsitem_cast<Place*>(item)->getId()!=place->getId())
-                        {
-                            qgraphicsitem_cast<Place*>(item)->setTokens(place->getTokens());
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        foreach(QGraphicsItem * item, scene->items())
-        {
-            if(item->type() == Place::Type)
-            {
-                if(qgraphicsitem_cast<Place*>(item)->getName()==new_name&&qgraphicsitem_cast<Place*>(item)->getId()!=place->getId())
-                {
-                    qgraphicsitem_cast<Place*>(item)->setTokens(place->getTokens());
-                }
-            }
-        }
-    }
-    */
     place->f_setComment(placeEditDialog->m_plainTextEdit->toPlainText());
 
     if(!placeEditDialog->m_showComment->isChecked())
@@ -489,14 +436,18 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
         place->setShow(true);
         place->setLabel_2();
     }
-    //端口
+    //端口判断
     if(placeEditDialog->m_inputPort->isChecked())
     {
         place->setInputport();
     }
-    if(placeEditDialog->m_outputPort->isChecked())
+    else if(placeEditDialog->m_outputPort->isChecked())
     {
         place->setOutputport();
+    }
+    else if(placeEditDialog->m_notPort->isChecked())
+    {
+        place->cancelSetPort();
     }
 }
 

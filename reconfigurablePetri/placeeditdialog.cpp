@@ -30,9 +30,11 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     m_showComment=new QCheckBox("show");
     m_inputPort=new QCheckBox("Input port");
     m_outputPort=new QCheckBox("Output port");
+    m_notPort=new QCheckBox("Non port");
     //设置互斥勾选框
     m_inputPort->setAutoExclusive(true);
     m_outputPort->setAutoExclusive(true);
+    m_notPort->setAutoExclusive(true);
 
     inputLabel = new QLineEdit(tr("labeltext"), 0);
     inputLabel->setFixedSize(150, 25);
@@ -68,6 +70,7 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     m_portlayout = new QVBoxLayout;
     m_portlayout->addWidget(m_inputPort);
     m_portlayout->addWidget(m_outputPort);
+    m_portlayout->addWidget(m_notPort);
     l_tab3->setLayout(m_portlayout);
 
 

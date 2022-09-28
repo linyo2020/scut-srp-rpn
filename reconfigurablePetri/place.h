@@ -38,6 +38,7 @@ class Place : public QGraphicsEllipseItem
     //设置端口
     void setInputport();
     void setOutputport();
+    void cancelSetPort();
 
     bool reachCapacity(Arc* arc);
     bool hasRelations ();
@@ -56,6 +57,12 @@ class Place : public QGraphicsEllipseItem
     QColor getPenColor() const;
     void setBrushColor(QColor color);
     void setPenColor(QColor color);
+
+    //判断是否为端口
+    bool isInputPort();
+    bool isOutputPort();
+    void setInputPort(bool);
+    void setOutputPort(bool);
 
  protected:
 
@@ -82,6 +89,10 @@ class Place : public QGraphicsEllipseItem
 
     static const QColor defalut_brushColor;
     static const QColor defalut_penColor;
+
+    //判断是否为端口
+    bool inputPort=false;
+    bool outputPort=false;
 
 };
 
