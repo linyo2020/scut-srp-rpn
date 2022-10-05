@@ -45,7 +45,7 @@ public:
     void exportNet (const QString &imagefile);
     bool isNetEmpty();
     bool isSaved ();
-//    PTNET_ATTR toXml() const;
+    PTNET_ATTR toXml() const;
     bool checkNet ();
     bool checkMarking();
     bool checkNodesConnections();

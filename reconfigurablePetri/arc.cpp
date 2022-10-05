@@ -76,10 +76,8 @@ ARC_ATTR Arc::toXml() const
     arc.source = source_id;
     arc.target = target_id;
     arc.weight = weight;
-//	arc.fis = m_FIS;
     arc.brushColor = m_brushColor;
     arc.penColor = m_penColor;
-//	arc.ruleset = new RuleSet(m_ruleSet);
 //	//this place update for weight from double to QString by syx 8.15
 
     for(int i = 1; i < path().elementCount()-1; i++ )

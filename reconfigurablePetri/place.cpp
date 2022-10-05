@@ -99,6 +99,27 @@ QString Place::getComment()
     return m_comment;
 }
 
+/* return place attributes as a structure */
+PLACE_ATTR Place::toXml() const
+{
+  PLACE_ATTR place;
+
+  place.id = id;
+  place.name = name;
+  place.initmark = tokens;
+  place.capacity = capacity;
+  place.x = pos().x();
+  place.y = pos().y();
+  place.offsetx = label->x();
+  place.offsety = label->y();
+  place.comment = m_comment;
+  place.show = show;
+  place.brushColor = m_brushColor;
+  place.penColor = m_penColor;
+
+  return place;
+}
+
 void Place::createPlace()
 {
     setRect(0, 0, place_diameter, place_diameter);

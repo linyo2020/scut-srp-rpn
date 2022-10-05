@@ -23,7 +23,6 @@ Transition::Transition(const TRANSITION_ATTR &transition)
   self_function = transition.self_function;
   m_brushColor = transition.brushColor;
   m_penColor = transition.penColor;
-  //MassAction=transition.MassAction;
   show = transition.show;
   if(transition.name.isEmpty())
      name = id;
@@ -93,26 +92,26 @@ void Transition::createTransition()
 //todo
 //XML
 
-//TRANSITION_ATTR Transition::toXml() const
-//{
-//  TRANSITION_ATTR transition;
+TRANSITION_ATTR Transition::toXml() const
+{
+  TRANSITION_ATTR transition;
 
-//  transition.id = id;
-//  transition.name = name;
-//  transition.x = pos().x();
-//  transition.y = pos().y();
-//  transition.rotation = rotation;
-//  transition.offsetx = label->x();
-//  transition.offsety = label->y();
-//  transition.self_function=self_function;
-//  //transition.MassAction=MassAction;
-//  transition.comment = m_comment;
-//  transition.show = show;
-//  transition.brushColor = m_brushColor;
-//  transition.penColor = m_penColor;
+  transition.id = id;
+  transition.name = name;
+  transition.x = pos().x();
+  transition.y = pos().y();
+  transition.rotation = rotation;
+  transition.offsetx = label->x();
+  transition.offsety = label->y();
+  transition.self_function=self_function;
+  //transition.MassAction=MassAction;
+  transition.comment = m_comment;
+  transition.show = show;
+  transition.brushColor = m_brushColor;
+  transition.penColor = m_penColor;
 
-//  return transition;
-//}
+  return transition;
+}
 
 /* to generate coverability tree */
 

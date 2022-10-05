@@ -20,7 +20,7 @@ class Transition : public QGraphicsRectItem
     ~Transition ();
 
     void createTransition();
-    //TRANSITION_ATTR toXml() const;
+    TRANSITION_ATTR toXml() const;
 
     void showEditDialog ();
     void setAttributes ();

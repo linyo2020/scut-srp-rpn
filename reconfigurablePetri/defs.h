@@ -32,12 +32,6 @@ typedef struct{
       QColor penColor;
    } PLACE_ATTR;
 
-/* typedef struct
-    {
-        QString id, ref;
-        int x, y, rotation;
-    }; REFTRANS_ATTR */
-
 typedef struct{
      QString id, name;
      /* coordinate */
@@ -53,36 +47,26 @@ typedef struct{
      QColor penColor;
    } TRANSITION_ATTR;
 
-/* typedef struct
-    {
-        QString id, ref;
-        int x, y, rotation;
-    }; REFTRANS_ATTR */
-
 typedef struct{
      QString id, source, target;
-//     FISStruct2 fis;
      int weight;
      QList<QPointF> points;
-//     RuleSet *ruleset;
      QColor brushColor;
      QColor penColor;
    } ARC_ATTR;
 
 
-//typedef struct{
-//     QString id, name;
-//     QList <PLACE_ATTR> placeNodes;
-//     /* QList <REFPLACE_ATTR> refPlaces;*/
-//     QList <TRANSITION_ATTR> transitionNodes;
-//     /* QList <REFTRANS_ATTR> refTransitions;*/
-//     QList <ARC_ATTR> arcs;
-//   } PAGE_ATTR;
+typedef struct{
+     QString id, name;
+     QList <PLACE_ATTR> placeNodes;
+     QList <TRANSITION_ATTR> transitionNodes;
+     QList <ARC_ATTR> arcs;
+   } PAGE_ATTR;
 
-//typedef struct{
-//     QString id, name;
-//     QList <PAGE_ATTR> pages;
-//   } PTNET_ATTR;
+typedef struct{
+     QString id, name;
+     QList <PAGE_ATTR> pages;
+   } PTNET_ATTR;
 
 typedef struct{
     QString name;

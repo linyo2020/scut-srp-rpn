@@ -175,41 +175,37 @@ void PetriTabWidget::setId(QString id)
     this->id = id;
 }
 
-//PTNET_ATTR PTNtab::toXml() const
-//{
-//	PTNET_ATTR net;
-//	net.id = id;
-//	net.name = name;
-//	PAGE_ATTR page;
-//	page.id = "page0";
-//	page.name = name;
+PTNET_ATTR PetriTabWidget::toXml() const
+{
+    PTNET_ATTR net;
+    net.id = id;
+    net.name = name;
+    PAGE_ATTR page;
+    page.id = "page0";
+    page.name = name;
 
-//	foreach(QGraphicsItem * item, scene->items())
-//	{
-//		if(item->type() == Place::Type)
-//		{
-//			page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
-//			//Place * place = qgraphicsitem_cast<Place*>(item);
-//			//m_PlaceVector->push(place);
-//			continue;
-//		}
-//		if(item->type() == Transition::Type)
-//		{
-//			page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
-//			//Transition * trans = qgraphicsitem_cast<Transition*>(item);
-//			//m_TransitionVector->push(trans);
-//			continue;
-//		}
-//		if(item->type() == Arc::Type)
-//		{
-//			page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
-//			continue;
-//		}
-//	}
+    foreach(QGraphicsItem * item, scene->items())
+    {
+        if(item->type() == Place::Type)
+        {
+            page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+            continue;
+        }
+        if(item->type() == Transition::Type)
+        {
+            page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+            continue;
+        }
+        if(item->type() == Arc::Type)
+        {
+            page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            continue;
+        }
+    }
 
-//	net.pages << page;
-//	return net;
-//}
+    net.pages << page;
+    return net;
+}
 
 void PetriTabWidget::exportNet (const QString &imagefile)
 {

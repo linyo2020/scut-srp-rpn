@@ -16,7 +16,7 @@ class Place : public QGraphicsEllipseItem
     ~Place ();
 
     void createPlace();
-//	PLACE_ATTR toXml() const;
+    PLACE_ATTR toXml() const;
 
     void addInputArc(QGraphicsItem * arc);
     void addOutputArc(QGraphicsItem * arc);

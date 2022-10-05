@@ -45,7 +45,8 @@ SOURCES += \
     transitioneditdialog.cpp \
     undostack.cpp \
     arceditdialog.cpp \
-    petritabwidget.cpp
+    petritabwidget.cpp \
+    xmlwriter.cpp
 
 HEADERS += \
     arc.h \
@@ -68,7 +69,8 @@ HEADERS += \
     transitioneditdialog.h \
     undostack.h \
     arceditdialog.h \
-    petritabwidget.h
+    petritabwidget.h \
+    xmlwriter.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

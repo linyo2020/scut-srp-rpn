@@ -1,4 +1,5 @@
 #include "tabwidget.h"
+#include "xmlwriter.h"
 #include <QDebug>
 
 TabWidget::TabWidget()
@@ -14,11 +15,65 @@ TabWidget::TabWidget()
 
 void TabWidget::save()
 {
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    QString filename = tab->getFilename();
 
+    if(filename.isNull())
+        saveAs();
+    else
+    {
+      QFile file(filename);
+
+      if(!file.open(QIODevice::WriteOnly))
+          QMessageBox::critical(this, "Open File Error", \
+        "The file could not be opened.");
+
+      XmlWriter writer(tab->toXml());
+      writer.writeXML(&file);
+      tab->cleanUndostack();
+      //tab->arcnoclicked=true;
+    }
 }
 void TabWidget::saveAs()
 {
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    int index = currentIndex();
 
+    QString filename = QFileDialog::getSaveFileName(this,
+                          tr("Save As PNML Document"),
+                                QDir::currentPath(),
+                          tr("Petri Net Files (*.pnml)"));
+
+    if(filename.isNull())
+        return;
+
+    if(QFileInfo(filename).suffix().isEmpty())
+        filename.append(".pnml");
+
+    QFile file(filename);
+
+    if(!file.open(QIODevice::WriteOnly))
+    {
+       QMessageBox::critical(this, "Save As Error", "The Petri Net" \
+                          "could not be saved to: "+filename);
+
+       return;
+    }
+    QFileInfo fileInfo(filename);
+    QString nameStr = fileInfo.fileName();
+    nameStr = nameStr.remove(nameStr.size()-5,5);
+    tab->setName(nameStr);
+    tab->setId(nameStr);
+    XmlWriter writer(tab->toXml());
+    writer.writeXML(&file);
+
+    tab->setFilename(filename);
+    tab->cleanUndostack();
+    setTabToolTip(index, filename);
+    setTabText(index, fileInfo.fileName ());
+
+    if(!fileNames.contains(filename))
+         fileNames << filename;
 }
 void TabWidget::exportNet()
 {
