@@ -46,7 +46,8 @@ SOURCES += \
     undostack.cpp \
     arceditdialog.cpp \
     petritabwidget.cpp \
-    xmlwriter.cpp
+    xmlwriter.cpp \
+    xmlparser.cpp
 
 HEADERS += \
     arc.h \
@@ -70,7 +71,8 @@ HEADERS += \
     undostack.h \
     arceditdialog.h \
     petritabwidget.h \
-    xmlwriter.h
+    xmlwriter.h \
+    xmlparser.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
