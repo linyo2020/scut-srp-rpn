@@ -488,7 +488,7 @@ void PetriTabWidget::transitionDoubleClicked (QGraphicsItem* item)
     {
         if(item1->type() == Transition::Type)
         {
-            if(qgraphicsitem_cast<Transition*>(item1)->getName()==new_name&&qgraphicsitem_cast<Place*>(item1)->getId()!=trans->getId())
+            if(qgraphicsitem_cast<Transition*>(item1)->getName()==new_name&&qgraphicsitem_cast<Transition*>(item1)->getId()!=trans->getId())
             {
                 myflag=1;
                 qgraphicsitem_cast<Transition*>(item1)->setFunction(trans->getFunction());
