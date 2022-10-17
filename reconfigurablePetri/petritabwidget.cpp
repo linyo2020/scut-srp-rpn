@@ -382,9 +382,12 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     placeEditDialog->inputLabel->setText(old_name);
     placeEditDialog->inputTokens->setText(QString::number(place->getTokens()));
     placeEditDialog->m_placeID->setText(place->getId());
-    /////placeEditDialog->m_placeID->setText(QString::number(nodes_names.indexOf(old_name)));
+
     placeEditDialog->m_plainTextEdit->setText(place->getComment());
     placeEditDialog->m_showComment->setChecked(place->getShow());
+    placeEditDialog->m_inputPort->setChecked(place->isInputPort());
+    placeEditDialog->m_outputPort->setChecked(place->isOutputPort());
+    placeEditDialog->m_notPort->setChecked(!place->isInputPort()&&!place->isOutputPort());
 
     //set Color
     placeEditDialog->m_graphicsEditTab->setBrushColor(place->getBrushColor());
@@ -432,14 +435,15 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
         place->setShow(true);
         place->setLabel_2();
     }
-    //端口判断
+    //端口识别和判断选择
     if(placeEditDialog->m_inputPort->isChecked())
     {
-        place->setInputport();
+        place->drawInputport();
     }
     else if(placeEditDialog->m_outputPort->isChecked())
     {
-        place->setOutputport();
+        place->drawOutputport();
+
     }
     else if(placeEditDialog->m_notPort->isChecked())
     {

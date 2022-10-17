@@ -3,6 +3,7 @@
 PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     QDialog (parent)
 {
+
     setFixedSize (450, 450);
     setModal(true);
     setWindowTitle(tr("Place Attributes"));
@@ -31,10 +32,12 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     m_inputPort=new QCheckBox("Input port");
     m_outputPort=new QCheckBox("Output port");
     m_notPort=new QCheckBox("Non port");
+
     //设置互斥勾选框
     m_inputPort->setAutoExclusive(true);
     m_outputPort->setAutoExclusive(true);
     m_notPort->setAutoExclusive(true);
+
 
     inputLabel = new QLineEdit(tr("labeltext"), 0);
     inputLabel->setFixedSize(150, 25);

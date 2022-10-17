@@ -13,7 +13,9 @@
 #include <QGroupBox>
 #include <QTabWidget>
 #include <QPlainTextEdit>
+#include<QButtonGroup>
 
+#include "graphicsedittab.h"
 #include "graphicsedittab.h"
 
 class PlaceEditDialog : public QDialog
@@ -60,6 +62,8 @@ class PlaceEditDialog : public QDialog
     QLabel      * m_commentLabel;
     QHBoxLayout * m_commentHlayout;
     QVBoxLayout * m_portlayout;
+
+    QButtonGroup *ButtonGroup;
     //QGroupBox   * m_groupBox_1;
     //QFormLayout * m_flayout_1;
     //QSpinBox    * m_radiusSpinBox;

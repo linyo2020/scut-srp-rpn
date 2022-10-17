@@ -235,7 +235,7 @@ void Place::setLabel_2()
    label->setText(lb);
 
 }
-void Place::setInputport()
+void Place::drawInputport()
 {
     QString lb;
 
@@ -248,7 +248,7 @@ void Place::setInputport()
     setOutputPort(false);
     update();
 }
-void Place::setOutputport()
+void Place::drawOutputport()
 {
     QString lb;
 
