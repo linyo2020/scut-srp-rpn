@@ -12,7 +12,7 @@ class Place : public QGraphicsEllipseItem
     enum { Type = UserType + 1 };
 
     explicit Place(const QString &id);
-//	Place(const PLACE_ATTR &place);
+    Place(const PLACE_ATTR &place);
     ~Place ();
 
     void createPlace();

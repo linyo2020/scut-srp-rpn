@@ -3,6 +3,7 @@
 
 #include <QPainter>
 #include <QGraphicsRectItem>
+
 /*!
  * \brief The ArcEdgeSelectionRectangle class
  * 选中弧时转弯节点的小方块

@@ -22,7 +22,7 @@ class PetriTabWidget : public QWidget
 public:
 
     explicit PetriTabWidget(const QString &id, QWidget * parent = 0);
-//    PTNtab(const PTNET_ATTR &ptnet, const QString& file);
+    PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file);
     ~PetriTabWidget ();
     QString getId()
     {

@@ -30,26 +30,23 @@ Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem
     createArc();
 }
 
-//Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
-//	 QPainterPath paintpath, const ARC_ATTR &arc)
-//	: QGraphicsPathItem()
-//{
-//	sourceItem = item1;
-//	targetItem = item2;
-//	setPath(paintpath);
-//	source_id = arc.source;
-//	target_id = arc.target;
-//	weight = arc.weight;
-//	id = arc.id;
-//	expression = arc.expression;
-//	m_experssion = arc.expression;
-//    m_brushColor = arc.brushColor;
-//    m_penColor = arc.penColor;
-//	m_FIS = arc.fis;
+Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
+     QPainterPath paintpath, const ARC_ATTR &arc)
+    : QGraphicsPathItem()
+{
+    sourceItem = item1;
+    targetItem = item2;
+    setPath(paintpath);
+    source_id = arc.source;
+    target_id = arc.target;
+    weight = arc.weight;
+    id = arc.id;
+    m_brushColor = arc.brushColor;
+    m_penColor = arc.penColor;
 
-//	createArc();
-//	updatePosition();
-//}
+    createArc();
+    updatePosition();
+}
 
 void Arc::createArc()
 {

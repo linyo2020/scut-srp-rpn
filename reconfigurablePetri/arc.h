@@ -20,8 +20,8 @@ class Arc : public QGraphicsPathItem
     Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
         QString TargetId, QPainterPath arc_path, const QString &ArcId,int ArcWeight);
 
-//	Arc(QGraphicsItem * item1, QGraphicsItem * item2,
-//		QPainterPath paintpath, const ARC_ATTR &arc);
+    Arc(QGraphicsItem * item1, QGraphicsItem * item2,
+        QPainterPath paintpath, const ARC_ATTR &arc);
 
     ~Arc();
 

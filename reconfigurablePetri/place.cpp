@@ -13,33 +13,33 @@ Place::Place(const QString &id)
 }
 
 /* From XML */
-//Place::Place(const PLACE_ATTR &place)
-//{
-//	id = place.id;
+Place::Place(const PLACE_ATTR &place)
+{
+    id = place.id;
 
-//	if(place.name.isNull())
-//		name = id;
-//	else
-//		name = place.name;
+    if(place.name.isNull())
+        name = id;
+    else
+        name = place.name;
 
-//	tokens = place.initmark;
+    tokens = place.initmark;
 
-//	capacity = place.capacity;
+    capacity = place.capacity;
 
-//	m_comment = place.comment;
+    m_comment = place.comment;
 
-//    m_brushColor = place.brushColor;
+    m_brushColor = place.brushColor;
 
-//    m_penColor = place.penColor;
+    m_penColor = place.penColor;
 
-//	show = place.show;
+    show = place.show;
 
-//	createPlace();
+    createPlace();
 
-//	label->setPos(place.offsetx, place.offsety);
+    label->setPos(place.offsetx, place.offsety);
 
-//	if(show)setLabel_2();
-//}
+    if(show)setLabel_2();
+}
 
 bool Place::getShow()
 {

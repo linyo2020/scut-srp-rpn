@@ -9,16 +9,16 @@ PetriTabWidget::PetriTabWidget(const QString &id, QWidget * parent)
     createTab ();
 }
 
-//PTNtab::PTNtab(const PTNET_ATTR &ptnet, const QString& file)
-//{
-//	id = ptnet.id;
-//	name = ptnet.name;
-//	filename = file;
-//	createTab ();
-//	// xml
-//	scene->from_Xml (ptnet.pages);
-//	view->centerOn(scene->itemsBoundingRect().center());
-//}
+PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
+{
+    id = ptnet.id;
+    name = ptnet.name;
+    filename = file;
+    createTab ();
+    // xml
+    scene->from_Xml (ptnet.pages);
+    view->centerOn(scene->itemsBoundingRect().center());
+}
 
 void PetriTabWidget::createTab ()
 {

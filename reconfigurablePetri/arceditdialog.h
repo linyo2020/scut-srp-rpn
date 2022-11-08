@@ -9,6 +9,7 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QLineEdit>
+
 //#include "mainwindow.h"
 #include "graphicsedittab.h"
 //#include "Simulation/plot.h"

@@ -2,7 +2,8 @@
 #include "xmlwriter.h"
 #include <QDebug>
 
-TabWidget::TabWidget()
+TabWidget::TabWidget(QWidget * parent)
+    :QTabWidget (parent)
 {
     nets_indexes = 0;
     setMovable (true);
@@ -119,6 +120,91 @@ void TabWidget::updateTitle (bool changed)
         text.remove(text.size()-1, 1);
         setTabText(index, text);
     }
+}
+/* 打开子网 */
+bool TabWidget::open (MessageHandler &messageHandler)
+{
+    //![0] get file name
+    QString filename = QFileDialog::getOpenFileName(this,
+        tr("Open PNML Document"), QDir::currentPath(),
+              tr("Petri Net Files (*.pnml)"));
+    //qDebug()<<filename;
+
+    if(filename.isNull())
+        return false;
+
+    //![1] check if the file is already opened
+    if(fileNames.contains(filename))
+    {
+        for(int i=0; i<count(); i++)
+        {
+            PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(widget(i));
+            if(tab->getFilename() == filename)
+            {
+                setCurrentWidget(tab);
+                return true;
+            }
+        }
+    }else
+    {
+        fileNames << filename;
+    }
+
+    QFile file(filename);
+    QFileInfo fi(file);
+    //qDebug()<<fi.fileName();
+
+    //[2]! validate xml file
+    if(!validateXml(file, messageHandler))
+    return false;
+
+    //[3]! parse xml file
+    file.seek(0);
+    QTextStream textstream(&file);
+    QString xmlContent = textstream.readAll();
+    file.close();
+
+    XmlParser parser;
+    if(!parser.parseXML(xmlContent))
+        return false;
+
+    //[4]! ok :)
+    PTNET_ATTR net = parser.getXML_net ();
+    PetriTabWidget * tab = new PetriTabWidget(net, filename);
+    addTab(tab,fi.fileName());
+    connectSignalAndSlot(tab);
+    setTabToolTip(currentIndex(), filename);
+
+    return true;
+}
+bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
+{
+    //![0] validate XML schema
+    QXmlSchema schema;
+    schema.setMessageHandler(&messageHandler);
+    schema.load(QUrl::fromLocalFile(":/schemas/ptnet.xsd"));
+
+    if(!schema.isValid())
+        return false;
+
+    //![1] open file
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::critical(this, "Loading File Error", file.errorString ());
+        return false;
+    }
+
+    //![2] validate file against XML schema
+    QXmlSchemaValidator validator(schema);
+    validator.setMessageHandler(&messageHandler);
+
+    if(!validator.validate(&file, QUrl::fromLocalFile(file.fileName())))
+    {
+        file.close();
+        return false;
+    }
+
+  return true;
 }
 
 void TabWidget::closeTab(int index)

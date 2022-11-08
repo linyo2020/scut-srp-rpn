@@ -3,19 +3,25 @@
 
 #include <QTabWidget>
 #include <QUrl>
+#include <QXmlSchema>
+#include <QXmlSchemaValidator>
 #include <QTextStream>
 
+#include "xmlparser.h"
+#include "xmlwriter.h"
+#include "messagehandler.h"
 #include "petritabwidget.h"
 
 class TabWidget : public QTabWidget
 {
      Q_OBJECT
 public:
-    TabWidget();
+     explicit TabWidget (QWidget * parent = 0);
     /*
      * QTabWidget是带标签页的窗口，可以存储多个子窗口，
      * 每个子窗口的显示可以通过对应的标签index进行切换。
      */
+     bool validateXml(QFile& file, MessageHandler &messageHandler);
     //槽函数
     void closeTab(int index);//关闭子窗口
     void removeItems ();
@@ -24,6 +30,8 @@ public:
     void zoom (int val);
     //新建窗口
     void createNew ();
+    //打开子网
+    bool open (MessageHandler &messageHandler);
     //更新窗口名
     void updateTitle (bool changed);
 

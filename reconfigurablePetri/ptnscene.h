@@ -25,10 +25,10 @@ public:
     void trakInitialMarking ();
     void resetInitialMarking();
 
-//    void from_Xml (const QList<PAGE_ATTR> &pages);
-//    void addXML_places (const QList <PLACE_ATTR> &places);
-//    void addXML_transitions (const QList <TRANSITION_ATTR> &transitions);
-//    void addXML_arcs (const QList <ARC_ATTR> &arcs);
+    void from_Xml (const QList<PAGE_ATTR> &pages);
+    void addXML_places (const QList <PLACE_ATTR> &places);
+    void addXML_transitions (const QList <TRANSITION_ATTR> &transitions);
+    void addXML_arcs (const QList <ARC_ATTR> &arcs);
 
     Marking getInitialMarking () const;
     QMap<QString, QString> getPlacesNames ();
