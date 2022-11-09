@@ -39,6 +39,10 @@ public:
     void saveAs ();
     void exportNet ();
     void print();
+
+    //保存组件
+    void saveComponent ();
+    void saveAsComponent ();
 signals:
     void canRedoChange (bool canRedo);
     void canUndoChange (bool canUndo);

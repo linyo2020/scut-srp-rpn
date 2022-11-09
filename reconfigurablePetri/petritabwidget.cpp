@@ -206,7 +206,37 @@ PTNET_ATTR PetriTabWidget::toXml() const
     net.pages << page;
     return net;
 }
+PTNET_ATTR PetriTabWidget::componentToXml() const
+{
+    PTNET_ATTR net;
+    net.id = id;
+    net.name = name;
+    PAGE_ATTR page;
+    page.id = "page0";
+    page.name = name;
 
+    foreach(QGraphicsItem * item, scene->selectedItems())
+    {
+        if(item->type() == Place::Type)
+        {
+            page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+            continue;
+        }
+        if(item->type() == Transition::Type )
+        {
+            page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+            continue;
+        }
+        if(item->type() == Arc::Type)
+        {
+            page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            continue;
+        }
+    }
+
+    net.pages << page;
+    return net;
+}
 void PetriTabWidget::exportNet (const QString &imagefile)
 {
     QRectF rect = scene->itemsBoundingRect();

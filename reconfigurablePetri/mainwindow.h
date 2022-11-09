@@ -68,6 +68,12 @@ private:
     QAction * m_transitionMenuAct;
     QAction * m_arcMenuAct;
 
+    //组件库
+    QMenu   * componentMenu;
+    QAction * openComponentAction;
+    QAction * saveComponentAction;
+
+
 
     //状态栏
     QStatusBar * statusBar;

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="simpleComponentWithoutport" type="http://www.pnml.org/version-2009/grammar/ptnet">
+        <name>
+            <text>simpleComponentWithoutport</text>
+        </name>
+        <page id="page0">
+            <name>
+                <text>simpleComponentWithoutport</text>
+            </name>
+            <place id="p0">
+                <name>
+                    <text>p0</text>
+                    <graphics>
+                        <offset x="30" y="30"/>
+                    </graphics>
+                </name>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+                <toolspecific tool="petrinet" version="1.0">
+                    <placeCapacity capacity="0"/>
+                </toolspecific>
+                <graphics>
+                    <position x="339" y="302"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <comment>
+                    <text></text>
+                    <show>N</show>
+                </comment>
+            </place>
+            <place id="p1">
+                <name>
+                    <text>p1</text>
+                    <graphics>
+                        <offset x="30" y="30"/>
+                    </graphics>
+                </name>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+                <toolspecific tool="petrinet" version="1.0">
+                    <placeCapacity capacity="0"/>
+                </toolspecific>
+                <graphics>
+                    <position x="796" y="316"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <comment>
+                    <text></text>
+                    <show>N</show>
+                </comment>
+            </place>
+            <transition id="t0">
+                <name>
+                    <text>t0</text>
+                    <graphics>
+                        <offset x="30" y="10"/>
+                    </graphics>
+                </name>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+                <toolspecific tool="petrinet" version="1.0">
+                    <rotation degree="0"/>
+                </toolspecific>
+                <graphics>
+                    <position x="638" y="319"/>
+                </graphics>
+                <function>
+                    <text>MassAction(1)</text>
+                </function>
+                <comment>
+                    <text></text>
+                    <show>N</show>
+                </comment>
+            </transition>
+            <transition id="t1">
+                <name>
+                    <text>t1</text>
+                    <graphics>
+                        <offset x="30" y="10"/>
+                    </graphics>
+                </name>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+                <toolspecific tool="petrinet" version="1.0">
+                    <rotation degree="0"/>
+                </toolspecific>
+                <graphics>
+                    <position x="801" y="476"/>
+                </graphics>
+                <function>
+                    <text>MassAction(1)</text>
+                </function>
+                <comment>
+                    <text></text>
+                    <show>N</show>
+                </comment>
+            </transition>
+            <arc id="a0" source="p0" target="t0">
+                <inscription>
+                    <text>1</text>
+                </inscription>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+            </arc>
+            <arc id="a1" source="t0" target="p1">
+                <inscription>
+                    <text>1</text>
+                </inscription>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+            </arc>
+            <arc id="a2" source="p1" target="t1">
+                <inscription>
+                    <text>1</text>
+                </inscription>
+                <color>
+                    <brush red="255" green="255" blue="255"/>
+                    <pen red="0" green="0" blue="0"/>
+                </color>
+            </arc>
+        </page>
+    </net>
+</pnml>

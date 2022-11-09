@@ -220,13 +220,25 @@ void MainWindow::createMenuBar()
     m_modelingMenu = m_Bar->addMenu(tr("&Elements"));
     m_placeMenuAct = m_modelingMenu->addAction(tr("&Place"));
     m_placeMenuAct->setIcon(QIcon(QPixmap(":/images/place.png")));
-          connect(m_placeMenuAct,&QAction::triggered,this,[=](){this->addPlaceToolButton->clicked();});
+          connect(m_placeMenuAct,&QAction::triggered,this,[=](){this->addPlaceToolButton->click();});
     m_transitionMenuAct = m_modelingMenu->addAction(tr("&Transition"));
     m_transitionMenuAct->setIcon(QIcon(QPixmap(":/images/transition.png")));
-          connect(m_transitionMenuAct,&QAction::triggered,this,[=](){this->addTransToolButton->clicked();});
+          connect(m_transitionMenuAct,&QAction::triggered,this,[=](){this->addTransToolButton->click();});
     m_arcMenuAct = m_modelingMenu->addAction(tr("Arcs"));
     m_arcMenuAct->setIcon(QIcon(QPixmap(":/images/arc.png")));
-          connect(m_arcMenuAct,&QAction::triggered,this,[=](){this->drawArcToolButton->clicked();});
+          connect(m_arcMenuAct,&QAction::triggered,this,[=](){this->drawArcToolButton->click();});
+
+     //组件库菜单
+     componentMenu =m_Bar->addMenu(tr("&Component"));
+     saveComponentAction = componentMenu->addAction(tr("&Save Component"));
+     saveComponentAction->setIcon(QIcon(QPixmap(":/images/componentSave.png")));
+         connect(saveComponentAction,&QAction::triggered,this,[=](){this->tabWidget->saveComponent();});
+                componentMenu->addSeparator();
+     openComponentAction = componentMenu->addAction(tr("&Open Component"));
+     openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
+//         connect(aboutMenuAct,&QAction::triggered,this,[=](){this->about();});
+
+
 
      //帮助菜单
      helpMenu =m_Bar->addMenu(tr("&Help"));

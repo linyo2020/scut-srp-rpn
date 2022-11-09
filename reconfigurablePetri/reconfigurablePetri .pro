@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml xmlpatterns concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -47,7 +47,8 @@ SOURCES += \
     arceditdialog.cpp \
     petritabwidget.cpp \
     xmlwriter.cpp \
-    xmlparser.cpp
+    xmlparser.cpp \
+    messagehandler.cpp
 
 HEADERS += \
     arc.h \
@@ -72,7 +73,8 @@ HEADERS += \
     arceditdialog.h \
     petritabwidget.h \
     xmlwriter.h \
-    xmlparser.h
+    xmlparser.h \
+    messagehandler.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

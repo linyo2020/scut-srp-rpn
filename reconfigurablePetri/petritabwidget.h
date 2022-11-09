@@ -46,6 +46,7 @@ public:
     bool isNetEmpty();
     bool isSaved ();
     PTNET_ATTR toXml() const;
+    PTNET_ATTR componentToXml() const;
     bool checkNet ();
     bool checkMarking();
     bool checkNodesConnections();

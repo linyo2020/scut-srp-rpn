@@ -15,5 +15,7 @@
         <file>images/transition.png</file>
         <file>images/undo.png</file>
         <file>images/widow-new.png</file>
+        <file>images/componentLibrary.png</file>
+        <file>images/componentSave.png</file>
     </qresource>
 </RCC>
