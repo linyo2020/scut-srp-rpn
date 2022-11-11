@@ -48,6 +48,19 @@ Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
     updatePosition();
 }
 
+Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+         QString TargetId, const QString &ArcId,int ArcWeight)
+{
+    sourceItem = SourceItem;
+    targetItem = TargetItem;
+    source_id = SourceId;
+    target_id = TargetId;
+    id = ArcId;
+    weight = ArcWeight;
+
+    createArc();
+}
+
 void Arc::createArc()
 {
     setZValue(-1000.0);

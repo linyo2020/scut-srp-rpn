@@ -28,6 +28,7 @@ SOURCES += \
     arc.cpp \
     arcedgeselectionrectangle.cpp \
     command.cpp \
+    component.cpp \
     graphedge.cpp \
     graphgenerator.cpp \
     graphicsedittab.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
         mainwindow.cpp \
     place.cpp \
     placeeditdialog.cpp \
+    ptnet.cpp \
     ptnscene.cpp \
     sceneselectionrectangle.cpp \
     tabwidget.cpp \
@@ -55,6 +57,7 @@ HEADERS += \
     arc.h \
     arcedgeselectionrectangle.h \
     command.h \
+    component.h \
     defs.h \
     graphedge.h \
     graphgenerator.h \
@@ -64,6 +67,7 @@ HEADERS += \
         mainwindow.h \
     place.h \
     placeeditdialog.h \
+    ptnet.h \
     ptnscene.h \
     sceneselectionrectangle.h \
     tabwidget.h \
