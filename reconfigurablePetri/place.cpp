@@ -494,6 +494,16 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
 
 }
 
+QList<Arc *> Place::getOutput() const
+{
+    return output;
+}
+
+QList<Arc *> Place::getInput() const
+{
+    return input;
+}
+
 bool Place::collidesWithItem ( const QGraphicsItem * other, Qt::ItemSelectionMode mode ) const
 {
     Q_UNUSED(mode);
