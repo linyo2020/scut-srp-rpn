@@ -41,6 +41,7 @@ public:
     void sliderValueChanged (int value);
     void open ();
     void about();
+    void openRuleLibrary();
 
 private:
 
@@ -73,6 +74,9 @@ private:
     QAction * openComponentAction;
     QAction * saveComponentAction;
 
+    //规则库
+    QMenu* ruleMenu;
+    QAction* openRuleLibraryAction;
 
 
     //状态栏

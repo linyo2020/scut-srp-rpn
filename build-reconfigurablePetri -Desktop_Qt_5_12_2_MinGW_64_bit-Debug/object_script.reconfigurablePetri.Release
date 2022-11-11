@@ -21,6 +21,8 @@ release/arceditdialog.o
 release/petritabwidget.o
 release/xmlwriter.o
 release/xmlparser.o
+release/messagehandler.o
+release/editrulelibrary.o
 release/qrc_resources.o
 release/moc_graphicsedittab.o
 release/moc_mainwindow.o
@@ -32,3 +34,5 @@ release/moc_transitioneditdialog.o
 release/moc_undostack.o
 release/moc_arceditdialog.o
 release/moc_petritabwidget.o
+release/moc_messagehandler.o
+release/moc_editrulelibrary.o

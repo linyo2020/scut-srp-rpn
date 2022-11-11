@@ -48,7 +48,8 @@ SOURCES += \
     petritabwidget.cpp \
     xmlwriter.cpp \
     xmlparser.cpp \
-    messagehandler.cpp
+    messagehandler.cpp \
+    editrulelibrary.cpp
 
 HEADERS += \
     arc.h \
@@ -74,7 +75,8 @@ HEADERS += \
     petritabwidget.h \
     xmlwriter.h \
     xmlparser.h \
-    messagehandler.h
+    messagehandler.h \
+    editrulelibrary.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -84,4 +86,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     resources.qrc
 
-FORMS += graphicsedittab.ui
+FORMS += graphicsedittab.ui \
+    editrulelibrary.ui

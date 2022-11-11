@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "editrulelibrary.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -238,7 +239,10 @@ void MainWindow::createMenuBar()
      openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
 //         connect(aboutMenuAct,&QAction::triggered,this,[=](){this->about();});
 
-
+     //规则库菜单
+     ruleMenu=m_Bar->addMenu(tr("&Rule"));
+     openRuleLibraryAction=ruleMenu->addAction(tr("&Open Rule Library"));
+     connect(openRuleLibraryAction,&QAction::triggered,this,[=](){this->openRuleLibrary();});
 
      //帮助菜单
      helpMenu =m_Bar->addMenu(tr("&Help"));
@@ -360,7 +364,11 @@ void MainWindow::about()
 {
 
 }
-
+void MainWindow::openRuleLibrary()
+{
+    editRuleLibrary* editRuleDialog=new editRuleLibrary(this);
+    editRuleDialog->show();
+}
 
 MainWindow::~MainWindow()
 {

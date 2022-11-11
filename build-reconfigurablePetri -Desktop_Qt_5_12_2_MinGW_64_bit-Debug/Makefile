@@ -244,6 +244,10 @@ Makefile: ../reconfigurablePetri/reconfigurablePetri\ .pro ../../../qt/Qt5.12.2/
 		../reconfigurablePetri/reconfigurablePetri\ .pro \
 		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Widgets.prl \
 		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Gui.prl \
+		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Xml.prl \
+		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5XmlPatterns.prl \
+		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Network.prl \
+		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Concurrent.prl \
 		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Core.prl \
 		../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/qtmaind.prl
 	$(QMAKE) -o Makefile "..\reconfigurablePetri\reconfigurablePetri .pro" -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
@@ -428,6 +432,10 @@ Makefile: ../reconfigurablePetri/reconfigurablePetri\ .pro ../../../qt/Qt5.12.2/
 ../reconfigurablePetri/reconfigurablePetri\ .pro:
 ../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Widgets.prl:
 ../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Gui.prl:
+../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Xml.prl:
+../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5XmlPatterns.prl:
+../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Network.prl:
+../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Concurrent.prl:
 ../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/Qt5Core.prl:
 ../../../qt/Qt5.12.2/5.12.2/mingw73_64/lib/qtmaind.prl:
 qmake: FORCE

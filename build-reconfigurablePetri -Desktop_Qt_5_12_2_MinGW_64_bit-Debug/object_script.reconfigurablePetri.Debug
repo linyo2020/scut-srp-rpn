@@ -21,6 +21,8 @@ debug/arceditdialog.o
 debug/petritabwidget.o
 debug/xmlwriter.o
 debug/xmlparser.o
+debug/messagehandler.o
+debug/editrulelibrary.o
 debug/qrc_resources.o
 debug/moc_graphicsedittab.o
 debug/moc_mainwindow.o
@@ -32,3 +34,5 @@ debug/moc_transitioneditdialog.o
 debug/moc_undostack.o
 debug/moc_arceditdialog.o
 debug/moc_petritabwidget.o
+debug/moc_messagehandler.o
+debug/moc_editrulelibrary.o
