@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>925</width>
+    <width>1181</width>
     <height>575</height>
    </rect>
   </property>
@@ -15,14 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="EditHorizontalLayout">
      <item>
-      <widget class="QFrame" name="gridFrame">
+      <widget class="QFrame" name="rulesGridFrame">
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="1">
-         <widget class="QPushButton" name="addRulesButton">
+        <item row="0" column="2">
+         <widget class="QPushButton" name="deleteRulePushButton">
           <property name="text">
-           <string>add</string>
+           <string>Delete</string>
           </property>
          </widget>
         </item>
@@ -44,28 +44,41 @@
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <widget class="QWidget" name="rulesScrollAreaWidgetContents">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>350</width>
-             <height>477</height>
+             <width>551</width>
+             <height>457</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QTreeWidget" name="treeWidget"/>
+             <widget class="QTreeWidget" name="treeWidget">
+              <column>
+               <property name="text">
+                <string notr="true">1</string>
+               </property>
+              </column>
+             </widget>
             </item>
            </layout>
           </widget>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="addRulesPushButton">
+          <property name="text">
+           <string>Add</string>
+          </property>
          </widget>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QScrollArea" name="scrollArea">
+      <widget class="QScrollArea" name="rulesSettingsScrollArea">
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
@@ -73,313 +86,365 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
-          <width>538</width>
-          <height>514</height>
+          <y>-20</y>
+          <width>552</width>
+          <height>534</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QFrame" name="ruleSettingsFrame">
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <widget class="QFrame" name="gridFrame">
-              <layout class="QGridLayout" name="gridLayout">
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>comments</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <spacer name="horizontalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QTextEdit" name="textEdit"/>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit"/>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>ruleName</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+          <widget class="QFrame" name="gridFrame">
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="2">
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="commentLabel">
+              <property name="text">
+               <string>Comments</string>
+              </property>
              </widget>
             </item>
-            <item>
-             <widget class="QFrame" name="triggerGridFrame">
-              <layout class="QGridLayout" name="gridLayout_2">
-               <item row="0" column="0">
-                <widget class="QLabel" name="TriggerLabel">
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Trigger</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="conditionTypeLabel">
-                 <property name="text">
-                  <string>condition type</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="conditionTypeComboBox">
-                 <item>
-                  <property name="text">
-                   <string>state</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>event</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>time</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="monitiorObjectLabel">
-                 <property name="text">
-                  <string>monitor object</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QComboBox" name="monitorObjectComboBox"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="conditionLabel">
-                 <property name="text">
-                  <string>condition</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QComboBox" name="ConditionOperatorComboBox">
-                 <item>
-                  <property name="text">
-                   <string>&gt;</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>&lt;</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>=</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>≥</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>≤</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>≠</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QLineEdit" name="conditionValueLineEdit"/>
-               </item>
-               <item row="3" column="3">
-                <widget class="QLabel" name="conditionUnitLabel">
-                 <property name="text">
-                  <string>token(s)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="durationLabel">
-                 <property name="text">
-                  <string>duration</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="durationValueLineEdit"/>
-               </item>
-               <item row="4" column="2">
-                <widget class="QComboBox" name="durationUnitComboBox">
-                 <item>
-                  <property name="text">
-                   <string>ms</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>s</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>min</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>h</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-              </layout>
+            <item row="2" column="1" colspan="2">
+             <widget class="QTextEdit" name="commentTextEdit"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="ruleNameLabel">
+              <property name="text">
+               <string>RuleName</string>
+              </property>
              </widget>
             </item>
-            <item>
-             <widget class="QFrame" name="actionGridFrame">
-              <layout class="QGridLayout" name="actionGridLayout" columnstretch="0,0,0">
-               <item row="1" column="0">
-                <widget class="QLabel" name="actionTypeLabel">
-                 <property name="text">
-                  <string>action type</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="ActionLabel">
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Action</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1" colspan="2">
-                <widget class="QComboBox" name="Target2ComboBox"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="target2Label">
-                 <property name="text">
-                  <string>to</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QComboBox" name="Target1ComboBox"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="actionTypeComboBox">
-                 <item>
-                  <property name="text">
-                   <string>create</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>delete</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>update</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="target1Label">
-                 <property name="text">
-                  <string>target</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="triggerGridFrame">
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="conditionValue1LineEdit"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="conditionTypeComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>time</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>state</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>event</string>
+               </property>
+              </item>
              </widget>
             </item>
-            <item>
-             <widget class="QFrame" name="connectionGridFrame">
-              <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="2">
-                <widget class="QPushButton" name="pushButton">
-                 <property name="text">
-                  <string>Add</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="connectionLabel">
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Connections</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="timeValueLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
              </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="conditionTypeLabel">
+              <property name="text">
+               <string>Condition type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QLabel" name="conditionAndLabel">
+              <property name="text">
+               <string>and</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="monitiorObjectLabel">
+              <property name="text">
+               <string>Monitor object</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="conditionLabel">
+              <property name="text">
+               <string>Condition</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QComboBox" name="timeUnitComboBox">
+              <item>
+               <property name="text">
+                <string>ms</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>s</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>min</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>h</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QComboBox" name="timeComboBox">
+              <property name="inputMethodHints">
+               <set>Qt::ImhNone</set>
+              </property>
+              <item>
+               <property name="text">
+                <string>Duration</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Latency</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="TriggerLabel">
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Trigger</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="ConditionOperatorComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>between</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>&gt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>&lt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>=</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≥</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≤</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≠</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QLabel" name="conditionUnitLabel">
+              <property name="text">
+               <string>token(s)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QLineEdit" name="conditionValue2LineEdit"/>
+            </item>
+            <item row="2" column="1" colspan="4">
+             <widget class="QComboBox" name="monitorObjectComboBox"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="actionGridFrame">
+           <layout class="QGridLayout" name="actionGridLayout" columnstretch="0,0,0">
+            <item row="1" column="0">
+             <widget class="QLabel" name="actionTypeLabel">
+              <property name="text">
+               <string>Action type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="ActionLabel">
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Action</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="3" column="1" colspan="2">
+             <widget class="QComboBox" name="Target2ComboBox"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="target2Label">
+              <property name="text">
+               <string>To</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="actionTypeComboBox">
+              <item>
+               <property name="text">
+                <string>update</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>create</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>delete</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="target1Label">
+              <property name="text">
+               <string>From</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QComboBox" name="Target1ComboBox"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="connectionGridFrame">
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="addConnectionPushButton">
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="connectionLabel">
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Connections</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
