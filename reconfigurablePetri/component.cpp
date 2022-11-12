@@ -75,9 +75,9 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
 
 
-                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_outputport],this->mynet.PlaceList[mynet_outputport]->getId(),trans,trans->getId(),null,this->mynet.PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
+                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_outputport],this->mynet.PlaceList[mynet_outputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
 
-                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),null,trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
+                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
 
                 trans->addInputArc(my_arc1);
                 trans->addOutputArc(my_arc2);
@@ -108,9 +108,9 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
 
 
-                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_inputport],this->mynet.PlaceList[mynet_inputport]->getId(),trans,trans->getId(),null,this->mynet.PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
+                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_inputport],this->mynet.PlaceList[mynet_inputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
 
-                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),null,trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
+                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
 
                 trans->addInputArc(my_arc1);
                 trans->addOutputArc(my_arc2);
