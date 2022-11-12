@@ -1,2 +1,3 @@
 *.user
 build-reconfigurablePetri*/
+*.autosave
