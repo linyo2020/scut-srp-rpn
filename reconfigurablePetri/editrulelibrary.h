@@ -16,7 +16,14 @@ public:
     ~editRuleLibrary();
 
 private slots:
-    void on_comboBox_activated(const QString &arg1);
+
+    void on_conditionTypeComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_actionTypeComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_ConditionOperatorComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_addConnectionPushButton_clicked();
 
 private:
     Ui::editRuleLibrary *ui;
