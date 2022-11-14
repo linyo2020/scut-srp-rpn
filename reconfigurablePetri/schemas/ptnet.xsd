@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="offset">
+	<xs:complexType>
+		<xs:attribute name="x" type="xs:decimal"/>
+		<xs:attribute name="y" type="xs:decimal"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="position">
+	<xs:complexType>
+		<xs:attribute name="x" type="xs:decimal"/>
+		<xs:attribute name="y" type="xs:decimal"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="brush">
+        <xs:complexType>
+                <xs:attribute name="red" type="xs:decimal"/>
+                <xs:attribute name="green" type="xs:decimal"/>
+                <xs:attribute name="blue" type="xs:decimal"/>
+        </xs:complexType>
+</xs:element>
+
+<xs:element name="pen">
+        <xs:complexType>
+                <xs:attribute name="red" type="xs:decimal"/>
+                <xs:attribute name="green" type="xs:decimal"/>
+                <xs:attribute name="blue" type="xs:decimal"/>
+        </xs:complexType>
+</xs:element>
+
+<xs:element name="place">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+						<xs:element name="graphics"> 
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="offset"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="color" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element ref="brush"/>
+                                            <xs:element ref="pen"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+			<xs:element name="toolspecific">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="placeCapacity">
+							<xs:complexType>
+								<xs:attribute name="capacity" type="xs:decimal"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="tool" type="xs:string"/>
+					<xs:attribute name="version" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="graphics">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="position"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="initialMarking">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="comment"  minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="text" type="xs:string"/>
+                                                <xs:element name="show" type="xs:string"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="transition">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+						<xs:element name="graphics" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="offset"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="color" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element ref="brush"/>
+                                            <xs:element ref="pen"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+			<xs:element name="toolspecific">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="rotation">
+							<xs:complexType>
+								<xs:attribute name="degree" type="xs:decimal"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="tool" type="xs:string"/>
+					<xs:attribute name="version" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="graphics" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="position" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="function"  minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="text" type="xs:string"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+                        <xs:element name="comment"  minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="text" type="xs:string"/>
+                                                <xs:element name="show" type="xs:string"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="fis">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="FISName" type="xs:string"/>
+			<xs:element name="FISType" type="xs:string"/>
+			<xs:element name="Deffuzification" type="xs:string"/>
+			<xs:element name="TimeStep" type="xs:string"/>
+			<xs:element name="VariableName" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RangeMin" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RangeMax" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InputOrOutput" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LinguisticName" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LinguisticType" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Para1" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Para2" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Para3" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="NewSortedVariables" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Rules" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="arc">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="inscription">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="expression" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="text" type="xs:string"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+			<xs:element name="graphics" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="position" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+                        <xs:element name="color" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element ref="brush"/>
+                                            <xs:element ref="pen"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
+			<xs:element ref="fis" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="source" type="xs:string"/>
+		<xs:attribute name="target" type="xs:string"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="pnml">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="net">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="name">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="text" type="xs:string"></xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="name">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="text" type="xs:string"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element ref="place" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element ref="transition" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element ref="arc" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:attribute name="id" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="id" type="xs:string"/>
+					<xs:attribute name="type" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>

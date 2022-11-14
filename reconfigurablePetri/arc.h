@@ -18,10 +18,10 @@ class Arc : public QGraphicsPathItem
     enum { Type = UserType + 3 };
 
     Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
-        QString TargetId, QPainterPath arc_path, const QString &ArcId,int ArcWeight);
+        QString TargetId, QPainterPath arc_path, const QString &ArcId,double ArcWeight);
 
     Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
-        QString TargetId, const QString &ArcId,int ArcWeight);//计算用，不能用于画图
+        QString TargetId, const QString &ArcId,double ArcWeight);//计算用，不能用于画图
 
 
     Arc(QGraphicsItem * item1, QGraphicsItem * item2,
@@ -37,8 +37,8 @@ class Arc : public QGraphicsPathItem
 
     QString getId();
 
-    int getWeight() const;
-    void setWeight(int Weight);
+    double getWeight() const;
+    void setWeight(double Weight);
 
     void setLabel();
 
@@ -67,7 +67,7 @@ class Arc : public QGraphicsPathItem
     QString id;
     QString source_id;
     QString target_id;
-    int weight;
+    double weight;
 
     QPolygonF ArcHead;
     QGraphicsSimpleTextItem* label;

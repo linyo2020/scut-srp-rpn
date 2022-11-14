@@ -25,8 +25,8 @@ class Place : public QGraphicsEllipseItem
     double getTokens() const;
     void setTokens (double tok);
     void updateTokens(double tok);
-    int getCapacity() const;
-    void setCapacity(int c);
+    double getCapacity() const;
+    void setCapacity(double c);
     QString getName () const;
     void setName (const QString& nm);
     QString getId () const;
@@ -77,7 +77,7 @@ class Place : public QGraphicsEllipseItem
     QString m_comment;
     bool show = false;
     double tokens=0;
-    int capacity=0;
+    double capacity=0;
 
     QGraphicsSimpleTextItem * label;
 

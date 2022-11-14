@@ -16,7 +16,6 @@ bool XmlParser::parseXML(const QString &xmlContent)
     QXmlStreamReader xml(xmlContent);
 
     bool isPnml=false;
-
     while (!xml.atEnd() && !xml.hasError())
     {
         QXmlStreamReader::TokenType token = xml.readNext();
@@ -368,7 +367,8 @@ bool XmlParser::parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page)
             }
             else if (xml.name() == "color")
             {
-                if(!parseXML_Color(xml)) return false;
+                if(!parseXML_Color(xml))
+                    return false;
                 continue;
             }
         }
@@ -650,11 +650,11 @@ bool XmlParser::parseXML_Positions(QXmlStreamReader &xml)
             if (xml.name() == "position")
             {
                 v.setValue(xml.attributes().value("x").toString());
-                //x = v.toFloat();
-                x=v.toInt();
+                x = v.toDouble();
+                //x=v.toInt();
                 v.setValue(xml.attributes().value("y").toString());
-                //y = v.toFloat();
-                y=v.toInt();
+                y = v.toDouble();
+                //y=v.toInt();
                 points<<QPointF(x,y);
                     continue;
             }

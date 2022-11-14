@@ -202,19 +202,19 @@ QString Transition::f_getFunction() const
 /* is firable */
 bool Transition::isFirable()
 {
-    QString toks;
+    double toks;
 
     // check input
     foreach(Arc * arc, input)
     {
-        int w = arc->getWeight();
+        double w = arc->getWeight();
         QGraphicsItem * sourceItem = arc->getSourceItem();
 
         if(sourceItem->type() == Place::Type)
         {
             toks = qgraphicsitem_cast<Place *>(sourceItem)->getTokens();
-           // if(toks < w)
-               // return false;
+            if(toks < w)
+                return false;
         }
     }
 
@@ -242,7 +242,7 @@ void Transition::fire()
   // update input places
   foreach(Arc * arc, input)
   {
-      int w = arc->getWeight();
+      double w = arc->getWeight();
       QGraphicsItem * sourceItem = arc->getSourceItem ();
 
       if(sourceItem->type() == Place::Type)
@@ -252,7 +252,7 @@ void Transition::fire()
   // update output places
   foreach(Arc * arc, output)
   {
-      int w = arc->getWeight();
+      double w = arc->getWeight();
       QGraphicsItem * targetItem = arc->getTargetItem();
 
       if(targetItem->type() == Place::Type)

@@ -22,7 +22,7 @@ typedef struct{
      /* coordinates */
      int x, y;
      double initmark;
-     int capacity;
+     double capacity;
      /* label offset */
      int offsetx, offsety;
      /* new addition */
@@ -49,7 +49,7 @@ typedef struct{
 
 typedef struct{
      QString id, source, target;
-     int weight;
+     double weight;
      QList<QPointF> points;
      QColor brushColor;
      QColor penColor;

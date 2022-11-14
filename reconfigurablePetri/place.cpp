@@ -174,7 +174,7 @@ void Place::deleteArc(QString id)
 /* update tokens */
 void Place::updateTokens(double tok)
 {
-    if((tok<0)&&(tokens==0))
+    if((tok<0)&&(tokens==0.0))
             return;
 
     tokens += tok;
@@ -192,12 +192,12 @@ double Place::getTokens()  const
 }
 
 /* get capacity */
-int Place::getCapacity() const
+double Place::getCapacity() const
 {
   return capacity;
 }
 
-void Place::setCapacity(int c)
+void Place::setCapacity(double c)
 {
     capacity = c;
 }
@@ -286,7 +286,7 @@ QString Place::f_getComment() const
 bool Place::reachCapacity(Arc * arc)
 {
 
-  if(capacity == 0)
+  if(capacity == 0.0)
       return false;
   else if(arc->getWeight()+tokens > capacity)
       return true;

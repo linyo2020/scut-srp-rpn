@@ -17,5 +17,6 @@
         <file>images/widow-new.png</file>
         <file>images/componentLibrary.png</file>
         <file>images/componentSave.png</file>
+        <file>schemas/ptnet.xsd</file>
     </qresource>
 </RCC>

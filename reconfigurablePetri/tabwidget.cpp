@@ -1,6 +1,6 @@
 #include "tabwidget.h"
-#include "xmlwriter.h"
 #include <QDebug>
+#include <QMessageBox>
 
 TabWidget::TabWidget(QWidget * parent)
     :QTabWidget (parent)
@@ -215,11 +215,15 @@ bool TabWidget::open (MessageHandler &messageHandler)
     QFileInfo fi(file);
     //qDebug()<<fi.fileName();
 
-    //[2]! validate xml file
+    //![2] validate xml file
     if(!validateXml(file, messageHandler))
-    return false;
+    {
+        QMessageBox::critical(0,"Warning!",QString("Validate failed!"),
+                              QMessageBox::Ok,0,0);
+        return false;
+    }
 
-    //[3]! parse xml file
+    //![3] parse xml file
     file.seek(0);
     QTextStream textstream(&file);
     QString xmlContent = textstream.readAll();
@@ -229,7 +233,7 @@ bool TabWidget::open (MessageHandler &messageHandler)
     if(!parser.parseXML(xmlContent))
         return false;
 
-    //[4]! ok :)
+    //![4] ok :)
     PTNET_ATTR net = parser.getXML_net ();
     PetriTabWidget * tab = new PetriTabWidget(net, filename);
     addTab(tab,fi.fileName());
@@ -243,10 +247,16 @@ bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
     //![0] validate XML schema
     QXmlSchema schema;
     schema.setMessageHandler(&messageHandler);
+
+    //TODO:update xsd
     schema.load(QUrl::fromLocalFile(":/schemas/ptnet.xsd"));
 
     if(!schema.isValid())
+    {
+        QMessageBox::critical(0,"Warning!",QString("Xsd invalid!"),
+                              QMessageBox::Ok,0,0);
         return false;
+    }
 
     //![1] open file
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))

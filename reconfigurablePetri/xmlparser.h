@@ -50,7 +50,8 @@ private:
 
     QVariant v;
     QString id, name, source, target, ref, self_function, comment, show;//MassAction;
-    int offsetx, offsety, x, y, capacity, rotation, weight;
+    int offsetx, offsety, capacity, rotation, weight;
+    qreal x,y;
     COLOR pen,brush;
     double initmark;
     QList<QPointF> points;

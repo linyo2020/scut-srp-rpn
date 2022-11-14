@@ -16,7 +16,7 @@ const QColor Arc::defalut_brushColor=Qt::white;
 const QColor Arc::defalut_penColor=Qt::black;
 
 Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
-         QString TargetId, QPainterPath arc_path, const QString &ArcId,int ArcWeight)
+         QString TargetId, QPainterPath arc_path, const QString &ArcId,double ArcWeight)
 {
     sourceItem = SourceItem;
     targetItem = TargetItem;
@@ -49,7 +49,7 @@ Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
 }
 
 Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
-         QString TargetId, const QString &ArcId,int ArcWeight)
+         QString TargetId, const QString &ArcId,double ArcWeight)
 {
     sourceItem = SourceItem;
     targetItem = TargetItem;
@@ -111,12 +111,12 @@ QString Arc::getId()
 }
 
 /* get weight */
-int Arc::getWeight() const
+double Arc::getWeight() const
 {
     return weight;
 }
 
-void Arc::setWeight(int ArcWeight)
+void Arc::setWeight(double ArcWeight)
 {
     weight=ArcWeight;
 }
