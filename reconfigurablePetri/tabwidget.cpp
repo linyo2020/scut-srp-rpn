@@ -189,7 +189,6 @@ bool TabWidget::open (MessageHandler &messageHandler)
     QString filename = QFileDialog::getOpenFileName(this,
         tr("Open PNML Document"), QDir::currentPath(),
               tr("Petri Net Files (*.pnml)"));
-    //qDebug()<<filename;
 
     if(filename.isNull())
         return false;
@@ -242,6 +241,46 @@ bool TabWidget::open (MessageHandler &messageHandler)
 
     return true;
 }
+bool TabWidget::openComponent(MessageHandler &messageHandler)
+{
+    //![0] get file name
+    QString filename = QFileDialog::getOpenFileName(this,
+        tr("Open PNML Document"), QDir::currentPath(),
+              tr("Petri Net Files (*.pnml)"));
+
+    if(filename.isNull())
+        return false;
+
+    //![1]
+    fileNames << filename;
+    QFile file(filename);
+    QFileInfo fi(file);
+
+    //![2] validate xml file
+    if(!validateXml(file, messageHandler))
+    {
+        QMessageBox::critical(0,"Warning!",QString("Validate failed!"),
+                              QMessageBox::Ok,0,0);
+        return false;
+    }
+
+    //![3] parse xml file
+    file.seek(0);
+    QTextStream textstream(&file);
+    QString xmlContent = textstream.readAll();
+    file.close();
+
+    XmlParser parser;
+    if(!parser.parseXML(xmlContent))
+        return false;
+
+    //![4] ok :)
+    PTNET_ATTR net = parser.getXML_net ();
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    tab->setComponent(net, filename);
+
+    return true;
+}
 bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
 {
     //![0] validate XML schema
@@ -283,26 +322,26 @@ void TabWidget::closeTab(int index)
     auto * tab = qobject_cast<PetriTabWidget *>(widget(index));
     setCurrentWidget(tab);
 
-//    if(!tab->isSaved())
-//    {
-//        QMessageBox::StandardButton action;
+    if(!tab->isSaved())
+    {
+        QMessageBox::StandardButton action;
 
-//        action = QMessageBox::warning(this,
-//                       "Save", "Save or not?",
-//                        QMessageBox::Save | QMessageBox::No |
-//                        QMessageBox::Cancel, QMessageBox::Save);
+        action = QMessageBox::warning(this,
+                       "Save", "Save or not?",
+                        QMessageBox::Save | QMessageBox::No |
+                        QMessageBox::Cancel, QMessageBox::Save);
 
-//      if(action == QMessageBox::Save)
-//         save();
-//      else if(action == QMessageBox::Cancel)
-//          return;
-//    }
-      // 移除tab页
+      if(action == QMessageBox::Save)
+         save();
+      else if(action == QMessageBox::Cancel)
+          return;
+    }
+
       removeTab(index);
 
-//      if (count() <= 1)
-//        setTabsClosable(false);
-//      else
+      if (count() <= 1)
+        setTabsClosable(false);
+      else
         setTabsClosable(true);
 
 }

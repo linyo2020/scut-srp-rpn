@@ -40,6 +40,7 @@ public:
     void tabChanged (int index);
     void sliderValueChanged (int value);
     void open ();
+    void openComponent ();
     void about();
     void openRuleLibrary();
 

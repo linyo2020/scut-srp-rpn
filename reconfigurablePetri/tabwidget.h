@@ -32,6 +32,8 @@ public:
     void createNew ();
     //打开子网
     bool open (MessageHandler &messageHandler);
+    //打开组件
+    bool openComponent (MessageHandler &messageHandler);
     //更新窗口名
     void updateTitle (bool changed);
 

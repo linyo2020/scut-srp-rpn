@@ -237,8 +237,7 @@ void MainWindow::createMenuBar()
                 componentMenu->addSeparator();
      openComponentAction = componentMenu->addAction(tr("&Open Component"));
      openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
-//         connect(aboutMenuAct,&QAction::triggered,this,[=](){this->about();});
-
+         connect(openComponentAction,&QAction::triggered,this,[=](){this->openComponent();});
      //规则库菜单
      ruleMenu=m_Bar->addMenu(tr("&Rule"));
      openRuleLibraryAction=ruleMenu->addAction(tr("&Open Rule Library"));
@@ -359,6 +358,14 @@ void MainWindow::open ()
         statusBar->showMessage("Document loaded and opened.", 1000);
     else
         statusBar->showMessage("Document was not opened.", 1000);
+}
+void MainWindow::openComponent()
+{
+    statusBar->showMessage("Open an existing Component ...");
+    if(tabWidget->openComponent(buttomDock->getMessageHandler()))
+        statusBar->showMessage("Component loaded and opened.", 1000);
+    else
+        statusBar->showMessage("Component was not opened.", 1000);
 }
 void MainWindow::about()
 {

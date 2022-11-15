@@ -5,7 +5,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
-
+#include <QGraphicsSceneMouseEvent>
 #include "undostack.h"
 //#include "graphvisualizer.h"
 
@@ -60,6 +60,7 @@ public:
     void arcDoubleClicked (QGraphicsItem* item);
     void setName(QString);
     void setId(QString);
+    void setComponent(const PTNET_ATTR &ptnet, const QString& file);
     //bool arcnoclicked=true;
 signals:
 

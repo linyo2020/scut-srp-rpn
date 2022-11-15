@@ -19,7 +19,15 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
     scene->from_Xml (ptnet.pages);
     view->centerOn(scene->itemsBoundingRect().center());
 }
+void PetriTabWidget::setComponent(const PTNET_ATTR &ptnet, const QString& file)
+{
+    id = ptnet.id;
+    name = ptnet.name;
+    // xml
+    scene->from_Xml (ptnet.pages);
+    view->centerOn(scene->itemsBoundingRect().center());
 
+}
 void PetriTabWidget::createTab ()
 {
     mode = normalMode;
@@ -607,7 +615,7 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
 
 
     Transition *l_transition;
-//	//@武杰，请在此通过arc找到其连接的transition，然后查找变迁链接的所有位置，将其名字写入l_vPlaces
+
     if(arc->getSourceItem()->type()==Transition::Type)
     {
         l_transition=qgraphicsitem_cast<Transition*>(arc->getSourceItem());
