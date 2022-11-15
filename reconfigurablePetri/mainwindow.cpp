@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
       createMenuBar();
       createDocks ();
       createStatusBar ();
-
+      createComponentDock();
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
 
 }
@@ -237,8 +237,7 @@ void MainWindow::createMenuBar()
                 componentMenu->addSeparator();
      openComponentAction = componentMenu->addAction(tr("&Open Component"));
      openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
-//         connect(aboutMenuAct,&QAction::triggered,this,[=](){this->about();});
-
+         connect(openComponentAction,&QAction::triggered,this,[=](){this->openComponent();});
      //规则库菜单
      ruleMenu=m_Bar->addMenu(tr("&Rule"));
      openRuleLibraryAction=ruleMenu->addAction(tr("&Open Rule Library"));
@@ -288,6 +287,47 @@ void MainWindow::createDocks ()
     buttomDock->setAllowedAreas(Qt::BottomDockWidgetArea);
     buttomDock->setMaximumHeight(150);
     buttomDock->show ();
+
+}
+//组件库浮动窗口
+void MainWindow::createComponentDock()
+{
+    componentDock = new QDockWidget(tr("组件库"),this);
+    addDockWidget(Qt::RightDockWidgetArea, componentDock);
+    componentDock->setAllowedAreas(Qt::RightDockWidgetArea);
+    componentDock->setMinimumWidth(475);
+    newComponent=new QToolButton();
+    deleteComponent=new QToolButton();
+    addComponent=new QToolButton();
+    componentTree=new QTreeWidget();
+    newComponent->setText(tr("新建"));
+    newComponent->setToolTip(tr("Add a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    deleteComponent->setText(tr("删除"));
+    deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    addComponent->setText(tr("添加"));
+    addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
+    componentBar=new QToolBar();
+
+    componentBar->addWidget(newComponent);
+    componentBar->addWidget(deleteComponent);
+    componentBar->addWidget(addComponent);
+    componentBar->setAllowedAreas(Qt::TopToolBarArea);
+    addToolBar(componentBar);
+    componentController *component_controller=new componentController();
+    component_controller->componentTreeInitial(componentTree);
+    component_controller->addComponentTreeNode(componentTree,"A","cell1");
+    component_controller->addComponentTreeNode(componentTree,"B","cell1");
+    componentTree->expandAll();
+    QVBoxLayout* VerticalLayout=new QVBoxLayout(componentDock);
+    VerticalLayout->addWidget(componentBar);
+    VerticalLayout->addWidget(componentTree);
+    QWidget *mywid1 = new QWidget();
+    mywid1->setLayout(VerticalLayout);
+    componentDock->setWidget(mywid1);
+    componentDock->show ();
+
+
 
 }
 /*
@@ -360,6 +400,14 @@ void MainWindow::open ()
     else
         statusBar->showMessage("Document was not opened.", 1000);
 }
+void MainWindow::openComponent()
+{
+    statusBar->showMessage("Open an existing Component ...");
+    if(tabWidget->openComponent(buttomDock->getMessageHandler()))
+        statusBar->showMessage("Component loaded and opened.", 1000);
+    else
+        statusBar->showMessage("Component was not opened.", 1000);
+}
 void MainWindow::about()
 {
 
@@ -369,6 +417,7 @@ void MainWindow::openRuleLibrary()
     editRuleLibrary* editRuleDialog=new editRuleLibrary(this);
     editRuleDialog->show();
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -391,4 +440,5 @@ MainWindow::~MainWindow()
     delete buttomDock;
     delete slider;
     delete statusBar;
+    delete componentDock;
 }

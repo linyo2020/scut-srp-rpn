@@ -15,6 +15,10 @@ PTNscene::PTNscene(QObject * parent)
     setSceneRect(0, 0, 5000, 5000);
     setItemIndexMethod(NoIndex);
 }
+void PTNscene::setisComponent(bool Component)
+{
+    isComponent=Component;
+}
 
 void PTNscene::setMode (int mod)
 {
@@ -222,6 +226,12 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
        default:
      ;
      }
+
+    if(isComponent==true)
+    {
+      itemsBoundingRect().center()=QPointF(mouseEvent->scenePos().x()  , mouseEvent->scenePos().y());
+      isComponent=false;
+    }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
     emit sceneRectChanged (itemsBoundingRect() );

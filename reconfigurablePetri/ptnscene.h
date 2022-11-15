@@ -25,6 +25,8 @@ public:
     void trakInitialMarking ();
     void resetInitialMarking();
 
+    void setisComponent(bool Component);
+
     void from_Xml (const QList<PAGE_ATTR> &pages);
     void addXML_places (const QList <PLACE_ATTR> &places);
     void addXML_transitions (const QList <TRANSITION_ATTR> &transitions);
@@ -45,6 +47,7 @@ signals:
     void arcRemoved (QGraphicsItem * item, PTNscene * scene);
     void nodesInserted (const QStringList &names);
 
+
     void itemDoubleClicked(QGraphicsItem * item);
 
 protected:
@@ -57,12 +60,12 @@ protected:
     //void drawBackground ( QPainter * painter, const QRectF & rect);
 
 private:
-
     int places_indexs;
     int transitions_indexs;
     int arcs_indexs;
     int mode;
     QTransform transform;
+    bool isComponent=false;
 
     QGraphicsItem     * currentItem;
     QGraphicsPathItem * pathitem;
@@ -73,6 +76,7 @@ private:
     QPointF origin, oldPos, currentPos;
 
     Marking initial_marking;
+
 };
 
 #endif // PTNSCENE_H

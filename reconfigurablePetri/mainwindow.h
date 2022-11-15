@@ -12,12 +12,13 @@
 #include <QSlider>
 #include<QFont>
 #include <QToolTip>
+#include <QTreeWidget>
 
 #include <QCloseEvent>
 
 #include "tabwidget.h"
 #include "dockwidget.h"
-
+#include "componentcontroller.h"
 
 //enum{normalMode=0, animationMode=1, addPlaceMode=2, \
 //            addTransMode=3,drawArcMode=4, addToken=5, subToken=6};
@@ -40,8 +41,10 @@ public:
     void tabChanged (int index);
     void sliderValueChanged (int value);
     void open ();
+    void openComponent ();
     void about();
     void openRuleLibrary();
+
 
 private:
 
@@ -78,6 +81,14 @@ private:
     QMenu* ruleMenu;
     QAction* openRuleLibraryAction;
 
+    //组件操作库
+    QDockWidget* componentDock;
+    QToolButton* newComponent;
+    QToolButton* addComponent;
+    QToolButton* deleteComponent;
+    QToolBar* componentBar;
+    QTreeWidget* componentTree;
+    QTreeWidget* componentSubTree;
 
     //状态栏
     QStatusBar * statusBar;
@@ -118,6 +129,7 @@ private:
     void createToolBar ();
     void createStatusBar ();
     void createDocks ();
+    void createComponentDock();
 
 };
 
