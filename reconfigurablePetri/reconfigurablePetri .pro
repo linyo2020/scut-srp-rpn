@@ -51,7 +51,8 @@ SOURCES += \
     xmlwriter.cpp \
     xmlparser.cpp \
     messagehandler.cpp \
-    editrulelibrary.cpp
+    editrulelibrary.cpp \
+    componentcontroller.cpp
 
 HEADERS += \
     arc.h \
@@ -80,7 +81,8 @@ HEADERS += \
     xmlwriter.h \
     xmlparser.h \
     messagehandler.h \
-    editrulelibrary.h
+    editrulelibrary.h \
+    componentcontroller.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
