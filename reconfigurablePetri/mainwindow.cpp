@@ -301,6 +301,7 @@ void MainWindow::createComponentDock()
     addComponent=new QToolButton();
     componentTree=new QTreeWidget();
     newComponent->setText(tr("新建"));
+    connect(newComponent,&QToolButton::clicked,tabWidget,&TabWidget::saveComponent);
     newComponent->setToolTip(tr("Add a component <span style=\"color:gray;\">Ctrl+O</span>"));
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
@@ -441,4 +442,9 @@ MainWindow::~MainWindow()
     delete slider;
     delete statusBar;
     delete componentDock;
+
+    delete newComponent;
+    delete addComponent;
+    delete deleteComponent;
+    delete componentBar;
 }
