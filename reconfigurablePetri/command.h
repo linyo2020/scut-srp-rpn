@@ -70,7 +70,7 @@ class AddArcCommand : public QUndoCommand
 {
 public:
     AddArcCommand(QGraphicsItem * item1, QGraphicsItem * item2, const QPainterPath &arc_path,
-                  const QString &id, PTNscene * scene, int ArcWeight);
+                  const QString &id, PTNscene * scene, double ArcWeight);
     ~AddArcCommand();
     void addConnections ();
     void removeConnections ();

@@ -20,6 +20,10 @@ ArcEditDialog::ArcEditDialog(QWidget * parent):QDialog(parent)
     QFormLayout * temp = new QFormLayout;
     temp->addRow(l_tabWidget);
 
+    inputWeight = new QLineEdit;
+    inputWeight->setFixedSize(150,25);
+    inputWeight->setText("1.0");
+
     validateButton = new QPushButton("OK");
     //validateButton->setDefault(true);
     cancelButton = new QPushButton("Cancel");
@@ -42,7 +46,7 @@ ArcEditDialog::ArcEditDialog(QWidget * parent):QDialog(parent)
     hlayout->setAlignment (validateButton, Qt::AlignRight);
 
     //flayout->addRow("<span style=\"text-decoration:underline;\">E</span>xperssion : ", m_experssionHlayout);
-    //flayout->addRow("<span style=\"text-decoration:underline;\">E</span>xpression : ", inputExpression);
+    flayout->addRow("<span style=\"text-decoration:underline;\">W</span>eight : ", inputWeight);
     groupBox = new QGroupBox (this);
     groupBox->setFlat (false);
     //groupBox->setLayout (flayout);
