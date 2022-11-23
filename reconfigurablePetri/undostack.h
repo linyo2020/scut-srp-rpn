@@ -3,14 +3,15 @@
 
 #include <QUndoStack>
 #include "command.h"
-
+#include"ptnet.h"
 class UndoStack:public QUndoStack
 {
   Q_OBJECT
  public:
     explicit UndoStack(QObject * parent = 0 );
+    UndoStack(PTNet *net,QObject * parent = 0);
     ~UndoStack();
-
+    PTNet*mynet;
 public slots:
     void arcInserted(QGraphicsItem * item1, QGraphicsItem * item2,
                         const QPainterPath &arc_path,

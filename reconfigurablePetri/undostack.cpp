@@ -1,6 +1,11 @@
 #include "undostack.h"
 
 UndoStack::UndoStack(QObject * parent):QUndoStack(parent){}
+
+UndoStack::UndoStack(PTNet *net,QObject *parent):QUndoStack(parent)
+{
+    this->mynet=net;
+}
 UndoStack::~UndoStack(){}
 
 void UndoStack::arcInserted(QGraphicsItem * item1, QGraphicsItem * item2,
