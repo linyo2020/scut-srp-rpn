@@ -21,7 +21,7 @@ public:
      * @brief run
      * @return
      */
-    bool run(QString,double,double,double,bool,int);
+    bool run(QString,double,double,double,bool);
 
 signals:
     /**

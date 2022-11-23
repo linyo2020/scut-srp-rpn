@@ -61,8 +61,6 @@ Plot::Plot(QWidget *parent) :
     ui->lineEdit_2->setText(QString("10"));
     ui->lineEdit_5->setText(QString("0.1"));
     ui->comboBox_2->addItem(QString("Runge-Kutta"));
-    ui->comboBox_3->addItem(QString("Product"));
-    ui->comboBox_3->addItem(QString("Minimum"));
     ui->tableWidget->verticalHeader()->setVisible(false);
     ui->tableWidget->horizontalHeader()->setVisible(false);
     ui->tableWidget->setColumnCount(2);
@@ -188,7 +186,7 @@ void Plot::startSimulation()
     g_run = 1;  //启动子线程
     Calculate *p = new Calculate(this);
     p->start();
-    bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked,ui->comboBox_3->currentIndex());
+    bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked);
     if(suc==true)
     {
         ui->customPlot->rescaleAxes(true);

@@ -31,7 +31,7 @@ void Calculate::slotUpdateUi(double x,QString y)
 {
     m_gui->updateUi(x,y);
 }
-bool Calculate::run(QString PlotId,double l_start,double l_end,double dh,bool state,int method)
+bool Calculate::run(QString PlotId,double l_start,double l_end,double dh,bool state)
 {
     //子线程无法操作界面，例如显示数据怎么搞？？
     //发信号给主线程
