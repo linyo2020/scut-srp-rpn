@@ -17,6 +17,8 @@ class Transition : public QGraphicsRectItem
 
     explicit Transition(const QString &id);
     Transition(const TRANSITION_ATTR &transition);
+    //控件用到
+    Transition(const QString &id,const QPointF &position);
     ~Transition ();
 
     void createTransition();

@@ -13,7 +13,7 @@
 #include "transitioneditdialog.h"
 #include "arceditdialog.h"
 #include <vector>
-
+#include"ptnet.h"
 
 class PetriTabWidget : public QWidget
 {
@@ -100,6 +100,9 @@ private:
     void createTab ();
     //用于连接场景和撤销栈的信号和槽函数连接，传递恢复、撤销、删除功能信息
     void connect_sigs_slots ();
+
+
+    PTNet *mynet;//赋值给undostack
 };
 
 #endif // PETRITABWIDGET_H

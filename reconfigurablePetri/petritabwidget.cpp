@@ -46,6 +46,8 @@ void PetriTabWidget::createTab ()
     view->setScene (scene);
     /*init the view on left-top position*/
     view->centerOn(-INT_MAX, -INT_MAX);
+    this->mynet=new PTNet();
+    //undostack = new UndoStack(mynet,this);// 专用于控件
     undostack = new UndoStack(this);
     //graphVis = new GraphVisualizer;    //跟graphvisualizer相关的都不知道是啥
 
@@ -90,10 +92,14 @@ void PetriTabWidget::nodeInserted(const QPointF &itemPos,
     {
        undostack->push(new AddPlaceCommand(itemPos, id, scene));
       nodes_names << id;
+      //bug
+      //mynet->AddPlace(new Place(id,itemPos));
     }else
      {
        undostack->push(new AddTransitionCommand(itemPos, id, scene));
        nodes_names << id;
+       //bug
+       //mynet->AddTransition(new Transition(id,itemPos));
      }
 }
 
@@ -152,7 +158,20 @@ qreal PetriTabWidget::scaleValue ()
 /* call this function when the delete Toolbar button is trigered */
 void PetriTabWidget::removeItems ()
 {
+    //同步删除PTNet中的node
+//    foreach(QGraphicsItem * item, scene->selectedItems())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            mynet->deletePlace(qgraphicsitem_cast<Place*>(item));
+//        }
+//        else if(item->type()==Transition::Type)
+//        {
+//            mynet->deleteTransition(qgraphicsitem_cast<Transition*>(item));
+//        }
+//    }
     scene->removeItems ();
+
 }
 
 const QString& PetriTabWidget::getFilename ()
@@ -197,16 +216,21 @@ PTNET_ATTR PetriTabWidget::toXml() const
         if(item->type() == Place::Type)
         {
             page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+            //控件——将画板上的库所加入到网类中
+            mynet->AddPlace(qgraphicsitem_cast<Place*>(item));
             continue;
         }
         if(item->type() == Transition::Type)
         {
             page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+            //控件——将画板上的变迁加入到网类中
+            mynet->AddTransition(qgraphicsitem_cast<Transition*>(item));
             continue;
         }
         if(item->type() == Arc::Type)
         {
             page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            mynet->AddArc(qgraphicsitem_cast<Arc*>(item));
             continue;
         }
     }

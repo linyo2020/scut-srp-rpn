@@ -35,6 +35,12 @@ Transition::Transition(const TRANSITION_ATTR &transition)
   if(show)setLabel_2();
 }
 
+Transition::Transition(const QString &id, const QPointF &position)
+{
+    this->id=id;
+    label->setPos(position.x(),position.y());
+}
+
 void Transition::setShow(bool flag)
 {
     show = flag;
