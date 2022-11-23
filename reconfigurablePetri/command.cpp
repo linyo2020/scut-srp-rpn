@@ -7,6 +7,7 @@ AddPlaceCommand::AddPlaceCommand(const QPointF &itemPos,
     place = new Place(id);
     position = itemPos;
     graphicsscene = scene;
+
 }
 
 void AddPlaceCommand::undo ()
@@ -26,6 +27,7 @@ AddPlaceCommand::~AddPlaceCommand()
 {
     if(!graphicsscene)
         delete place;
+    //emit deletePlace();
 }
 //![0]
 
