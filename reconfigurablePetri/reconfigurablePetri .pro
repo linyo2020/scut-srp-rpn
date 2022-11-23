@@ -6,7 +6,7 @@
 
 QT       += core gui xml xmlpatterns concurrent
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = reconfigurablePetri
 TEMPLATE = app
@@ -25,62 +25,93 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    ODESolver/fparser.cc \
+    ODESolver/fpoptimizer.cc \
+    ODESolver/ODEsolver.cpp \
     arc.cpp \
     arcedgeselectionrectangle.cpp \
+    arceditdialog.cpp \
     command.cpp \
     component.cpp \
+    componentcontroller.cpp \
+    dockwidget.cpp \
+    editrulelibrary.cpp \
     graphedge.cpp \
     graphgenerator.cpp \
     graphicsedittab.cpp \
     graphnode.cpp \
     graphvisualizer.cpp \
-        main.cpp \
-        mainwindow.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    messagehandler.cpp \
+    petritabwidget.cpp \
     place.cpp \
     placeeditdialog.cpp \
     ptnet.cpp \
     ptnscene.cpp \
+    qcustomplot.cpp \
     sceneselectionrectangle.cpp \
+    simulation/calculate.cpp \
+    simulation/editlineproperty.cpp \
+    simulation/editmanyproperty.cpp \
+    simulation/editplotproperty.cpp \
+    simulation/plot.cpp \
+    simulation/savediffcsv.cpp \
+    simulation/tabular.cpp \
     tabwidget.cpp \
-    dockwidget.cpp \
     transition.cpp \
     transitioneditdialog.cpp \
     undostack.cpp \
-    arceditdialog.cpp \
-    petritabwidget.cpp \
-    xmlwriter.cpp \
     xmlparser.cpp \
-    messagehandler.cpp \
-    editrulelibrary.cpp
+    xmlwriter.cpp
+
 
 HEADERS += \
+    ODESolver/fparser.hh \
+    ODESolver/fparser_gmpint.hh \
+    ODESolver/fparser_mpfr.hh \
+    ODESolver/fpaux.hh \
+    ODESolver/fpconfig.hh \
+    ODESolver/ODEsolver.h \
+    ODESolver/fptypes.hh \
     arc.h \
     arcedgeselectionrectangle.h \
+    arceditdialog.h \
     command.h \
     component.h \
+    componentcontroller.h \
     defs.h \
+    dockwidget.h \
+    editrulelibrary.h \
     graphedge.h \
     graphgenerator.h \
     graphicsedittab.h \
     graphnode.h \
     graphvisualizer.h \
-        mainwindow.h \
+    mainwindow.h \
+    messagehandler.h \
+    petritabwidget.h \
     place.h \
     placeeditdialog.h \
     ptnet.h \
     ptnscene.h \
+    qcustomplot.h \
     sceneselectionrectangle.h \
+    simulation/calculate.h \
+    simulation/editlineproperty.h \
+    simulation/editmanyproperty.h \
+    simulation/editplotproperty.h \
+    simulation/plot.h \
+    simulation/savediffcsv.h \
+    simulation/tabular.h \
     tabwidget.h \
-    dockwidget.h \
     transition.h \
     transitioneditdialog.h \
     undostack.h \
-    arceditdialog.h \
-    petritabwidget.h \
-    xmlwriter.h \
     xmlparser.h \
-    messagehandler.h \
-    editrulelibrary.h
+    xmlwriter.h
+
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -91,4 +122,10 @@ RESOURCES += \
     resources.qrc
 
 FORMS += graphicsedittab.ui \
-    editrulelibrary.ui
+    editrulelibrary.ui \
+    simulation/editlineproperty.ui \
+    simulation/editmanyproperty.ui \
+    simulation/editplotproperty.ui \
+    simulation/plot.ui \
+    simulation/savediffcsv.ui \
+    simulation/tabular.ui

@@ -625,7 +625,7 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
     Arc* arc = qgraphicsitem_cast<Arc*>(item);
 //	/* set the SpinBox with the arc's current weight */
 //	//arcEditDialog->inputWeight->setText(QString::number(arc->getWeight(),'f',10));
-//	arcEditDialog->inputExpression->setText(arc->getExpression());
+    arcEditDialog->inputWeight->setText(QString("%1").arg(arc->getWeight()));
 //	//arcEditDialog->m_experssionEdit->setText(arc->f_getExperssion());
 //	//arcEditDialog->exec();
 //	//FL
@@ -694,15 +694,15 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
 
 
 //	/* update the arc's weight */
-//	if(arcEditDialog->result() == QDialog::Accepted)
+    if(arcEditDialog->result() == QDialog::Accepted)
 //		//arc->setWeight(arcEditDialog->inputWeight->text().toDouble());
-//	{
-//		arc->setExpression(arcEditDialog->inputExpression->text());
+    {
+        arc->setWeight(arcEditDialog->inputWeight->text().toDouble());
 //		//zyc
 //		arc->createRuleSet();
 //        if(arc->getFISStruct().m_sFISName.size())
 //            arc->setExpression(QString::fromStdString(arc->getFISStruct().m_sFISName));
-//	}
+    }
 //	//lf
 //	arcEditDialog->SetFISStruct(arc->GetFISStruct());
 //	//arc->f_setExperssion(arcEditDialog->m_experssionEdit->text());
