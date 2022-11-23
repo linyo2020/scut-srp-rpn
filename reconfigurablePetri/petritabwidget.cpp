@@ -216,16 +216,21 @@ PTNET_ATTR PetriTabWidget::toXml() const
         if(item->type() == Place::Type)
         {
             page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+            //控件——将画板上的库所加入到网类中
+            mynet->AddPlace(qgraphicsitem_cast<Place*>(item));
             continue;
         }
         if(item->type() == Transition::Type)
         {
             page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+            //控件——将画板上的变迁加入到网类中
+            mynet->AddTransition(qgraphicsitem_cast<Transition*>(item));
             continue;
         }
         if(item->type() == Arc::Type)
         {
             page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            mynet->AddArc(qgraphicsitem_cast<Arc*>(item));
             continue;
         }
     }

@@ -15,6 +15,11 @@ void PTNet::AddTransition(Transition *mytrans)
     this->TransitionList.push_back(mytrans);
 }
 
+void PTNet::AddArc(Arc *myarc)
+{
+    this->ArcList.push_back(myarc);
+}
+
 void PTNet::deletePlace(Place *myplace)
 {
     for(int i=0;i<PlaceList.size();i++)
