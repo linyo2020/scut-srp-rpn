@@ -31,6 +31,7 @@ class ArcEditDialog : public QDialog
  signals: /* */
  private:
     GraphicsEditTab *m_graphicsEditTab;
+    QLineEdit* inputWeight;
     QHBoxLayout * hlayout;
     QVBoxLayout * vlayout;
     QFormLayout * flayout;

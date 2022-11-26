@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "editrulelibrary.h"
+#include "simulation/plot.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -337,6 +338,223 @@ void MainWindow::buttonGroupClicked(int id)
 {
     //QTabWidget的currentWidget方法用于获取选项卡的当前显示页面的实例对象。
     PetriTabWidget* tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget ());
+
+    if(id == animationMode)
+    {
+        buttomDock->show();
+        if(!tab->checkNet())
+        {
+            tab->setMode (normalMode);
+                return;
+        }
+        else
+        {
+            tab->setMode (animationMode);
+
+            //清空原有数据和加载新数据
+            e_mInputVaraible2Value[tab->getId()].clear();
+            e_vFunDef[tab->getId()].clear();
+            PTNET_ATTR net=tab->toXml();
+            QList<ARC_ATTR>arcs=net.pages[0].arcs;
+            QList<TRANSITION_ATTR>transitionNodes=net.pages[0].transitionNodes;
+            QList<PLACE_ATTR>placeNodes=net.pages[0].placeNodes;
+            //for(int i=0;i<arcs.size();i++)
+            //{
+            //    qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
+            //}
+
+            //用l_mtemp记录弧和指向它的库所
+            map<QString,QString>l_mtemp;
+            for(int i=0;i<arcs.size();i++)
+            {
+                //qDebug()<<arcs.size();
+                QString l_stemp;
+                l_stemp.clear();
+                for(int j=0;j<placeNodes.size();j++)
+                {
+                    if(placeNodes[j].id==arcs[i].source)
+                    {
+                        l_stemp.append(placeNodes[j].name);
+                        //qDebug()<<placeNodes[j].name;
+                        break;
+                    }
+                }
+                l_mtemp[arcs[i].id]=l_stemp;
+            }
+            QVector<QString> samename;
+            int recordpos;
+            //对于每个PLACE
+            for(int i=0;i<placeNodes.size();i++)
+            {
+                int havesame=0;
+                for(int j=0;j<samename.size();j++)
+                {
+                    if(samename[j]==placeNodes[i].name)
+                    {
+                        havesame=1;
+                        break;
+                    }
+                }
+                e_mInputVaraible2Value[tab->getId()][placeNodes[i].name.toStdString()]=placeNodes[i].initmark;
+                FUNCTIONDEF l_FunDef;
+                if(havesame==0)
+                {
+                    //fisRecord fisR;
+                    l_FunDef.m_sDifferentialName=placeNodes[i].name.toStdString();
+                    l_FunDef.m_sFunctionExp="";
+                }
+                else
+                {
+                    for(unsigned j=0;j<e_vFunDef[tab->getId()].size();j++)
+                    {
+                        if(e_vFunDef[tab->getId()][j].m_sDifferentialName==placeNodes[i].name.toStdString())
+                        {
+                            l_FunDef=e_vFunDef[tab->getId()][j];
+                            recordpos=int(j);
+                            break;
+                        }
+                    }
+                }
+                //查找与PLACE相连的N条ARC
+                for(int j=0;j<arcs.size();j++)
+                {
+                    //PLACE为该ARC起点
+                    if(arcs[j].source==placeNodes[i].id)
+                    {
+                        //qDebug()<<placeNodes[i].name<<"is the source of"<<arcs[j].id;
+                        for(int k=0;k<transitionNodes.size();k++)
+                        {
+                            //找到该ARC的终点TRANSITION
+                            if(transitionNodes[k].id==arcs[j].target)
+                            {
+
+                                l_FunDef.m_sFunctionExp.append("-1*(");
+                                l_FunDef.m_sFunctionExp.append(QString::number(arcs[j].weight).toStdString());
+                                l_FunDef.m_sFunctionExp.append(")*(");
+                                if(transitionNodes[k].self_function.contains("MassAction"))
+                                    {
+                                        QString temp=(transitionNodes[k].self_function.split("MassAction"))[1];
+                                        for(int m=0;m<transitionNodes.size();m++)
+                                        {
+                                            if(transitionNodes[m].name==transitionNodes[k].name&&m!=k)
+                                            {
+                                                for(int p=0;p<arcs.size();p++)
+                                                {
+                                                    if(arcs[p].target==transitionNodes[m].id)
+                                                    {
+                                                        temp.append("*(");
+                                                        temp.append(l_mtemp[arcs[p].id]);
+                                                        temp.append(")");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        for(int m=0;m<arcs.size();m++)
+                                        {
+                                            //temp.append("*");
+                                            if(arcs[m].target==transitionNodes[k].id)
+                                            {
+                                                temp.append("*(");
+                                                temp.append(l_mtemp[arcs[m].id]);
+                                                temp.append(")");
+                                            }
+                                        }
+                                        l_FunDef.m_sFunctionExp.append(temp.toStdString());
+                                    }
+                                else
+                                    {
+                                        l_FunDef.m_sFunctionExp.append(transitionNodes[k].self_function.toStdString());
+                                    }
+                                l_FunDef.m_sFunctionExp.append(")");
+                                break;
+                            }
+                        }
+                    }
+                    else if(arcs[j].target==placeNodes[i].id)//PLACE为该ARC终点
+                    {
+                        //qDebug()<<placeNodes[i].name<<"is the target of"<<arcs[j].id;
+                        for(int k=0;k<transitionNodes.size();k++)
+                        {
+                            if(transitionNodes[k].id==arcs[j].source)//找到该ARC的起点TRANSITION
+                            {
+                                {
+                                    if(l_FunDef.m_sFunctionExp=="")
+                                        l_FunDef.m_sFunctionExp.append("1*(");
+                                    else
+                                        l_FunDef.m_sFunctionExp.append("+1*(");
+                                    l_FunDef.m_sFunctionExp.append(QString::number(arcs[j].weight).toStdString());
+                                    l_FunDef.m_sFunctionExp.append(")*(");
+                                    if(transitionNodes[k].self_function.contains("MassAction"))
+                                    {
+                                        QString temp=(transitionNodes[k].self_function.split("MassAction"))[1];
+                                        for(int m=0;m<transitionNodes.size();m++)
+                                        {
+                                            if(transitionNodes[m].name==transitionNodes[k].name&&m!=k)
+                                            {
+                                                for(int p=0;p<arcs.size();p++)
+                                                {
+                                                    //temp.append("*");
+                                                    if(arcs[p].target==transitionNodes[m].id)
+                                                    {
+                                                        temp.append("*(");
+                                                        temp.append(l_mtemp[arcs[p].id]);
+                                                        temp.append(")");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        for(int m=0;m<arcs.size();m++)
+                                        {
+                                            //temp.append("*");
+                                            if(arcs[m].target==transitionNodes[k].id)
+                                            {
+                                                temp.append("*(");
+                                                temp.append(l_mtemp[arcs[m].id]);
+                                                temp.append(")");
+                                            }
+                                        }
+                                        l_FunDef.m_sFunctionExp.append(temp.toStdString());
+                                    }
+                                    else
+                                    {
+                                        l_FunDef.m_sFunctionExp.append(transitionNodes[k].self_function.toStdString());
+                                    }
+                                    l_FunDef.m_sFunctionExp.append(")");
+                                }
+                            }
+                        }
+                    }
+                }
+                if(l_FunDef.m_sFunctionExp=="")
+                    l_FunDef.m_sFunctionExp="0";
+                if(havesame==0)
+                {
+                    e_vFunDef[tab->getId()].push_back(l_FunDef);
+                    samename.push_back(placeNodes[i].name);
+                }
+                else
+                {
+                    e_vFunDef[tab->getId()][recordpos]=l_FunDef;
+                }
+            }
+            Plot* view = new Plot();
+            view->setPlotId(tab->getId());
+            /*
+            QString e = tab->getId();
+            QFile file("./used_to_record_the_id.txt");
+            if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                file.write(e.toUtf8());
+                file.close();
+            }
+            else
+            {
+                QMessageBox::information(this,QString("Error!"),QString("Unable to write the file."));
+            }*/
+            view->show();
+         }
+    }
+
     tab->setMode (id);
     updateWidgets (id);
 }

@@ -35,10 +35,12 @@ typedef struct{
 typedef struct{
      QString id, name;
      /* coordinate */
-     int x, y;
+     int x;
+     int y;
      int rotation;
      /* label coordinate */
-     int offsetx, offsety;
+     int offsetx;
+     int offsety;
      QString self_function;
      //QString MassAction;
      QString comment;
@@ -48,8 +50,11 @@ typedef struct{
    } TRANSITION_ATTR;
 
 typedef struct{
-     QString id, source, target;
+     QString id;
+     QString source;
+     QString target;
      double weight;
+
      QList<QPointF> points;
      QColor brushColor;
      QColor penColor;
@@ -57,14 +62,16 @@ typedef struct{
 
 
 typedef struct{
-     QString id, name;
+     QString id;
+     QString name;
      QList <PLACE_ATTR> placeNodes;
      QList <TRANSITION_ATTR> transitionNodes;
      QList <ARC_ATTR> arcs;
    } PAGE_ATTR;
 
 typedef struct{
-     QString id, name;
+     QString id;
+     QString name;
      QList <PAGE_ATTR> pages;
    } PTNET_ATTR;
 
@@ -74,8 +81,10 @@ typedef struct{
     QMap<QString, QString> postSet;
   } TRANS_RELATION;
 
-typedef struct{
-    int red,green,blue;
+typedef struct{   
+    int red;
+    int green;
+    int blue;
 } COLOR;
 
 #endif

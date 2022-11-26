@@ -41,7 +41,7 @@ signals:
 
     void nodeInserted(const QPointF &itemPos, const QString &id);
     void arcInserted(QGraphicsItem * source, QGraphicsItem * target,
-    const QPainterPath &arc_path, const QString &id, PTNscene * scene,int w=1,QString e="1");
+    const QPainterPath &arc_path, const QString &id, PTNscene * scene,double w=1.0);
     void itemMoved (QGraphicsItem * movedItem, const QPointF &oldPosition);
     void nodeRemoved (QGraphicsItem * item, PTNscene * scene);
     void arcRemoved (QGraphicsItem * item, PTNscene * scene);

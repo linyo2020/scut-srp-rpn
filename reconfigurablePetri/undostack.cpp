@@ -1,11 +1,16 @@
 #include "undostack.h"
 
 UndoStack::UndoStack(QObject * parent):QUndoStack(parent){}
+
+UndoStack::UndoStack(PTNet *net,QObject *parent):QUndoStack(parent)
+{
+    this->mynet=net;
+}
 UndoStack::~UndoStack(){}
 
 void UndoStack::arcInserted(QGraphicsItem * item1, QGraphicsItem * item2,
                          const QPainterPath &arc_path,
-                  const QString &id, PTNscene * scene, int ArcWeight)
+                  const QString &id, PTNscene * scene, double ArcWeight)
 {
     push(new AddArcCommand(item1, item2, arc_path, id, scene, ArcWeight));
 }

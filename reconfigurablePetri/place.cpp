@@ -41,6 +41,13 @@ Place::Place(const PLACE_ATTR &place)
     if(show)setLabel_2();
 }
 
+Place::Place(const QString &id, const QPointF &position)
+{
+    this->id=id;
+    //might have bug
+    label->setPos(position.x(),position.y());
+}
+
 bool Place::getShow()
 {
     return show;

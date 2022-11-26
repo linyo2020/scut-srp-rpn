@@ -13,6 +13,8 @@ class Place : public QGraphicsEllipseItem
 
     explicit Place(const QString &id);
     Place(const PLACE_ATTR &place);
+    //用于控件计算的place
+    Place(const QString &id,const QPointF &position);
     ~Place ();
 
     void createPlace();

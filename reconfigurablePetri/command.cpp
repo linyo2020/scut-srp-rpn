@@ -7,6 +7,7 @@ AddPlaceCommand::AddPlaceCommand(const QPointF &itemPos,
     place = new Place(id);
     position = itemPos;
     graphicsscene = scene;
+
 }
 
 void AddPlaceCommand::undo ()
@@ -26,6 +27,7 @@ AddPlaceCommand::~AddPlaceCommand()
 {
     if(!graphicsscene)
         delete place;
+    //emit deletePlace();
 }
 //![0]
 
@@ -61,7 +63,7 @@ AddTransitionCommand::~AddTransitionCommand()
 //![2]
 AddArcCommand::AddArcCommand(QGraphicsItem * item1, QGraphicsItem * item2,
                            const QPainterPath &arc_path,
-                   const QString &id, PTNscene * scene, int ArcWeight)
+                   const QString &id, PTNscene * scene, double ArcWeight)
 {
     sourceItem = item1;
     targetItem = item2;
