@@ -44,6 +44,7 @@ public:
     void openComponent ();
     void about();
     void openRuleLibrary();
+    void setComponentTreeNode(QString componentName);
 
 
 private:
@@ -120,6 +121,7 @@ private:
 
     //可拖拉界面的部件
     DockWidget * buttomDock;
+    componentController *component_controller;
 
     //用于缩放的滑动条
     QSlider  * slider;

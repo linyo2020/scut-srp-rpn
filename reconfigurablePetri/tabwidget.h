@@ -7,6 +7,7 @@
 #include <QXmlSchemaValidator>
 #include <QTextStream>
 
+
 #include "xmlparser.h"
 #include "xmlwriter.h"
 #include "messagehandler.h"
@@ -45,7 +46,11 @@ public:
     //保存组件
     void saveComponent ();
     void saveAsComponent ();
+
+    //获取组件名
+    QStringList getFileNames ();
 signals:
+    void addComponentTreeNode (QString componentName);
     void canRedoChange (bool canRedo);
     void canUndoChange (bool canUndo);
     void tabChanged (int index);

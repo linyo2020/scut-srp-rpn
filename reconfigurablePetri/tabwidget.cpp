@@ -97,8 +97,8 @@ void TabWidget::saveComponent()
       QFile file(filename);
 
       if(!file.open(QIODevice::WriteOnly))
-          QMessageBox::critical(this, "Open File Error", \
-        "The file could not be opened.");
+          QMessageBox::critical(this, "Open Component Error", \
+        "The Component could not be opened.");
 
       XmlWriter writer(tab->componentToXml());
       writer.writeXML(&file);
@@ -111,7 +111,7 @@ void TabWidget::saveAsComponent()
     int index = currentIndex();
 
     QString filename = QFileDialog::getSaveFileName(this,
-                          tr("Save As PNML Document"),
+                          tr("Save As Component.PNML Document"),
                                 QDir::currentPath(),
                           tr("Petri Net Files (*.pnml)"));
 
@@ -146,6 +146,10 @@ void TabWidget::saveAsComponent()
     if(!fileNames.contains(filename))
          fileNames << filename;
 }
+ QStringList TabWidget::getFileNames ()
+ {
+     return fileNames;
+ }
 void TabWidget::undo()
 {
     qobject_cast<PetriTabWidget*>(currentWidget ())->undo ();
@@ -243,19 +247,19 @@ bool TabWidget::open (MessageHandler &messageHandler)
 }
 bool TabWidget::openComponent(MessageHandler &messageHandler)
 {
-    //![0] get file name
-    QString filename = QFileDialog::getOpenFileName(this,
+    //![0] get Component name
+    QString componentName = QFileDialog::getOpenFileName(this,
         tr("Open PNML Document"), QDir::currentPath(),
               tr("Petri Net Files (*.pnml)"));
 
-    if(filename.isNull())
+    if(componentName.isNull())
         return false;
 
     //![1]
-    fileNames << filename;
-    QFile file(filename);
-    QFileInfo fi(file);
 
+    QFile file(componentName);
+    QFileInfo fi(file);
+    emit addComponentTreeNode(fi.baseName());
     //![2] validate xml file
     if(!validateXml(file, messageHandler))
     {
@@ -277,7 +281,7 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
     //![4] ok :)
     PTNET_ATTR net = parser.getXML_net ();
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
-    tab->setComponent(net, filename);
+    tab->setComponent(net, componentName);
 
     return true;
 }

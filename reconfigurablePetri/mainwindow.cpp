@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
       createStatusBar ();
       createComponentDock();
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
-
+      connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
 }
 
 /*
@@ -300,6 +300,7 @@ void MainWindow::createComponentDock()
     deleteComponent=new QToolButton();
     addComponent=new QToolButton();
     componentTree=new QTreeWidget();
+
     newComponent->setText(tr("新建"));
     connect(newComponent,&QToolButton::clicked,tabWidget,&TabWidget::saveComponent);
     newComponent->setToolTip(tr("Add a component <span style=\"color:gray;\">Ctrl+O</span>"));
@@ -315,10 +316,8 @@ void MainWindow::createComponentDock()
     componentBar->addWidget(addComponent);
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
-    componentController *component_controller=new componentController();
+    component_controller=new componentController();
     component_controller->componentTreeInitial(componentTree);
-    component_controller->addComponentTreeNode(componentTree,"A","cell1");
-    component_controller->addComponentTreeNode(componentTree,"B","cell1");
     componentTree->expandAll();
     QVBoxLayout* VerticalLayout=new QVBoxLayout(componentDock);
     VerticalLayout->addWidget(componentBar);
@@ -327,9 +326,6 @@ void MainWindow::createComponentDock()
     mywid1->setLayout(VerticalLayout);
     componentDock->setWidget(mywid1);
     componentDock->show ();
-
-
-
 }
 /*
  * 点击按钮组触发的槽函数
@@ -418,7 +414,10 @@ void MainWindow::openRuleLibrary()
     editRuleLibrary* editRuleDialog=new editRuleLibrary(this);
     editRuleDialog->show();
 }
-
+void MainWindow::setComponentTreeNode(QString componentName)
+{
+    component_controller->addComponentTreeNode(componentTree,"A",componentName);
+}
 
 MainWindow::~MainWindow()
 {

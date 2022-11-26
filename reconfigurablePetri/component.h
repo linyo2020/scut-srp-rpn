@@ -5,7 +5,6 @@
 //this class defines a base unit of component library
 #include"defs.h"
 #include"ptnet.h"
-
 class Component
 {
 public:
