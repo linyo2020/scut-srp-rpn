@@ -363,7 +363,7 @@ void MainWindow::buttonGroupClicked(int id)
             //    qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
             //}
 
-            //用l_mtemp记录弧和指向它的库所
+            //用l_mtemp记录弧和指向它的库所(源)
             map<QString,QString>l_mtemp;
             for(int i=0;i<arcs.size();i++)
             {
@@ -379,6 +379,8 @@ void MainWindow::buttonGroupClicked(int id)
                         break;
                     }
                 }
+                //记录ode中前置库所对应的指数
+                l_stemp.append("^("+QString::number(arcs[i].weight)+")");
                 l_mtemp[arcs[i].id]=l_stemp;
             }
             QVector<QString> samename;
@@ -387,6 +389,7 @@ void MainWindow::buttonGroupClicked(int id)
             for(int i=0;i<placeNodes.size();i++)
             {
                 int havesame=0;
+                //没搞懂samename
                 for(int j=0;j<samename.size();j++)
                 {
                     if(samename[j]==placeNodes[i].name)
@@ -399,7 +402,6 @@ void MainWindow::buttonGroupClicked(int id)
                 FUNCTIONDEF l_FunDef;
                 if(havesame==0)
                 {
-                    //fisRecord fisR;
                     l_FunDef.m_sDifferentialName=placeNodes[i].name.toStdString();
                     l_FunDef.m_sFunctionExp="";
                 }
