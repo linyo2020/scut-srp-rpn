@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QAction>
+#include <QPoint>
 #include <QMenuBar>
 #include <QToolBar>
 #include <QToolButton>
@@ -19,6 +20,7 @@
 #include "tabwidget.h"
 #include "dockwidget.h"
 #include "componentcontroller.h"
+#include "editcomponent.h"
 
 //enum{normalMode=0, animationMode=1, addPlaceMode=2, \
 //            addTransMode=3,drawArcMode=4, addToken=5, subToken=6};
@@ -45,7 +47,9 @@ public:
     void about();
     void openRuleLibrary();
     void setComponentTreeNode(QString componentName);
-
+    void deleteComponentTreeNode(QTreeWidget* tree);
+    void openEditComponent();
+    void componentPopMenu();
 
 private:
 
@@ -83,13 +87,15 @@ private:
     QAction* openRuleLibraryAction;
 
     //组件操作库
+    QMenu * componentEditMenu;
+    QAction * editComponentAction;
     QDockWidget* componentDock;
     QToolButton* newComponent;
     QToolButton* addComponent;
     QToolButton* deleteComponent;
     QToolBar* componentBar;
     QTreeWidget* componentTree;
-    QTreeWidget* componentSubTree;
+
 
     //状态栏
     QStatusBar * statusBar;
@@ -132,6 +138,7 @@ private:
     void createStatusBar ();
     void createDocks ();
     void createComponentDock();
+
 
 };
 

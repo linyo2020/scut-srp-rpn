@@ -9,7 +9,7 @@ public:
     componentController();
     void componentTreeInitial(QTreeWidget *newTree);
     void addComponentTreeNode(QTreeWidget *newTree,QString component_type,QString component_name);
-    void deleteComponentTreeNode();
+    void removeComponentTreeNode(QTreeWidgetItem *item);
 
     QList<QTreeWidgetItem *> TreeWiditems;
 private slots:

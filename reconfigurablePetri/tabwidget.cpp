@@ -245,6 +245,7 @@ bool TabWidget::open (MessageHandler &messageHandler)
 
     return true;
 }
+
 bool TabWidget::openComponent(MessageHandler &messageHandler)
 {
     //![0] get Component name

@@ -239,6 +239,7 @@ void MainWindow::createMenuBar()
      openComponentAction = componentMenu->addAction(tr("&Open Component"));
      openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
          connect(openComponentAction,&QAction::triggered,this,[=](){this->openComponent();});
+
      //规则库菜单
      ruleMenu=m_Bar->addMenu(tr("&Rule"));
      openRuleLibraryAction=ruleMenu->addAction(tr("&Open Rule Library"));
@@ -307,6 +308,7 @@ void MainWindow::createComponentDock()
     newComponent->setToolTip(tr("Add a component <span style=\"color:gray;\">Ctrl+O</span>"));
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    connect(deleteComponent,&QToolButton::clicked,this,[=](){this->deleteComponentTreeNode(componentTree);});
     addComponent->setText(tr("添加"));
     addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
@@ -320,13 +322,22 @@ void MainWindow::createComponentDock()
     component_controller=new componentController();
     component_controller->componentTreeInitial(componentTree);
     componentTree->expandAll();
+    componentEditMenu=new QMenu();
+    editComponentAction=componentEditMenu->addAction(tr("编辑"));
     QVBoxLayout* VerticalLayout=new QVBoxLayout(componentDock);
+    QWidget *mywid1 = new QWidget();
     VerticalLayout->addWidget(componentBar);
     VerticalLayout->addWidget(componentTree);
-    QWidget *mywid1 = new QWidget();
     mywid1->setLayout(VerticalLayout);
+    connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
+    connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
     componentDock->setWidget(mywid1);
     componentDock->show ();
+
+}
+void MainWindow::componentPopMenu()
+{
+    componentEditMenu->exec(QCursor::pos());
 }
 /*
  * 点击按钮组触发的槽函数
@@ -363,7 +374,7 @@ void MainWindow::buttonGroupClicked(int id)
             //    qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
             //}
 
-            //用l_mtemp记录弧和指向它的库所(源)
+            //用l_mtemp记录弧和指向它的库所（源）
             map<QString,QString>l_mtemp;
             for(int i=0;i<arcs.size();i++)
             {
@@ -379,8 +390,6 @@ void MainWindow::buttonGroupClicked(int id)
                         break;
                     }
                 }
-                //记录ode中前置库所对应的指数
-                l_stemp.append("^("+QString::number(arcs[i].weight)+")");
                 l_mtemp[arcs[i].id]=l_stemp;
             }
             QVector<QString> samename;
@@ -389,7 +398,6 @@ void MainWindow::buttonGroupClicked(int id)
             for(int i=0;i<placeNodes.size();i++)
             {
                 int havesame=0;
-                //没搞懂samename
                 for(int j=0;j<samename.size();j++)
                 {
                     if(samename[j]==placeNodes[i].name)
@@ -402,6 +410,7 @@ void MainWindow::buttonGroupClicked(int id)
                 FUNCTIONDEF l_FunDef;
                 if(havesame==0)
                 {
+                    //fisRecord fisR;
                     l_FunDef.m_sDifferentialName=placeNodes[i].name.toStdString();
                     l_FunDef.m_sFunctionExp="";
                 }
@@ -638,7 +647,19 @@ void MainWindow::setComponentTreeNode(QString componentName)
 {
     component_controller->addComponentTreeNode(componentTree,"A",componentName);
 }
-
+//删除当前组件库浮动窗口上的组件
+void MainWindow::deleteComponentTreeNode(QTreeWidget* tree)
+{
+    QTreeWidgetItem * currentItem = tree->currentItem();//获取当前节点
+    component_controller->removeComponentTreeNode(currentItem);
+}
+//点击当前组件浮动窗口上的组件弹出编辑窗口，暂时只有修改组件类型和组件名操作，并且未与文件操作联通
+//后期可在编辑界面加入多个merge和delete操作
+void MainWindow::openEditComponent()
+{
+    editComponent* editComponentDialog=new editComponent(this);
+    editComponentDialog->show();
+}
 MainWindow::~MainWindow()
 {
     delete newToolButton;
@@ -666,4 +687,5 @@ MainWindow::~MainWindow()
     delete addComponent;
     delete deleteComponent;
     delete componentBar;
+
 }
