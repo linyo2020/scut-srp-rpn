@@ -90,6 +90,8 @@ void PTNscene::removeItems()
     if(selectedItems().isEmpty())
         return;
 
+
+
     foreach(QGraphicsItem * item, selectedItems())
        if(item->type() == QGraphicsSimpleTextItem::Type
             || item->type() == ArcEdgeSelectionRectangle::Type)
@@ -365,6 +367,7 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         addXML_arcs (page.arcs);
     }
 }
+
 
 void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
 {

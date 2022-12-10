@@ -76,6 +76,24 @@ typedef struct{
    } PTNET_ATTR;
 
 typedef struct{
+    QString id;
+    QString name;
+    QString type;
+    QList <PLACE_ATTR> placeNodes;
+    QList <TRANSITION_ATTR> transitionNodes;
+    QList <ARC_ATTR> arcs;
+    QList<QString>in;//连入该组件的所有组件id
+    QList<QString>out;//该组件连出的所有组件id
+} COMPONENT_ATTR;
+
+typedef struct{
+    QString id;
+    QString name;
+    QList<COMPONENT_ATTR>component_net;
+} COMPONENTNET_ATTR;
+
+
+typedef struct{
     QString name;
     QMap<QString, QString> preSet;
     QMap<QString, QString> postSet;

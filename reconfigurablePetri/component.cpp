@@ -1,8 +1,33 @@
 #include "component.h"
-
+#include"QDebug"
 Component::Component()
 {
+    this->mynet=new PTNet();
 
+}
+
+Component::Component(PTNET_ATTR &PTnet)
+{
+    if(PTnet.id[0].isLetter())
+    {
+        this->Component_type=PTnet.id[0];
+        QDateTime time=QDateTime::currentDateTime ();
+        this->Component_id=Component_type+time.toString("yy:MM:dd:hh:mm:ss");
+
+    }
+    else
+    {
+        qDebug()<<"the first letter of id is not letter, but still use construction fuction of Component";
+    }
+
+}
+
+Component::Component(QString type, QString label)
+{
+    this->Component_type=type;
+    this->label=label;
+     QDateTime time=QDateTime::currentDateTime ();
+    this->Component_id=Component_type+time.toString("yy:MM:dd:hh:mm:ss");
 }
 
 QString Component::getLabel() const
@@ -15,6 +40,11 @@ void Component::setLabel(const QString &value)
     label = value;
 }
 
+QString Component::getComponent_id()
+{
+    return this->Component_id;
+}
+
 Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet_port)
 {
     int mynet_inputport;
@@ -22,13 +52,13 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
     int otherNet_inputport;
     int otherNet_outputport;
 
-    for(int i=0;i<mynet.PlaceList.size();i++)
+    for(int i=0;i<mynet->PlaceList.size();i++)
     {
-        if(mynet.PlaceList[i]->isInputPort())
+        if(mynet->PlaceList[i]->isInputPort())
         {
             mynet_inputport=i;
         }
-        else if(mynet.PlaceList[i]->isOutputPort())
+        else if(mynet->PlaceList[i]->isOutputPort())
         {
             mynet_outputport=i;
         }
@@ -61,13 +91,13 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
                 //outputoprt connect inputport
 
-               Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_outputport],this->mynet.PlaceList[mynet_outputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
+               Arc *my_arc1=new Arc(this->mynet->PlaceList[mynet_outputport],this->mynet->PlaceList[mynet_outputport]->getId(),trans,trans->getId(),this->mynet->PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
 
                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_inputport],otherNet.PlaceList[otherNet_inputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_inputport]->getId(),1);
 
                trans->addInputArc(my_arc1);
                trans->addOutputArc(my_arc2);
-               this->mynet.PlaceList[mynet_outputport]->addOutputArc(my_arc1);
+               this->mynet->PlaceList[mynet_outputport]->addOutputArc(my_arc1);
                otherNet.PlaceList[otherNet_inputport]->addInputArc(my_arc2);
 
             }
@@ -75,13 +105,13 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
 
 
-                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_outputport],this->mynet.PlaceList[mynet_outputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
+                Arc *my_arc1=new Arc(this->mynet->PlaceList[mynet_outputport],this->mynet->PlaceList[mynet_outputport]->getId(),trans,trans->getId(),this->mynet->PlaceList[mynet_outputport]->getId()+"_"+trans->getId(),1);
 
                 Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
 
                 trans->addInputArc(my_arc1);
                 trans->addOutputArc(my_arc2);
-                this->mynet.PlaceList[mynet_outputport]->addOutputArc(my_arc1);
+                this->mynet->PlaceList[mynet_outputport]->addOutputArc(my_arc1);
                 otherNet.PlaceList[otherNet_outputport]->addInputArc(my_arc2);
 
             }
@@ -94,13 +124,13 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
                 //outputoprt connect inputport
 
-               Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_inputport],this->mynet.PlaceList[mynet_inputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
+               Arc *my_arc1=new Arc(this->mynet->PlaceList[mynet_inputport],this->mynet->PlaceList[mynet_inputport]->getId(),trans,trans->getId(),this->mynet->PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
 
                Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_inputport],otherNet.PlaceList[otherNet_inputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_inputport]->getId(),1);
 
                trans->addInputArc(my_arc1);
                trans->addOutputArc(my_arc2);
-               this->mynet.PlaceList[mynet_inputport]->addOutputArc(my_arc1);
+               this->mynet->PlaceList[mynet_inputport]->addOutputArc(my_arc1);
                otherNet.PlaceList[otherNet_inputport]->addInputArc(my_arc2);
 
             }
@@ -108,13 +138,13 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
             {
 
 
-                Arc *my_arc1=new Arc(this->mynet.PlaceList[mynet_inputport],this->mynet.PlaceList[mynet_inputport]->getId(),trans,trans->getId(),this->mynet.PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
+                Arc *my_arc1=new Arc(this->mynet->PlaceList[mynet_inputport],this->mynet->PlaceList[mynet_inputport]->getId(),trans,trans->getId(),this->mynet->PlaceList[mynet_inputport]->getId()+"_"+trans->getId(),1);
 
                 Arc *my_arc2=new Arc(trans,trans->getId(),otherNet.PlaceList[otherNet_outputport],otherNet.PlaceList[otherNet_outputport]->getId(),trans->getId()+"_"+otherNet.PlaceList[otherNet_outputport]->getId(),1);
 
                 trans->addInputArc(my_arc1);
                 trans->addOutputArc(my_arc2);
-                this->mynet.PlaceList[mynet_inputport]->addOutputArc(my_arc1);
+                this->mynet->PlaceList[mynet_inputport]->addOutputArc(my_arc1);
                 otherNet.PlaceList[otherNet_outputport]->addInputArc(my_arc2);
 
             }
@@ -123,12 +153,12 @@ Component Component::merge(PTNet otherNet, QString thisNet_port,QString otherNet
 }
 
 
-int Component::getComponent_type() const
+QString Component::getComponent_type() const
 {
     return Component_type;
 }
 
-void Component::setComponent_type(int value)
+void Component::setComponent_type(QString value)
 {
     Component_type = value;
 }
