@@ -36,6 +36,7 @@ SOURCES += \
     componentcontroller.cpp \
     dockwidget.cpp \
     editrulelibrary.cpp \
+    editComponent.cpp \
     graphedge.cpp \
     graphgenerator.cpp \
     graphicsedittab.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     defs.h \
     dockwidget.h \
     editrulelibrary.h \
+    editComponent.h \
     graphedge.h \
     graphgenerator.h \
     graphicsedittab.h \
@@ -122,6 +124,7 @@ RESOURCES += \
 
 FORMS += graphicsedittab.ui \
     editrulelibrary.ui \
+    editcomponent.ui \
     simulation/editlineproperty.ui \
     simulation/editmanyproperty.ui \
     simulation/editplotproperty.ui \
