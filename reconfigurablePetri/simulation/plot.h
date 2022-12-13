@@ -25,13 +25,14 @@
 #include"savediffcsv.h"
 #include<QFont>
 
+/**名字和vector的映射*/
 extern map<QString,QVector<QString>> namevector;
+/** */
 extern map<QString,QVector<QVector<double>>> datavv;
+/**页id映射页内库所对应的ode方程集合*/
 extern map<QString,vector<FUNCTIONDEF>> e_vFunDef;
+/**页id映射（库所名字映射初始token值）*/
 extern map<QString,map<string,double>> e_mInputVaraible2Value;
-//extern QVector<QColor> colorv;
-//extern QVector<int> lineType;
-//extern QVector<int> lineWidth;
 
 extern int currentGraphNum;
 extern QColor currentColor;

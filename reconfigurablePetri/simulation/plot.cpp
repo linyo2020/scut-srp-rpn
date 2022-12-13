@@ -178,12 +178,14 @@ void Plot::startSimulation()
     double l_start=ui->lineEdit->text().toDouble();
     double l_end=ui->lineEdit_2->text().toDouble();
     double dh=ui->lineEdit_5->text().toDouble();
+    //判断步长是否合理
     if(dh==0)
     {
         QMessageBox::about(this,tr("Error"),tr("Please change the step size!"));
         return;
     }
-    g_run = 1;  //启动子线程
+    //启动子线程
+    g_run = 1;
     Calculate *p = new Calculate(this);
     p->start();
     bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked);

@@ -17,8 +17,14 @@ public:
      */
     Calculate(Plot *gui);
     ~Calculate();
+
     /**
      * @brief run
+     * @param PlotId
+     * @param l_start 开始时间
+     * @param l_end   截止时间
+     * @param dh      步长
+     * @param state
      * @return
      */
     bool run(QString,double,double,double,bool);

@@ -27,7 +27,7 @@ bool ODEsolver::parser()
         FunctionParser fparser1;
         std::vector<std::string> vReturnVars;
         std::string sss = m_vFunDef[i].m_sFunctionExp;
-               qDebug()<<QString::fromStdString(m_vFunDef[i].m_sFunctionExp)<<" is the function expression ";
+        qDebug()<<QString::fromStdString(m_vFunDef[i].m_sFunctionExp)<<" is the function expression of ";
         int res = fparser1.ParseAndDeduceVariables(sss, vReturnVars);
         if(res >= 0)
         {

@@ -362,25 +362,27 @@ void MainWindow::buttonGroupClicked(int id)
         {
             tab->setMode (animationMode);
 
-            //清空原有数据和加载新数据
+            //清空原页面数据
             e_mInputVaraible2Value[tab->getId()].clear();
             e_vFunDef[tab->getId()].clear();
+            //加载当前页面数据
             PTNET_ATTR net=tab->toXml();
             QList<ARC_ATTR>arcs=net.pages[0].arcs;
             QList<TRANSITION_ATTR>transitionNodes=net.pages[0].transitionNodes;
             QList<PLACE_ATTR>placeNodes=net.pages[0].placeNodes;
-            //for(int i=0;i<arcs.size();i++)
-            //{
-            //    qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
-            //}
+            /*
+            *输出每条边的来源和去向
+            for(int i=0;i<arcs.size();i++)
+            {
+                qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
+            }*/
 
-            //用l_mtemp记录弧和指向它的库所（源）
+            //用l_mtemp记录弧和其来源(包含权重信息，完整为(来源库所名字+"^"+权重))
             map<QString,QString>l_mtemp;
             for(int i=0;i<arcs.size();i++)
             {
                 //qDebug()<<arcs.size();
                 QString l_stemp;
-                l_stemp.clear();
                 for(int j=0;j<placeNodes.size();j++)
                 {
                     if(placeNodes[j].id==arcs[i].source)
@@ -390,6 +392,9 @@ void MainWindow::buttonGroupClicked(int id)
                         break;
                     }
                 }
+                //记录ode中前置库所对应的指数
+                l_stemp.append("^("+QString::number(arcs[i].weight)+")");
+                //保存反应物和系数
                 l_mtemp[arcs[i].id]=l_stemp;
             }
             QVector<QString> samename;
@@ -398,6 +403,8 @@ void MainWindow::buttonGroupClicked(int id)
             for(int i=0;i<placeNodes.size();i++)
             {
                 int havesame=0;
+                //qDebug()<<"the size of samename is "<<samename.size();
+                //检测库所名字是否重复
                 for(int j=0;j<samename.size();j++)
                 {
                     if(samename[j]==placeNodes[i].name)
@@ -410,7 +417,6 @@ void MainWindow::buttonGroupClicked(int id)
                 FUNCTIONDEF l_FunDef;
                 if(havesame==0)
                 {
-                    //fisRecord fisR;
                     l_FunDef.m_sDifferentialName=placeNodes[i].name.toStdString();
                     l_FunDef.m_sFunctionExp="";
                 }
@@ -438,19 +444,23 @@ void MainWindow::buttonGroupClicked(int id)
                             //找到该ARC的终点TRANSITION
                             if(transitionNodes[k].id==arcs[j].target)
                             {
-
+                                //向函数表达式中增加负项因子
                                 l_FunDef.m_sFunctionExp.append("-1*(");
                                 l_FunDef.m_sFunctionExp.append(QString::number(arcs[j].weight).toStdString());
                                 l_FunDef.m_sFunctionExp.append(")*(");
+                                //如果变迁（反应）速率符合质量作用定律
                                 if(transitionNodes[k].self_function.contains("MassAction"))
                                     {
                                         QString temp=(transitionNodes[k].self_function.split("MassAction"))[1];
                                         for(int m=0;m<transitionNodes.size();m++)
                                         {
+                                            //？？？同名变迁同步
                                             if(transitionNodes[m].name==transitionNodes[k].name&&m!=k)
                                             {
+                                                //通过寻找前置弧来寻找该反应（变迁）对应的反应物（消耗的库所）
                                                 for(int p=0;p<arcs.size();p++)
                                                 {
+                                                    //找到反应物后继续补充反应速率因子
                                                     if(arcs[p].target==transitionNodes[m].id)
                                                     {
                                                         temp.append("*(");
@@ -460,9 +470,10 @@ void MainWindow::buttonGroupClicked(int id)
                                                 }
                                             }
                                         }
+                                        //通过寻找前置弧来寻找该反应（变迁）对应的反应物（消耗的库所）
                                         for(int m=0;m<arcs.size();m++)
                                         {
-                                            //temp.append("*");
+                                            //找到反应物后继续补充反应速率因子
                                             if(arcs[m].target==transitionNodes[k].id)
                                             {
                                                 temp.append("*(");
@@ -472,6 +483,7 @@ void MainWindow::buttonGroupClicked(int id)
                                         }
                                         l_FunDef.m_sFunctionExp.append(temp.toStdString());
                                     }
+                                //否则反应速率为参数*反应物名字（其余为非法结构）
                                 else
                                     {
                                         l_FunDef.m_sFunctionExp.append(transitionNodes[k].self_function.toStdString());
@@ -481,16 +493,20 @@ void MainWindow::buttonGroupClicked(int id)
                             }
                         }
                     }
-                    else if(arcs[j].target==placeNodes[i].id)//PLACE为该ARC终点
+                    //PLACE为该ARC终点
+                    else if(arcs[j].target==placeNodes[i].id)
                     {
                         //qDebug()<<placeNodes[i].name<<"is the target of"<<arcs[j].id;
                         for(int k=0;k<transitionNodes.size();k++)
                         {
-                            if(transitionNodes[k].id==arcs[j].source)//找到该ARC的起点TRANSITION
+                            //找到该ARC的起点TRANSITION
+                            if(transitionNodes[k].id==arcs[j].source)
                             {
                                 {
+                                    //如果该库所只作为生成物
                                     if(l_FunDef.m_sFunctionExp=="")
                                         l_FunDef.m_sFunctionExp.append("1*(");
+                                    //如果该库所为反应物和生成物
                                     else
                                         l_FunDef.m_sFunctionExp.append("+1*(");
                                     l_FunDef.m_sFunctionExp.append(QString::number(arcs[j].weight).toStdString());
@@ -504,7 +520,6 @@ void MainWindow::buttonGroupClicked(int id)
                                             {
                                                 for(int p=0;p<arcs.size();p++)
                                                 {
-                                                    //temp.append("*");
                                                     if(arcs[p].target==transitionNodes[m].id)
                                                     {
                                                         temp.append("*(");
@@ -516,7 +531,6 @@ void MainWindow::buttonGroupClicked(int id)
                                         }
                                         for(int m=0;m<arcs.size();m++)
                                         {
-                                            //temp.append("*");
                                             if(arcs[m].target==transitionNodes[k].id)
                                             {
                                                 temp.append("*(");
