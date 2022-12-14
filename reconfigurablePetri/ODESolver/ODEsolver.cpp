@@ -179,10 +179,13 @@ vector<double> ODEsolver::evaluate(double dx,double dh,bool state)
 
 void ODEsolver::ODERungeKuttaOneStep(double dxn,const std::valarray<double>& dyn,double dh,std::valarray<double>& dynext)
 {
-    size_t n = dyn.size();  //微分方程组中方程的个数，同时是初值y(n)和下一步值y(n+1)的长度
+    //微分方程组中方程的个数，同时是初值y(n)和下一步值y(n+1)的长度
+    size_t n = dyn.size();
+
     if (n != dynext.size())
     {
-        dynext.resize(n, 0.0);  //下一步的值y(n+1)与y(n)长度相等
+        //下一步的值y(n+1)与y(n)长度相等
+        dynext.resize(n, 0.0);
     }
     std::valarray<double> K1(0.0, n), K2(0.0, n), K3(0.0, n), K4(0.0, n);
     odefunc(dxn, dyn, K1);               //求解K1
@@ -192,18 +195,24 @@ void ODEsolver::ODERungeKuttaOneStep(double dxn,const std::valarray<double>& dyn
     std::valarray<double> l_K2(0.0, n), l_K3(0.0, n);
     for(int i=0;i<n;i++)
     {
+        //归一化
         l_K2[i]=2*K2[i];
         l_K3[i]=2*K3[i];
     }
-    dynext = dyn + (K1 + l_K2 + l_K3 + K4)*dh/6.0; //求解下一步的值y(n+1)
+    //下一步的值y(n+1)=y(n)+1/6*h*(K1+2*K2+2*K3+K4)
+    dynext = dyn + (K1 + l_K2 + l_K3 + K4)*dh/6.0;
 }
 
 void ODEsolver::odefunc(double dx, const std::valarray<double>& dyn, std::valarray<double>& fai)
 {
-    int l_iSize=m_vFunDef.size();//函数的数量
+    //函数的数量
+    int l_iSize=m_vFunDef.size();
+
     for(int i=0;i<l_iSize;i++)
     {
-        int n=m_vFunDef[i].m_mVaraible2Value.size();//当前函数所含变量数
+        //当前函数所含变量数
+        int n=m_vFunDef[i].m_mVaraible2Value.size();
+
         double  *vals = new double[n];
         std::map<std::string, double>::iterator itMap;
         int k=0;

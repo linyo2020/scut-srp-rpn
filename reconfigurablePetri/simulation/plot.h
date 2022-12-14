@@ -90,13 +90,14 @@ public slots:
      */
     void startSimulation();
     /**
-     * @brief updateUi
-     * @param x
-     * @param y
+     * @brief updateUi 更新仿真进度
+     * @param x        进度
+     * @param y        仿真运行时间
      */
     void updateUi(double x,QString y);
     /**
-     * @brief addGraph
+     * @brief addGraph 增加一条曲线
+     * @param string   曲线id
      */
     void addGraph(string);
     /**

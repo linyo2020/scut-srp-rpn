@@ -45,13 +45,19 @@ public:
      */
     void setMap(map<string,double>&);
     /**
-     * @brief odefunc
+     * @brief 使用tn,yn计算ode方程y'=f(t,y)
+     * @param  dx为y'=f(t,y)中的定值tn
+     * @param  dyn为y'=f(t,y)中的定值yn
+     * @param  fai为t=tn,y=yn条件下的待求解yn'
      */
     void odefunc(double,const valarray<double>&,valarray<double>&);
 
     /**
-     * @brief ODERungeKuttaOneStep
-     * 使用四阶龙格库塔法单步求解ode
+     * @brief ODERungeKuttaOneStep 使用四阶龙格库塔法单步求解ode
+     * @param dxn
+     * @param dyn
+     * @param dh
+     * @param dynext
      */
     void ODERungeKuttaOneStep(double,const valarray<double>&,double,valarray<double>&);
 
@@ -69,9 +75,9 @@ public:
     }
 
 private:
-    map<string,double> m_mInputVaraible2Value;     /**<变量与其值*/
+    map<string,double> m_mInputVaraible2Value;     /**<因变量与其值*/
     vector<FUNCTIONDEF> m_vFunDef;                 /**<函数*/
-    map<string,int> m_mVariable2Position;          /**<变量在dy0中的下标*/
+    map<string,int> m_mVariable2Position;          /**<因变量在因变量初始值数组dy0中的下标*/
 };
 
 #endif // ODESOLVER_H
