@@ -25,13 +25,13 @@
 #include"savediffcsv.h"
 #include<QFont>
 
-/**名字和vector的映射*/
+/** 名字和vector的映射*/
 extern map<QString,QVector<QString>> namevector;
-/** */
+/** 页id映射 */
 extern map<QString,QVector<QVector<double>>> datavv;
-/**页id映射页内库所对应的ode方程集合*/
+/** 页id映射页内库所对应的ode方程集合*/
 extern map<QString,vector<FUNCTIONDEF>> e_vFunDef;
-/**页id映射（库所名字映射初始token值）*/
+/** 页id映射（库所名字映射初始token值）*/
 extern map<QString,map<string,double>> e_mInputVaraible2Value;
 
 extern int currentGraphNum;
@@ -97,11 +97,14 @@ public slots:
     void updateUi(double x,QString y);
     /**
      * @brief addGraph 增加一条曲线
-     * @param string   曲线id
+     * @param string   曲线名称
      */
     void addGraph(string);
     /**
-     * @brief addData
+     * @brief addData  向曲线增加数据
+     * @param i        曲线编号
+     * @param x        x坐标集合
+     * @param y        y坐标集合
      */
     void addData(int,QVector<double>&,QVector<double>&);
 private slots:

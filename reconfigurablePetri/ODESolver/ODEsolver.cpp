@@ -27,7 +27,8 @@ bool ODEsolver::parser()
         FunctionParser fparser1;
         std::vector<std::string> vReturnVars;
         std::string sss = m_vFunDef[i].m_sFunctionExp;
-        qDebug()<<QString::fromStdString(m_vFunDef[i].m_sFunctionExp)<<" is the function expression of ";
+        qDebug()<<QString::fromStdString(sss)<<" is the function expression of "<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName);
+        //将变量名从函数表达式中提取出来
         int res = fparser1.ParseAndDeduceVariables(sss, vReturnVars);
         if(res >= 0)
         {
@@ -35,6 +36,7 @@ bool ODEsolver::parser()
                 << fparser1.ErrorMsg() << "\n\n";
             return false;
         }
+        //检测函数表达式中的变量是否合法（当速率不使用质量作用定律时，速率函数表达式（可能不合法）被直接加入到函数表达式中）
         for(unsigned j=0;j<vReturnVars.size();j++)
         {
             int flag=0;
@@ -50,6 +52,7 @@ bool ODEsolver::parser()
                 return false;
         }
         m_vFunDef[i].m_Parser = fparser1;
+        //将函数结构体中的映射表初始化
         m_vFunDef[i].m_mVaraible2Value.clear();
         for(unsigned j=0;j<vReturnVars.size();j++)
         {
@@ -58,120 +61,85 @@ bool ODEsolver::parser()
     }
     return true;
 }
-/*
-vector<double> ODEsolver::evalulate(double dx,double dh,bool state)
-{
-    for (unsigned i = 0; i < m_vFunDef.size(); i++)//对于每个函数
-    {
-        m_mVariable2Position[m_vFunDef[i].m_sDifferentialName]=i;
-        std::map<std::string, double>::iterator itMap;//由string得到double
-        for (itMap = m_vFunDef[i].m_mVaraible2Value.begin(); itMap != m_vFunDef[i].m_mVaraible2Value.end(); itMap++)
-        {//对于每个变量
-            if (m_mInputVaraible2Value.find(itMap->first) != m_mInputVaraible2Value.end())//如果值不相对应
-            {//赋值
-                double l_dvalue = m_mInputVaraible2Value.find(itMap->first)->second;
-                itMap->second=l_dvalue;
-            }
-        }
-    }
-    double *dy0=new double[m_vFunDef.size()];//初值数组
-    for(unsigned i=0;i<m_vFunDef.size();i++)
-    {
-        if(m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]<0&&state==true)
-            dy0[i]=0;
-        else dy0[i]=m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName];
-    }
-    std::valarray<double> darrayn(dy0,m_vFunDef.size());//当前的值
-    std::valarray<double> darraynext(0.0,m_vFunDef.size()); //下一步的值,最好初始化
-    vector<double> vReturn;
-    ODERungeKuttaOneStep(dx,darrayn,dh,darraynext);
-    for(unsigned i=0;i<m_vFunDef.size();i++)
-    {
-        vReturn.push_back(darraynext[i]);
-        m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]=darraynext[i];
-    }
-    delete dy0;
-    return vReturn;
-}*/
-
 
 vector<double> ODEsolver::evaluate(double dx,double dh,bool state)
 {
-    //vector<int>list;//新增
-    double *dy0=new double[m_vFunDef.size()];//初值数组
-    for (unsigned i = 0; i < m_vFunDef.size(); i++)//对于每个函数
+    //ode的初值数组，初始化
+    double *dy0=new double[m_vFunDef.size()];
+    for (unsigned i = 0; i < m_vFunDef.size(); i++)
     {
         m_mVariable2Position[m_vFunDef[i].m_sDifferentialName]=int(i);
         if(m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]<0.00000000001&&state==true)
         //if(m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]<=0.000000000001&&state==true)
         {
             dy0[i]=0;
-            //list.push_back(i);//新增
         }
         else dy0[i]=m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName];
         //qDebug()<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName)<<" value "<<dy0[i];
     }
-    std::valarray<double> darrayn(dy0,m_vFunDef.size());//当前的值
-    std::valarray<double> darraynext(0.0,m_vFunDef.size()); //下一步的值,最好初始化
+    //当前的值，以初值初始化
+    std::valarray<double> darrayn(dy0,m_vFunDef.size());
+    //下一步的值，全零初始化
+    std::valarray<double> darraynext(0.0,m_vFunDef.size());
+    //函数返回的数组
     vector<double> vReturn;
+    //使用龙格库塔法进行计算
     ODERungeKuttaOneStep(dx,darrayn,dh,darraynext);
-    //_______________________________________
 
+    //如果仿真需要检查负值
     if(state==true)
     {
         int flag=1;
         vector<int> record;
+        //寻找出现零点向下的库所并记录
         for(unsigned i=0;i<m_vFunDef.size();i++)
         {
-            if(darrayn[i]==0&&darraynext[i]<0)
+            //注意浮点数比较不要用!=和==
+            if(abs(darrayn[i])<=1e-15&&darraynext[i]<0)
             {
                 flag=0;
                 record.push_back(int(i));
             }
         }
+        //如果出现向下的零点
         if(flag==0)
         {
             //qDebug()<<"NEW ODESOLVER";
             vector<FUNCTIONDEF>temp_vector=Getm_vFunDef();
+            //将出现零点向下的库所对应的函数表达式置零
             for(unsigned i=0;i<record.size();i++)
             {
                 QString temp_qstring="0";
                 temp_vector[unsigned(record[i])].m_sFunctionExp=temp_qstring.toStdString();
             }
+            //使用更新后的函数表达式创建新的ode
             map<string,double>temp_map=Getm_mInputVaraible2Value();
             ODEsolver ode_temp;
             ode_temp.setMap(temp_map);
             ode_temp.setVector(temp_vector);
             ode_temp.parser();
+            //用来保存新的计算结果
             double *dy=new double[m_vFunDef.size()];
+            //重新计算
             vector<double>vector_temp=ode_temp.evaluate(dx,dh,state);
             for(unsigned i=0;i<m_vFunDef.size();i++)
             {
                 dy[i]=vector_temp[i];
             }
+            //更新计算结果
             std::valarray<double> valarray_temp(dy,m_vFunDef.size());
             darraynext=valarray_temp;
             delete[] dy;
         }
     }
 
-    //_______________________________________
+    //更新ode的映射表
     for(unsigned i=0;i<m_vFunDef.size();i++)
     {
         vReturn.push_back(darraynext[i]);
         m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]=darraynext[i];
         //qDebug()<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName)<<" values "<<vReturn[i];
     }
-    /*
-    for(int i=0;i<list.size();i++)//新增
-    {
-        if(vReturn[list[i]]<0)
-        {
-            qDebug()<<"Change "<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName)<<"  "<<vReturn[list[i]];
-            vReturn[list[i]]=0;
-            m_mInputVaraible2Value[m_vFunDef[list[i]].m_sDifferentialName]=0;
-        }
-    }*/
     delete[] dy0;
     return vReturn;
 }
@@ -193,7 +161,7 @@ void ODEsolver::ODERungeKuttaOneStep(double dxn,const std::valarray<double>& dyn
     odefunc(dxn+dh/2, dyn+dh/2*K2, K3);  //求解K3
     odefunc(dxn+dh, dyn+dh*K3, K4);      //求解K4
     std::valarray<double> l_K2(0.0, n), l_K3(0.0, n);
-    for(int i=0;i<n;i++)
+    for(unsigned i=0;i<n;i++)
     {
         //归一化
         l_K2[i]=2*K2[i];
@@ -216,11 +184,14 @@ void ODEsolver::odefunc(double dx, const std::valarray<double>& dyn, std::valarr
         double  *vals = new double[n];
         std::map<std::string, double>::iterator itMap;
         int k=0;
+        //将变量目前对应的值有序地保存在vals数组中
         for(itMap=m_vFunDef[i].m_mVaraible2Value.begin();itMap!=m_vFunDef[i].m_mVaraible2Value.end();itMap++)
         {
+            //注意：m_mVaraible2Value中的库所名称顺序与dyn中的库所名称顺序可能不同
             vals[k]=dyn[m_mVariable2Position[itMap->first]];
             k++;
         }
+        //通过parser识别函数表达式中的变量并把值代入到其中计算出函数值
         fai[i]=m_vFunDef[i].m_Parser.Eval(vals);
         delete[] vals;
     }

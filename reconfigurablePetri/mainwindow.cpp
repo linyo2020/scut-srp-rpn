@@ -483,7 +483,7 @@ void MainWindow::buttonGroupClicked(int id)
                                         }
                                         l_FunDef.m_sFunctionExp.append(temp.toStdString());
                                     }
-                                //否则反应速率为参数*反应物名字（其余为非法结构）
+                                //否则反应速率为参数*反应物名字（其余为非法结构,之后在解析表达式时需要对此进行检测）
                                 else
                                     {
                                         l_FunDef.m_sFunctionExp.append(transitionNodes[k].self_function.toStdString());

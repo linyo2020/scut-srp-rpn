@@ -118,11 +118,11 @@ Plot::Plot(QWidget *parent) :
     ui->customPlot->legend->setSelectableParts(QCPLegend::spItems);
 
     //addAllGraph();
-    connect(ui->customPlot, SIGNAL(selectionChangedByUser()), this, SLOT(selectionChanged()));
+    connect(ui->customPlot, &QCustomPlot::selectionChangedByUser, this, &Plot::selectionChanged);
     //connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(updateGraph()));
     ui->customPlot->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->customPlot, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequest(QPoint)));
-    connect(ui->Start, SIGNAL(clicked()), this, SLOT(startSimulation()));
+    connect(ui->customPlot, &QWidget::customContextMenuRequested, this, &Plot::contextMenuRequest);
+    connect(ui->Start, &QAbstractButton::clicked, this, &Plot::startSimulation);
 
 
     //////for(unsigned i=0;i<m_vFunDef.size();i++)
@@ -163,7 +163,7 @@ void Plot::setPlotId(QString id)
         ui->tableWidget->setItem(i,1,new QTableWidgetItem(namevector[PlotId][i]));
         rowcount++;
     }
-    connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(updateGraph()));
+    connect(ui->tableWidget,&QTableWidget::cellChanged,this,&Plot::updateGraph);
 }
 void Plot::updateUi(double x,QString y)
 {
