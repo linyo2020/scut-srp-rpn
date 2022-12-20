@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
       createComponentDock();
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
+      connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
 }
 
 /*
