@@ -66,7 +66,6 @@ void TabWidget::saveAs()
     QString nameStr = fileInfo.fileName();
     nameStr = nameStr.remove(nameStr.size()-5,5);
     tab->setName(nameStr);
-    tab->setId(nameStr);
     XmlWriter writer(tab->toXml());
     writer.writeXML(&file);
 
