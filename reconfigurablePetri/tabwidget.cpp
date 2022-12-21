@@ -184,7 +184,7 @@ void TabWidget::saveAsComponent()
              {
                  QString num=QString::number(componentTypeNum,10);
                  Transition*trans=qgraphicsitem_cast<Transition*>(item);
-                 trans->setID(component_List[0]->getComponent_type()+"C"+componentTypeNum+"&"+trans->getId());
+                 trans->setID(component_List[0]->getComponent_type()+"C"+num+"&"+trans->getId());
              }
              else if(item->type()==Arc::Type)
              {
