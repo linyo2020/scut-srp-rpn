@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
       //component_controller->ReadListFile();
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
+      connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
 }
 
 /*

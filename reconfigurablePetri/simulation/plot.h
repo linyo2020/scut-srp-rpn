@@ -25,7 +25,7 @@
 #include"savediffcsv.h"
 #include<QFont>
 
-/** 名字和vector的映射*/
+/** 页id和vector的映射*/
 extern map<QString,QVector<QString>> namevector;
 /** 页id映射 */
 extern map<QString,QVector<QVector<double>>> datavv;
