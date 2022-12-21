@@ -152,6 +152,9 @@ private:
     void createStatusBar ();
     void createDocks ();
     void createComponentDock();
+
+    //组件库信息
+    void editComponentInfo(QString componentName,QString componentType);
 signals:
     void createComponentFinished();
     void deleteComponentFinished();

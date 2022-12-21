@@ -295,7 +295,7 @@ bool TabWidget::open (MessageHandler &messageHandler)
 
     return true;
 }
-
+//打开组件
 bool TabWidget::openComponent(MessageHandler &messageHandler)
 {
     //![0] get Component name
@@ -337,6 +337,7 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
 
     return true;
 }
+//添加已有组件
 void TabWidget::addComponent(QString componentPath)
 {
     QFile file(componentPath);

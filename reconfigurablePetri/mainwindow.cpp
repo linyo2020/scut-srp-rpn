@@ -725,6 +725,7 @@ void MainWindow::openEditComponent()
 {
     editComponent* editComponentDialog=new editComponent(this);
     editComponentDialog->show();
+    connect(editComponentDialog,&editComponent::editComponentInfo,this,&MainWindow::editComponentInfo);
 }
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
@@ -733,6 +734,13 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
     emit addComponentController(component_path);
 
 }
+void MainWindow::editComponentInfo(QString componentName, QString componentType)
+{
+    QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
+    currentItem->setText(0,componentName);
+    currentItem->setText(1,componentType);
+}
+
 MainWindow::~MainWindow()
 {
     delete newToolButton;

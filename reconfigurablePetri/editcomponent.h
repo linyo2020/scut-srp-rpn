@@ -2,7 +2,8 @@
 #define EDITCOMPONENT_H
 
 #include <QDialog>
-
+#include <QString>
+#include <QDebug>
 namespace Ui {
 class editComponent;
 }
@@ -16,8 +17,11 @@ public:
     ~editComponent();
 
     Ui::editComponent *ui;
+signals:
+    void editComponentInfo(QString componentName,QString componentType);
 
-
+private slots:
+    void on_buttonBox_accepted();
 };
 
 #endif // EDITCOMPONENT_H

@@ -9,9 +9,16 @@ editComponent::editComponent(QWidget *parent) :
     ui->setupUi(this);
 
 }
+void editComponent::on_buttonBox_accepted()
+{
+    QString componentName=ui->ComponentName->text();
+    QString componentType=ui->ComponentType->text();
+    emit editComponentInfo(componentName,componentType);
+}
 
 editComponent::~editComponent()
 {
     delete ui;
 }
+
 
