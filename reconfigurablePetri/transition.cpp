@@ -181,6 +181,11 @@ void Transition::setMode (int mod)
     mode = mod;
 }
 
+void Transition::setID(QString ID)
+{
+    this->id=ID;
+}
+
 QString Transition::f_getComment() const
 {
     return m_comment;

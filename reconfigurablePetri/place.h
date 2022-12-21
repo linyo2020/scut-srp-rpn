@@ -36,7 +36,7 @@ class Place : public QGraphicsEllipseItem
     void f_setComment(QString);
     void setLabel_1();
     void setLabel_2();
-
+    void setPlaceID(QString id);
     //设置端口
     void drawInputport();
     void drawOutputport();
@@ -80,7 +80,7 @@ class Place : public QGraphicsEllipseItem
     bool show = false;
     double tokens=0;
     double capacity=0;
-
+    QString component_id;
     QGraphicsSimpleTextItem * label;
 
     QList<Arc*> input;

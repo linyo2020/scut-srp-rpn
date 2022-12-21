@@ -12,7 +12,8 @@
 #include "xmlwriter.h"
 #include "messagehandler.h"
 #include "petritabwidget.h"
-
+#include"component.h"
+#include"QVector"
 class TabWidget : public QTabWidget
 {
      Q_OBJECT
@@ -49,13 +50,17 @@ public:
 
     //获取组件名
     QStringList getFileNames ();
+
+    void setComponentType(QString type);
+    void setElementId();
+    int componentTypeNum;
 signals:
     void addComponentTreeNode (QString componentName);
     void canRedoChange (bool canRedo);
     void canUndoChange (bool canUndo);
     void tabChanged (int index);
     void errorMessage (const QString &msg);
-
+    void ElementIdEditFinished();
 protected:
     //连接具体页面的信号和槽，用于传递Undo，Redo，netChanged，error信息
     void connectSignalAndSlot(PetriTabWidget * tab);
@@ -63,7 +68,7 @@ protected:
 private:
     int nets_indexes;
     QStringList fileNames;
-
+    QVector<Component*>component_List;
 };
 
 #endif // TABWIDGET_H

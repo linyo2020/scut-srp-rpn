@@ -5,14 +5,16 @@
 //this class defines a base unit of component library
 #include"defs.h"
 #include"ptnet.h"
+#include"ptnscene.h"
 #include"QDateTime.h"
 class Component
 {
 public:
     //特别注意,组件类创建的时机以及方式.
     Component();
-    Component(PTNET_ATTR& PTnet);//对应着读取xml文件时的构造函数
+    Component(const PTNET_ATTR& PTnet,PTNscene*scene);//对应着读取xml文件时的构造函数
     Component(QString type,QString label);//对应着用户在ui上创建控件时的构造函数,一开始无法直接将数据导入到PTNet类中
+    Component(QString PTnet_ID,PTNscene*scene);
     //The unique identity of the component unit
     //id不可更改
     QString Component_id;//该数据的获取方式:type+唯一编号\系统读取控件xml文件时读取

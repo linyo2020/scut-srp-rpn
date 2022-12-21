@@ -1,14 +1,15 @@
 #include "tabwidget.h"
 #include <QDebug>
 #include <QMessageBox>
-
+#include"editcomponent.h"
 TabWidget::TabWidget(QWidget * parent)
     :QTabWidget (parent)
 {
     nets_indexes = 0;
     setMovable (true);
     setTabsClosable(false);
-
+    Component*com=new Component();
+    component_List.push_back(com);
     //点击了标签上的关闭按钮 ,移除tab页
     connect (this, &TabWidget::tabCloseRequested,this, &TabWidget::closeTab);
     createNew();
@@ -85,10 +86,12 @@ void TabWidget::print()
 
 }
 
+//use
 void TabWidget::saveComponent()
 {
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
     QString filename = tab->getFilename();
+
 
     if(filename.isNull())
         saveAsComponent();
@@ -104,6 +107,7 @@ void TabWidget::saveComponent()
       writer.writeXML(&file);
       tab->cleanUndostack();
     }
+
 }
 void TabWidget::saveAsComponent()
 {
@@ -149,6 +153,51 @@ void TabWidget::saveAsComponent()
  QStringList TabWidget::getFileNames ()
  {
      return fileNames;
+ }
+
+ void TabWidget::setComponentType(QString type)
+ {
+     this->component_List[0]->setComponent_type(type);
+     qDebug()<<"component_List[0]_type"<<component_List[0]->getComponent_type();
+ }
+
+ //将网中所有元素的id增加组件前缀
+ void TabWidget::setElementId()
+ {
+
+     if(this->component_List[0]->getComponent_type()!=NULL)
+     {
+         PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+         PTNscene*s=tab->getSCene();
+         qDebug()<<"tab componentTypeNum"<<componentTypeNum;
+         foreach(QGraphicsItem * item , s->items())
+         {
+             if(item->type() == Place::Type)
+             {
+                 Place * place = qgraphicsitem_cast<Place*>(item);
+                 QString num=QString::number(componentTypeNum,10);
+                 place->setPlaceID(component_List[0]->getComponent_type()+"C"+num+"&"+place->getId());
+                 qDebug()<<place->getId();
+             }
+             else if(item->type()==Transition::Type)
+             {
+                 QString num=QString::number(componentTypeNum,10);
+                 Transition*trans=qgraphicsitem_cast<Transition*>(item);
+                 trans->setID(component_List[0]->getComponent_type()+"C"+componentTypeNum+"&"+trans->getId());
+             }
+             else if(item->type()==Arc::Type)
+             {
+                 QString num=QString::number(componentTypeNum,10);
+                 Arc*arc=qgraphicsitem_cast<Arc*>(item);
+                 arc->setsourceId(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getSourceId());
+                 arc->setTargetId(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getTargetId());
+                 arc->setID(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getId());
+             }
+         }
+         qDebug()<<"000ElementIdEditFinished";
+         emit ElementIdEditFinished();
+
+     }
  }
 void TabWidget::undo()
 {

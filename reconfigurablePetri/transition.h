@@ -31,7 +31,7 @@ class Transition : public QGraphicsRectItem
     QString getName () const;
     void setName (const QString& nm);
     void setMode (int mod);
-
+    void setID(QString ID);
     void addInputArc(QGraphicsItem * arc);
     void addOutputArc(QGraphicsItem * arc);
     void deleteArc(QString id);

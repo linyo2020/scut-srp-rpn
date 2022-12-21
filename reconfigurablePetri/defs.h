@@ -30,6 +30,7 @@ typedef struct{
       bool show;
       QColor brushColor;
       QColor penColor;
+      QString componet_id;//[new]属于哪个组件
    } PLACE_ATTR;
 
 typedef struct{
@@ -58,6 +59,7 @@ typedef struct{
      QList<QPointF> points;
      QColor brushColor;
      QColor penColor;
+
    } ARC_ATTR;
 
 

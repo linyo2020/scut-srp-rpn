@@ -15,8 +15,9 @@ public:
     explicit editComponent(QWidget *parent = nullptr);
     ~editComponent();
 
-private:
     Ui::editComponent *ui;
+
+
 };
 
 #endif // EDITCOMPONENT_H

@@ -21,6 +21,7 @@
 #include "dockwidget.h"
 #include "componentcontroller.h"
 #include "editcomponent.h"
+#include"neweditcom.h"
 
 //enum{normalMode=0, animationMode=1, addPlaceMode=2, \
 //            addTransMode=3,drawArcMode=4, addToken=5, subToken=6};
@@ -50,7 +51,7 @@ public:
     void deleteComponentTreeNode(QTreeWidget* tree);
     void openEditComponent();
     void componentPopMenu();
-
+    void Tex(QString tex);
 private:
 
     //各个菜单栏及其动作
@@ -132,13 +133,21 @@ private:
     //用于缩放的滑动条
     QSlider  * slider;
 
+    neweditcom*editcommenu;
+    void editcommenucreate();
+    QString comType;
+
+    void changecomType(QString text);
+
     //初始化菜单，工具，状态栏，拖拉界面
     void createMenuBar ();
     void createToolBar ();
     void createStatusBar ();
     void createDocks ();
     void createComponentDock();
-
+signals:
+    void createComponentFinished();
+    void deleteComponentFinished();
 
 };
 

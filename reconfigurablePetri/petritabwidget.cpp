@@ -6,6 +6,8 @@ PetriTabWidget::PetriTabWidget(const QString &id, QWidget * parent)
 {
     this->id = id;
     name = id;
+    //Component*com=new Component(id,scene);
+    //this->component_vector.push_back(com);
     createTab ();
 }
 
@@ -14,6 +16,9 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
     id = ptnet.id;
     name = ptnet.name;
     filename = file;
+//    Component*com=new Component(ptnet.id,scene);
+//    component_vector.push_back(com);
+
     createTab ();
     // xml
     scene->from_Xml (ptnet.pages);
@@ -23,30 +28,36 @@ void PetriTabWidget::setComponent(const PTNET_ATTR &ptnet, const QString& file)
 {
     id = ptnet.id;
     name = ptnet.name;
+//    Component*com=new Component(id,scene);
+//    component_vector.push_back(com);
     // xml
     scene->from_Xml (ptnet.pages);
     view->centerOn(scene->itemsBoundingRect().center());
 
-    foreach(QGraphicsItem * item, scene->items())
-    {
-        if(item->type() == Place::Type)
-        {
-            mynet->AddPlace(qgraphicsitem_cast<Place*>(item));
-            continue;
-        }
-        if(item->type() == Transition::Type)
-        {
+}
 
-            mynet->AddTransition(qgraphicsitem_cast<Transition*>(item));
-            continue;
-        }
-        if(item->type() == Arc::Type)
-        {
-            mynet->AddArc(qgraphicsitem_cast<Arc*>(item));
-            continue;
-        }
+void PetriTabWidget::PushBack(Component *com)
+{
+    component_vector.push_back(com);
+}
+
+//返回组件列表中下表为i的组件属性
+QString PetriTabWidget::getComponentType(int i)
+{
+    if(i<this->component_vector.size())
+    {
+        return this->component_vector[i]->Component_type;
+    }
+    else
+    {
+        return this->component_vector[0]->Component_type;
     }
 
+}
+
+int PetriTabWidget::getComponentSize()
+{
+    return this->component_vector.size();
 }
 void PetriTabWidget::createTab ()
 {
@@ -220,6 +231,7 @@ void PetriTabWidget::setName(QString name)
 void PetriTabWidget::setId(QString id)
 {
     this->id = id;
+
 }
 
 PTNET_ATTR PetriTabWidget::toXml() const
@@ -251,6 +263,8 @@ PTNET_ATTR PetriTabWidget::toXml() const
     }
 
     net.pages << page;
+
+
     return net;
 }
 PTNET_ATTR PetriTabWidget::componentToXml() const
@@ -396,6 +410,11 @@ void PetriTabWidget::checkNodesNames()
 
 }
 
+PTNscene* PetriTabWidget::getSCene()
+{
+    return this->scene;
+}
+
 /* error message */
 void PetriTabWidget::showErrorMessage (const QString &title, const QString &errorMsg)
 {
@@ -450,6 +469,18 @@ void PetriTabWidget::itemDoubleClicked (QGraphicsItem* item)
     arcDoubleClicked (item);
 
     item = 0;
+}
+
+void PetriTabWidget::save()
+{
+    Component*com=new Component(this->toXml(),scene);
+    component_vector.push_back(com);
+}
+
+void PetriTabWidget::componentSave()
+{
+    Component*com=new Component(this->componentToXml(),scene);
+    component_vector.push_back(com);
 }
 
 void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)

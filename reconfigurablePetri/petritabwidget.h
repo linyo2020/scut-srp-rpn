@@ -8,7 +8,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "undostack.h"
 //#include "graphvisualizer.h"
-
+#include"component.h"
 #include "placeeditdialog.h"
 #include "transitioneditdialog.h"
 #include "arceditdialog.h"
@@ -51,6 +51,7 @@ public:
     bool checkMarking();
     bool checkNodesConnections();
     void checkNodesNames();
+    PTNscene* getSCene();
 
 //    GraphVisualizer * createGraphVis ();
 //    GraphVisualizer * getGraphVis ();
@@ -62,6 +63,9 @@ public:
     void setId(QString);
     void setComponent(const PTNET_ATTR &ptnet, const QString& file);
     //bool arcnoclicked=true;
+    void PushBack(Component*com);
+    QString getComponentType(int i);
+    int getComponentSize();
 signals:
 
     void canRedoChange (bool canRedo);
@@ -74,6 +78,8 @@ public slots:
     void nodeInserted(const QPointF &itemPos, const QString &id);
     void nodesInserted (const QStringList& names);
     void itemDoubleClicked (QGraphicsItem* item);
+    void save();
+    void componentSave();
 
 private:
 
@@ -81,6 +87,7 @@ private:
     QString id, name;
 
     PTNscene * scene;
+    QVector<Component*>component_vector;
     QGraphicsView * view;
     UndoStack  * undostack;
 //    GraphVisualizer * graphVis;

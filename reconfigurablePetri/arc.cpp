@@ -110,6 +110,31 @@ QString Arc::getId()
     return id;
 }
 
+void Arc::setID(QString id)
+{
+    this->id=id;
+}
+
+void Arc::setsourceId(QString id)
+{
+    this->source_id=id;
+}
+
+void Arc::setTargetId(QString id)
+{
+    this->target_id=id;
+}
+
+QString Arc::getSourceId()
+{
+    return this->source_id;
+}
+
+QString Arc::getTargetId()
+{
+    return this->target_id;
+}
+
 /* get weight */
 double Arc::getWeight() const
 {

@@ -45,6 +45,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     messagehandler.cpp \
+    neweditcom.cpp \
     petritabwidget.cpp \
     place.cpp \
     placeeditdialog.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     graphvisualizer.h \
     mainwindow.h \
     messagehandler.h \
+    neweditcom.h \
     petritabwidget.h \
     place.h \
     placeeditdialog.h \

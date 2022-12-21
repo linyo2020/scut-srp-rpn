@@ -36,7 +36,11 @@ class Arc : public QGraphicsPathItem
     void showRects(bool show);
 
     QString getId();
-
+    void setID(QString id);
+    void setsourceId(QString id);
+    void setTargetId(QString id);
+    QString getSourceId();
+    QString getTargetId();
     double getWeight() const;
     void setWeight(double Weight);
 

@@ -3,6 +3,7 @@
 componentController::componentController()
 {
 
+
 }
 
 void componentController::componentTreeInitial(QTreeWidget *newTree)
@@ -32,6 +33,82 @@ void componentController::removeComponentTreeNode(QTreeWidgetItem *item)
         delete item;
 
 }
+
+void componentController::ReadListFile(QString str)
+{
+    QFile file(str);
+    QMapIterator<QString,int>iter(type_list);
+    if (file.open(QIODevice::ReadOnly))
+    {
+
+
+        while (!file.atEnd())
+        {
+            qDebug()<<"open";
+            QByteArray line = file.readLine();
+            QString str(line);
+            QStringList list=str.split("|");
+            qDebug()<<"list[0]"<<list[0];
+            qDebug()<<"list[1]"<<list[1].toInt();
+            type_list.insert(list[0],list[1].toInt());
+        }
+        file.close();
+    }
+}
+
+void componentController::WriteListFile(QString str)
+{
+//    this->type_list.insert("AB",3);
+//    this->type_list.insert("BH",4);
+//    this->type_list.insert("r",8);
+
+    QFile file(str);
+
+    if (file.open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+
+        qDebug()<<"success";
+        QTextStream out(&file);
+        //先做添加组件
+        qDebug()<<"type_list.contains(this->newtype) :"<<type_list.contains(this->newtype);
+        if(type_list.contains(this->newtype))
+        {
+
+            qDebug()<<"<type_list[newtype]+1:"<<type_list[newtype]+1;
+
+            qDebug()<<"if"<<newtype;
+            type_list[newtype]=type_list[newtype]+1;
+            QMapIterator<QString,int>iter(type_list);
+            while(iter.hasNext())
+            {
+                iter.next();
+                out<<iter.key()<<"|"<<iter.value();
+                qDebug()<<"write"<<iter.key()<<"|"<<iter.value();
+                out<<"\n";
+            }
+
+        }
+
+        else
+        {
+            qDebug()<<"else"<<newtype;
+
+            type_list.insert(newtype,1);
+            QMapIterator<QString,int>iter(type_list);
+            while(iter.hasNext())
+            {
+                iter.next();
+                out<<iter.key()<<"|"<<iter.value();
+                out<<"\n";
+            }
+        }
+
+        file.flush();
+        file.close();
+    }
+
+}
+
 void componentController::on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item)//勾选复选框
 {
     if(Qt::Checked==item->checkState(0)) //应为复选框设置在序号0的位置

@@ -461,7 +461,7 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
             }
         }
 
-      QPainterPath path(sourceItem->boundingRect ().center());
+      QPainterPath path(sourceItem->boundingRect().center());
 
       foreach(QPointF p, xmlarc.points)
           path.lineTo(p);

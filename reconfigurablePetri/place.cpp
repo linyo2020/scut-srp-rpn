@@ -16,7 +16,7 @@ Place::Place(const QString &id)
 Place::Place(const PLACE_ATTR &place)
 {
     id = place.id;
-
+    //component_id=place.componet_id;
     if(place.name.isNull())
         name = id;
     else
@@ -123,7 +123,7 @@ PLACE_ATTR Place::toXml() const
   place.show = show;
   place.brushColor = m_brushColor;
   place.penColor = m_penColor;
-
+//  place.componet_id=component_id;
   return place;
 }
 
@@ -241,6 +241,11 @@ void Place::setLabel_2()
 
    label->setText(lb);
 
+}
+
+void Place::setPlaceID(QString id)
+{
+    this->id=id;
 }
 void Place::drawInputport()
 {
