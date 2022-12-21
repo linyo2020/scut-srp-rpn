@@ -360,6 +360,8 @@ void PTNscene::drawBackground ( QPainter * painter, const QRectF & rect)
 
 void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
 {
+    foreach(auto item,selectedItems())
+        item->setSelected(0);
     foreach (PAGE_ATTR page, pages)
     {
         addXML_places (page.placeNodes);
@@ -378,6 +380,7 @@ void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
     foreach (PLACE_ATTR place, places)
     {
         Place * item = new Place (place);
+        item->setSelected(1);
         addItem(item);
         item->setPos (place.x, place.y);
         names << place.name;
@@ -407,6 +410,7 @@ void PTNscene::addXML_transitions (const QList <TRANSITION_ATTR> &transitions)
     foreach (TRANSITION_ATTR transition, transitions)
     {
         Transition * item = new Transition (transition);
+        item->setSelected(1);
         addItem(item);
         item->setPos (transition.x, transition.y);
         item->setRotation(transition.rotation);
