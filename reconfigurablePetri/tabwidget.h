@@ -36,6 +36,8 @@ public:
     bool open (MessageHandler &messageHandler);
     //打开组件
     bool openComponent (MessageHandler &messageHandler);
+    //添加组件
+    void addComponent (QString componentPath);
     //更新窗口名
     void updateTitle (bool changed);
 
@@ -55,7 +57,7 @@ public:
     void setElementId();
     int componentTypeNum;
 signals:
-    void addComponentTreeNode (QString componentName);
+    void addComponentTreeNode (QString componentName,QString componentPath);
     void canRedoChange (bool canRedo);
     void canUndoChange (bool canUndo);
     void tabChanged (int index);

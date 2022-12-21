@@ -47,11 +47,16 @@ public:
     void openComponent ();
     void about();
     void openRuleLibrary();
-    void setComponentTreeNode(QString componentName);
+    void setComponentTreeNode(QString componentName,QString currentPath);
     void deleteComponentTreeNode(QTreeWidget* tree);
     void openEditComponent();
+    void addEditComponent(QTreeWidget* tree);
     void componentPopMenu();
     void Tex(QString tex);
+    void openComponentDock();
+signals:
+    void addComponentController(QString componentPath);
+
 private:
 
     //各个菜单栏及其动作
@@ -82,6 +87,7 @@ private:
     QMenu   * componentMenu;
     QAction * openComponentAction;
     QAction * saveComponentAction;
+    QAction * openComponentDockAction;
 
     //规则库
     QMenu* ruleMenu;
@@ -90,6 +96,7 @@ private:
     //组件操作库
     QMenu * componentEditMenu;
     QAction * editComponentAction;
+    QAction * addComponentAction;
     QDockWidget* componentDock;
     QToolButton* newComponent;
     QToolButton* addComponent;

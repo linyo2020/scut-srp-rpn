@@ -16,15 +16,28 @@ void componentController::componentTreeInitial(QTreeWidget *newTree)
 
 }
 
-void componentController::addComponentTreeNode(QTreeWidget *newTree,QString component_type,QString component_name)
+void componentController::addComponentTreeNode(QTreeWidget *newTree,QString component_type,QString component_name,QString component_path)
 {
-    QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
-    Item->setText(0,component_type);
-    Item->setText(1,component_name);
-    Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
-    Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-    //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
-
+    bool flag=1;
+    //遍历treeWidget
+        QTreeWidgetItemIterator it(newTree);
+        while (*it) {
+             if((*it)->text(2)==component_path)
+             {
+                 flag=0;
+             }
+            ++it;
+        }
+        if(flag)
+        {
+            QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
+            Item->setText(0,component_type);
+            Item->setText(1,component_name);
+            Item->setText(2,component_path);
+            Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
+            Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+            //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
+        }
 }
 
 void componentController::removeComponentTreeNode(QTreeWidgetItem *item)
@@ -108,6 +121,7 @@ void componentController::WriteListFile(QString str)
     }
 
 }
+
 
 void componentController::on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item)//勾选复选框
 {
