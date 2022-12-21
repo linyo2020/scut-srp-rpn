@@ -420,5 +420,5 @@ void TabWidget::connectSignalAndSlot(PetriTabWidget * tab)
  *  */
 void TabWidget::zoom (int val)
 {
-
+    qobject_cast<PetriTabWidget*>(currentWidget ())->scaleView (val);
 }

@@ -85,7 +85,5 @@ void editRuleLibrary::on_addConnectionPushButton_clicked()
     groupBoxLayout->addWidget(deleteRulePushButton,2,3);
     ruleGroupBox->setLayout(groupBoxLayout);
     connectionGridLayout->addWidget(ruleGroupBox,connectionGridLayout->rowCount(),0,1,connectionGridLayout->columnCount());
-    QScrollBar* scrollBar=ui->rulesSettingsScrollArea->verticalScrollBar();
-    scrollBar->setValue(scrollBar->maximum());
     connect(deleteRulePushButton,&QPushButton::clicked,ruleGroupBox,&QGroupBox::deleteLater);
 }
