@@ -12,6 +12,7 @@ TabWidget::TabWidget(QWidget * parent)
     component_List.push_back(com);
     //点击了标签上的关闭按钮 ,移除tab页
     connect (this, &TabWidget::tabCloseRequested,this, &TabWidget::closeTab);
+
     createNew();
 }
 
@@ -309,7 +310,8 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
 
     QFile file(componentName);
     QFileInfo fi(file);
-    emit addComponentTreeNode(fi.baseName());
+    emit addComponentTreeNode(fi.baseName(),componentName);
+
     //![2] validate xml file
     if(!validateXml(file, messageHandler))
     {
@@ -334,6 +336,27 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
     tab->setComponent(net, componentName);
 
     return true;
+}
+void TabWidget::addComponent(QString componentPath)
+{
+    QFile file(componentPath);
+    QFileInfo fi(file);
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    //![3] parse xml file
+    file.seek(0);
+    QTextStream textstream(&file);
+    QString xmlContent = textstream.readAll();
+    file.close();
+
+    XmlParser parser;
+    parser.parseXML(xmlContent);
+
+    PTNET_ATTR net = parser.getXML_net ();
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    tab->setComponent(net, componentPath);
+
 }
 bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
 {

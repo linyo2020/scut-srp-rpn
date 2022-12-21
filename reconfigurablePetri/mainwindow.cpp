@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
+      connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
 }
 
 /*
@@ -247,6 +248,9 @@ void MainWindow::createMenuBar()
      openComponentAction = componentMenu->addAction(tr("&Open Component"));
      openComponentAction->setIcon(QIcon(QPixmap(":/images/componentLibrary.png")));
          connect(openComponentAction,&QAction::triggered,this,[=](){this->openComponent();});
+               componentMenu->addSeparator();
+     openComponentDockAction = componentMenu->addAction(tr("&Open ComponentDock"));
+         connect(openComponentDockAction,&QAction::triggered,this,[=](){this->openComponentDock();});
 
      //规则库菜单
      ruleMenu=m_Bar->addMenu(tr("&Rule"));
@@ -328,10 +332,7 @@ void MainWindow::createComponentDock()
     connect(editcommenu,&neweditcom::typechange,this,&MainWindow::changecomType);
     connect(editcommenu,&neweditcom::typechange,tabWidget,&TabWidget::setComponentType);
     connect(newComponent,&QToolButton::clicked,this,[=](){this->editcommenucreate();});
-    //-------------------------------------------------------------------------
-    //connect(newComponent,&QToolButton::clicked,tabWidget,&TabWidget::saveComponent);
 
-    newComponent->setToolTip(tr("Add a component <span style=\"color:gray;\">Ctrl+O</span>"));
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(deleteComponent,&QToolButton::clicked,this,[=](){this->deleteComponentTreeNode(componentTree);});
@@ -346,21 +347,24 @@ void MainWindow::createComponentDock()
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
 
-
+    component_controller=new componentController();
     component_controller->componentTreeInitial(componentTree);
     componentTree->expandAll();
     componentEditMenu=new QMenu();
     editComponentAction=componentEditMenu->addAction(tr("编辑"));
+    addComponentAction=componentEditMenu->addAction(tr("添加组件"));
+
     QVBoxLayout* VerticalLayout=new QVBoxLayout(componentDock);
     QWidget *mywid1 = new QWidget();
     VerticalLayout->addWidget(componentBar);
     VerticalLayout->addWidget(componentTree);
     mywid1->setLayout(VerticalLayout);
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
+
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
+    connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);});
     componentDock->setWidget(mywid1);
     componentDock->show ();
-
 }
 void MainWindow::componentPopMenu()
 {
@@ -692,6 +696,10 @@ void MainWindow::openComponent()
     else
         statusBar->showMessage("Component was not opened.", 1000);
 }
+void MainWindow::openComponentDock()
+{
+    componentDock->show ();
+}
 void MainWindow::about()
 {
 
@@ -701,9 +709,9 @@ void MainWindow::openRuleLibrary()
     editRuleLibrary* editRuleDialog=new editRuleLibrary(this);
     editRuleDialog->show();
 }
-void MainWindow::setComponentTreeNode(QString componentName)
+void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
 {
-    component_controller->addComponentTreeNode(componentTree,this->comType,componentName);
+    component_controller->addComponentTreeNode(componentTree,this->comType,componentName,componentPath);
 }
 //删除当前组件库浮动窗口上的组件
 void MainWindow::deleteComponentTreeNode(QTreeWidget* tree)
@@ -717,6 +725,13 @@ void MainWindow::openEditComponent()
 {
     editComponent* editComponentDialog=new editComponent(this);
     editComponentDialog->show();
+}
+void MainWindow::addEditComponent(QTreeWidget* tree)
+{
+    QTreeWidgetItem * currentItem = tree->currentItem();//获取当前节点
+    QString component_path=currentItem->text(2);
+    emit addComponentController(component_path);
+
 }
 MainWindow::~MainWindow()
 {
