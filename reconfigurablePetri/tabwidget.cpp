@@ -177,22 +177,22 @@ void TabWidget::saveAsComponent()
              {
                  Place * place = qgraphicsitem_cast<Place*>(item);
                  QString num=QString::number(componentTypeNum,10);
-                 place->setPlaceID(component_List[0]->getComponent_type()+"C"+num+"&"+place->getId());
+                 place->setPlaceID(component_List[0]->getComponent_type()+"&C"+num+"&"+place->getId());
                  qDebug()<<place->getId();
              }
              else if(item->type()==Transition::Type)
              {
                  QString num=QString::number(componentTypeNum,10);
                  Transition*trans=qgraphicsitem_cast<Transition*>(item);
-                 trans->setID(component_List[0]->getComponent_type()+"C"+num+"&"+trans->getId());
+                 trans->setID(component_List[0]->getComponent_type()+"&C"+num+"&"+trans->getId());
              }
              else if(item->type()==Arc::Type)
              {
                  QString num=QString::number(componentTypeNum,10);
                  Arc*arc=qgraphicsitem_cast<Arc*>(item);
-                 arc->setsourceId(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getSourceId());
-                 arc->setTargetId(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getTargetId());
-                 arc->setID(component_List[0]->getComponent_type()+"C"+num+"&"+arc->getId());
+                 arc->setsourceId(component_List[0]->getComponent_type()+"&C"+num+"&"+arc->getSourceId());
+                 arc->setTargetId(component_List[0]->getComponent_type()+"&C"+num+"&"+arc->getTargetId());
+                 arc->setID(component_List[0]->getComponent_type()+"&C"+num+"&"+arc->getId());
              }
          }
          qDebug()<<"000ElementIdEditFinished";
