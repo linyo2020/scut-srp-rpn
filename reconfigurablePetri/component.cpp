@@ -6,6 +6,7 @@ Component::Component()
 
 }
 
+//bug
 Component::Component(const PTNET_ATTR& PTnet,PTNscene*scene)
 {
     if(PTnet.id[0].isLetter())
@@ -34,7 +35,9 @@ Component::Component(const PTNET_ATTR& PTnet,PTNscene*scene)
                     continue;
                 }
             }
+            this->net_att_isEdited=true;
         }
+
 
     }
     else
@@ -78,6 +81,7 @@ Component::Component(QString PTnet_ID, PTNscene *scene)
                 continue;
             }
         }
+        this->net_att_isEdited=true;
     }
     else
     {
@@ -88,6 +92,16 @@ Component::Component(QString PTnet_ID, PTNscene *scene)
 QString Component::getLabel() const
 {
     return label;
+}
+
+void Component::setID(QString id)
+{
+    this->Component_id=id;
+}
+
+QString Component::getID()
+{
+    return this->Component_id;
 }
 
 void Component::setLabel(const QString &value)

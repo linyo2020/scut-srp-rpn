@@ -1,4 +1,4 @@
-#ifndef PLACE_H
+﻿#ifndef PLACE_H
 #define PLACE_H
 
 #include <QGraphicsEllipseItem>
@@ -60,11 +60,16 @@ class Place : public QGraphicsEllipseItem
     void setBrushColor(QColor color);
     void setPenColor(QColor color);
 
+
+
     //判断是否为端口
     bool isInputPort();
     bool isOutputPort();
     void setInputPort(bool);
     void setOutputPort(bool);
+
+    bool isInComponent();
+    void setIncomponent(bool isInComponent);
 
  protected:
 
@@ -95,6 +100,8 @@ class Place : public QGraphicsEllipseItem
     //判断是否为端口
     bool inputPort=false;
     bool outputPort=false;
+
+    bool InComponent=false;
 
 };
 

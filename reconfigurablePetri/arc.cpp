@@ -206,7 +206,17 @@ QRectF Arc::boundingRect() const
     qreal a = (pen().width())/2 + ArcSize/2;
     return QRectF( path().controlPointRect() )
            .normalized()
-           .adjusted(-a, -a, a, a);
+            .adjusted(-a, -a, a, a);
+}
+
+bool Arc::isInComponent()
+{
+    return this->InComponent;
+}
+
+void Arc::setIncomponent(bool isInComponent)
+{
+    this->InComponent=isInComponent;
 }
 
 QColor Arc::getBrushColor() const

@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include"editcomponent.h"
+#include"QCoreApplication"
+#include<QVector>
 TabWidget::TabWidget(QWidget * parent)
     :QTabWidget (parent)
 {
@@ -156,6 +158,7 @@ void TabWidget::saveAsComponent()
      return fileNames;
  }
 
+//bug,需要更改
  void TabWidget::setComponentType(QString type)
  {
      this->component_List[0]->setComponent_type(type);
@@ -169,8 +172,16 @@ void TabWidget::saveAsComponent()
      if(this->component_List[0]->getComponent_type()!=NULL)
      {
          PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+         tab->setId(component_List[0]->getComponent_type()+"&"+"C1");
          PTNscene*s=tab->getSCene();
+
+         qDebug()<<"set"<<component_List[0]->getComponent_type()+"&"+"C1";
+         qDebug()<<"tabId in set"<<tab->getId();
+
+
+         //这里强写成一了
          qDebug()<<"tab componentTypeNum"<<componentTypeNum;
+
          foreach(QGraphicsItem * item , s->items())
          {
              if(item->type() == Place::Type)
@@ -199,6 +210,273 @@ void TabWidget::saveAsComponent()
          emit ElementIdEditFinished();
 
      }
+ }
+
+ //废弃函数
+ void TabWidget::setImportComponentID()
+ {
+     //遍历全部元素，id设置方式id=type+&+C+type_count[type]+X
+     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+     PTNscene*s=tab->getSCene();
+     //原始id的格式  type&C?&p0/t0
+     QMap<QGraphicsItem*,bool>isEdit;
+     int t=1;
+     foreach(QGraphicsItem * item , s->items())
+     {
+         //如果当前元素被编辑过，则不处理
+         if(isEdit.contains(item))
+         {
+
+             qDebug()<<t++;
+             continue;
+         }
+         //如果未编辑
+         else
+         {
+             if(item->type() == Place::Type)
+             {
+                 Place * place = qgraphicsitem_cast<Place*>(item);
+                 QString ori_id=place->getId();
+                 QStringList list=ori_id.split("&");
+                 Q_ASSERT_X(list[0]!=NULL,"ERROR","list[0] represents component_type,this variable shouldnot become null.please check mainwindow line:333-336");
+                 //如果此时页面上已经添加过该类的
+                 if(type_count.contains(list[0]))
+                 {
+                     int nums=type_count.value(list[0])+1;
+                     QString num=QString::number(nums);
+                     place->setPlaceID(list[0]+"&"+"C"+num+"&"+list[2]);
+                     type_count.insert(list[0],nums);
+                 }
+                 //页面上尚未出现过该组件类型
+                 else
+                 {
+                     int nums=1;
+                     QString num=QString::number(nums);
+                     place->setPlaceID(list[0]+"&"+"C"+num+"&"+list[2]);
+                     type_count.insert(list[0],nums);
+                 }
+             }
+             else if(item->type()==Transition::Type)
+             {
+                 Transition * trans = qgraphicsitem_cast<Transition*>(item);
+                 QString ori_id=trans->getId();
+                 QStringList list=ori_id.split("&");
+                 Q_ASSERT_X(list[0]!=NULL,"ERROR","list[0] represents component_type,this variable shouldnot become null.please check mainwindow line:333-336");
+                 //如果此时页面上已经添加过该类的
+                 if(type_count.contains(list[0]))
+                 {
+                     int nums=type_count.value(list[0])+1;
+                     QString num=QString::number(nums);
+                     trans->setID(list[0]+"&"+"C"+num+"&"+list[2]);
+                     type_count.insert(list[0],nums);
+                 }
+                 //页面上尚未出现过该组件类型
+                 else
+                 {
+                     int nums=1;
+                     QString num=QString::number(nums);
+                     trans->setID(list[0]+"&"+"C"+num+"&"+list[2]);
+                     type_count.insert(list[0],nums);
+                 }
+             }
+             else if(item->type()==Arc::Type)
+             {
+                 QString num=QString::number(componentTypeNum,10);
+
+
+
+                 Arc*arc=qgraphicsitem_cast<Arc*>(item);
+                 QString ori_id=arc->getId();
+                 QStringList list=ori_id.split("&");
+                 Q_ASSERT_X(list[0]!=NULL,"ERROR","list[0] represents component_type,this variable shouldnot become null.please check mainwindow line:333-336");
+                 //如果此时页面上已经添加过该类的
+                 if(type_count.contains(list[0]))
+                 {
+                     int nums=type_count.value(list[0])+1;
+                     QString num=QString::number(nums);
+
+                     QString source=arc->getSourceId();
+                     QStringList souceList=source.split("&");
+
+                     QString target=arc->getTargetId();
+                     QStringList targetList=source.split("&");
+
+                     arc->setsourceId(list[0]+"&"+"C"+num+"&"+source[2]);
+                     arc->setTargetId(list[0]+"&"+"C"+num+"&"+targetList[2]);
+                     arc->setID(list[0]+"&"+"C"+num+"&"+list[2]);
+
+                     type_count.insert(list[0],nums);
+                 }
+                 //页面上尚未出现过该组件类型
+                 else
+                 {
+                     int nums=1;
+                     QString num=QString::number(nums);
+                     QString source=arc->getSourceId();
+                     QStringList souceList=source.split("&");
+
+                     QString target=arc->getTargetId();
+                     QStringList targetList=source.split("&");
+
+                     arc->setsourceId(list[0]+"&"+"C"+num+"&"+source[2]);
+                     arc->setTargetId(list[0]+"&"+"C"+num+"&"+targetList[2]);
+                     arc->setID(list[0]+"&"+"C"+num+"&"+list[2]);
+
+                     type_count.insert(list[0],nums);
+                 }
+
+
+
+             }
+             isEdit.insert(item,true);
+         }
+
+     }
+
+ }
+
+
+
+
+ bool TabWidget::componentIdEdited(QString ori_ID)
+ {
+     // 所有
+ }
+
+ void TabWidget::setImportComponentId_AND_classsifyComponenet()
+ {
+     //每导入一次就扫描页面上的所有元素，对该元素进行判断，判断是否读取过了，并将满足条件的元素塞入组件列表中
+     //每进行导入操作时，这个函数就被调用一次，com_arry.size()就+1
+     //QVector<Componenent*>com_arry;//管理页面上的所有组件,注意必须保持唯一性
+     //QMap<QString ,int>type_count;//计数器//必须保证唯一
+
+     //todo::
+     //在设置tab的id时，记得在尾巴弄上他的文件名，id由三部分组成，最后一部分是文件名，记得检查，有几个地方没弄
+
+     //拿到所有元素
+     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+     //扫描页面上所有元素
+     PTNscene*s=tab->getSCene();
+     Component*com=new Component();
+     qDebug()<<"1: "<<tab->getId()<<": "<<tab->getId();
+
+     QString type=getComponenttype(tab->getId());
+     qDebug()<<"2:"<<tab->getId()<<": "<<type;
+
+     //这个类型的组件之前已经添加过了
+     if(type_count.contains(type))
+     {
+         qDebug()<<"3:"<<tab->getId()<<": "<<type_count[type];
+         type_count[type]+=1;
+
+     }
+     else
+     {
+         type_count.insert(type,1);
+         qDebug()<<"4"<<tab->getId()<<": "<<type_count[type];
+     }
+     QString s1=QString::number(type_count[type]);
+     qDebug()<<"s1:"<<tab->getId()<<": "<<s1;
+     tab->setId(type+"&"+"C"+s1);
+     qDebug()<<"5:"<<tab->getId()<<": "<<tab->getId();
+     //对于所有原始组件而言，原始id的格式 一定是 type&C1&p0/t0
+     int count=0;
+     foreach(QGraphicsItem * item , s->items())
+     {
+         count+=1;
+         qDebug()<<"5.5 count:"<<tab->getId()<<": "<<count;
+         if(item->type() == Place::Type)
+         {
+             Place * place = qgraphicsitem_cast<Place*>(item);
+             QStringList list=place->getId().split("&");
+             qDebug()<<"6: "<<tab->getId()<<": "<<place->getId();
+             qDebug()<<"7:"<<tab->getId()<<": "<<place->isInComponent();
+             //这个元素已经被包含在组件内了
+             if(place->isInComponent())
+             {
+                 qDebug()<<"10:"<<tab->getId()<<": "<<place->getId();
+                 continue;
+             }
+             else
+             {
+
+                 //设置id
+                 QString newId=type+"&"+"C"+s1+"&"+list[2];
+                 qDebug()<<"8:"<<tab->getId()<<": "<<newId;
+                 place->setPlaceID(newId);
+                 place->setIncomponent(true);
+                 com->mynet->AddPlace(place);
+
+
+             }
+         }
+         else if(item->type() == Transition::Type)
+         {
+             Transition * trans = qgraphicsitem_cast<Transition*>(item);
+             QStringList list=trans->getId().split("&");
+             qDebug()<<"11"<<trans->getId();
+             qDebug()<<"14"<<tab->getId()<<": "<<trans->isInComponent();
+             //这个元素已经被包含在组件内了
+             if(trans->isInComponent())
+             {
+                 qDebug()<<"12"<<tab->getId()<<": "<<trans->getId();
+                 continue;
+             }
+             else
+             {
+
+                 //设置id
+                 QString newId=type+"&"+"C"+s1+"&"+list[2];
+                 qDebug()<<"9:"<<tab->getId()<<": "<<newId;
+                 trans->setID(newId);
+                 trans->setIncomponent(true);
+                 com->mynet->AddTransition(trans);
+
+
+             }
+         }
+         else if(item->type() == Arc::Type)
+         {
+             Arc * arc = qgraphicsitem_cast<Arc*>(item);
+             QStringList list=arc->getId().split("&");
+             qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
+             qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();
+             //这个元素已经被包含在组件内了
+             if(arc->isInComponent())
+             {
+                 qDebug()<<"17"<<tab->getId()<<": "<<arc->isInComponent();
+                 continue;
+             }
+             else
+             {
+
+                 //设置id
+                 QString newId=type+"&"+"C"+s1+"&"+list[2];
+                 QString source=arc->getSourceId();
+                 QStringList sl=source.split("&");
+
+                 QString target=arc->getTargetId();
+                 QStringList gl=target.split("&");
+
+                 arc->setsourceId(type+"&"+"C"+s1+"&"+sl[2]);
+                 arc->setTargetId(type+"&"+"C"+s1+"&"+gl[2]);
+                 qDebug()<<"18:"<<tab->getId()<<": "<<newId;
+                 arc->setID(newId);
+                 arc->setIncomponent(true);
+                 com->mynet->AddArc(arc);
+             }
+         }
+     }
+
+     com->setID(tab->getId());
+     qDebug()<<"13"<<com->getID();
+     com_arry.push_back(com);
+ }
+
+ QString TabWidget::getComponenttype(QString id)
+ {
+     QStringList list=id.split("&");
+     return list[0];
  }
 void TabWidget::undo()
 {

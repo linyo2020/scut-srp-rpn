@@ -73,6 +73,9 @@ class Transition : public QGraphicsRectItem
     void setBrushColor(QColor color);
     void setPenColor(QColor color);
 
+    bool isInComponent();
+    void setIncomponent(bool isInComponent);
+
  protected:
 
     void paint ( QPainter * painter,
@@ -105,6 +108,7 @@ class Transition : public QGraphicsRectItem
     QColor m_brushColor = defalut_brushColor;
     QColor m_penColor = defalut_penColor;
 
+    bool InComponent=false;
 
 };
 #endif // TRANSITION_H

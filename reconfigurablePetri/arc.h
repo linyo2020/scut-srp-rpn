@@ -58,6 +58,9 @@ class Arc : public QGraphicsPathItem
     QPainterPath shape() const;
     QRectF boundingRect() const;
 
+    bool isInComponent();
+    void setIncomponent(bool isInComponent);
+
     //void updateradius(int);
 
  protected:
@@ -87,6 +90,7 @@ class Arc : public QGraphicsPathItem
 
     QColor color;
 
+    bool InComponent=false;
 
 //	FISStruct2 m_FIS;
 

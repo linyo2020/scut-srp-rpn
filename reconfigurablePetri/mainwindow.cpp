@@ -315,18 +315,20 @@ void MainWindow::createComponentDock()
     addComponent=new QToolButton();
     componentTree=new QTreeWidget();
 
-    //---------不要调整下面connect顺序，会报错----------
+    //---------不要调整下面connect顺序，会报错--------------------
     newComponent->setText(tr("保存"));
     connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
     connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
-
     connect(this,&MainWindow::createComponentFinished,this,[=](){
-        this->component_controller->newtype=this->comType;
-        this->component_controller->ReadListFile();
-        this->component_controller->WriteListFile();
-        this->component_controller->ReadListFile();
-        tabWidget->componentTypeNum=component_controller->type_list[component_controller->newtype];
-        qDebug()<<"mainwindow tabWidget->componentTypeNum: "<<tabWidget->componentTypeNum;
+
+        //获取用户输入的type
+        //this->component_controller->newtype=this->comType;
+        //不再需要文件操作了
+//        this->component_controller->ReadListFile();
+//        this->component_controller->WriteListFile();
+//        this->component_controller->ReadListFile();
+        //this->component_controller->type_list.insert()
+        tabWidget->componentTypeNum=1;
     });
     connect(editcommenu,&neweditcom::editFinished,tabWidget,&TabWidget::setElementId);
     connect(editcommenu,&neweditcom::typechange,this,&MainWindow::changecomType);
@@ -336,9 +338,11 @@ void MainWindow::createComponentDock()
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(deleteComponent,&QToolButton::clicked,this,[=](){this->deleteComponentTreeNode(componentTree);});
-    addComponent->setText(tr("打开"));
+    addComponent->setText(tr("导入"));
     addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);//bug
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
+
     componentBar=new QToolBar();
 
     componentBar->addWidget(newComponent);
@@ -387,6 +391,8 @@ void MainWindow::changecomType(QString text)
     this->comType=text;
     emit createComponentFinished();
 }
+
+
 /*
  * 点击按钮组触发的槽函数
  * enum{normalMode=0, animationMode=1, addPlaceMode=2, \
@@ -695,6 +701,7 @@ void MainWindow::openComponent()
         statusBar->showMessage("Component loaded and opened.", 1000);
     else
         statusBar->showMessage("Component was not opened.", 1000);
+    emit importComponentFinished();
 }
 void MainWindow::openComponentDock()
 {
@@ -768,5 +775,5 @@ MainWindow::~MainWindow()
     delete addComponent;
     delete deleteComponent;
     delete componentBar;
-
+    delete editcommenu;
 }

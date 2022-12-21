@@ -78,6 +78,16 @@ void Place::setOutputPort(bool flag)
     outputPort = flag;
 }
 
+bool Place::isInComponent()
+{
+    return this->InComponent;
+}
+
+void Place::setIncomponent(bool isInComponent)
+{
+    this->InComponent=isInComponent;
+}
+
 
 QColor Place::getBrushColor() const
 {

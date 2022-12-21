@@ -53,9 +53,15 @@ public:
     //获取组件名
     QStringList getFileNames ();
 
+    //关于组件id的设置
     void setComponentType(QString type);
     void setElementId();
     int componentTypeNum;
+    void setImportComponentID();
+    bool componentIdEdited(QString ori_ID);
+    void setImportComponentId_AND_classsifyComponenet();
+    QString getComponenttype(QString id);
+
 signals:
     void addComponentTreeNode (QString componentName,QString componentPath);
     void canRedoChange (bool canRedo);
@@ -70,7 +76,9 @@ protected:
 private:
     int nets_indexes;
     QStringList fileNames;
-    QVector<Component*>component_List;
+    QVector<Component*>component_List;//bug
+    QVector<Component*>com_arry;
+    QMap<QString,int>type_count;
 };
 
 #endif // TABWIDGET_H

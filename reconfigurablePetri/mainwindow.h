@@ -146,6 +146,7 @@ private:
 
     void changecomType(QString text);
 
+
     //初始化菜单，工具，状态栏，拖拉界面
     void createMenuBar ();
     void createToolBar ();
@@ -155,10 +156,11 @@ private:
 
     //组件库信息
     void editComponentInfo(QString componentName,QString componentType);
+
 signals:
     void createComponentFinished();
     void deleteComponentFinished();
-
+    void importComponentFinished();
 };
 
 #endif // MAINWINDOW_H

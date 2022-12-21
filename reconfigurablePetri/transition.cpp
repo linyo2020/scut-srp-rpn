@@ -68,6 +68,16 @@ void Transition::setPenColor(QColor color)
     update();
 }
 
+bool Transition::isInComponent()
+{
+    return this->InComponent;
+}
+
+void Transition::setIncomponent(bool isInComponent)
+{
+    this->InComponent=isInComponent;
+}
+
 bool Transition::getShow()
 {
     return show;
