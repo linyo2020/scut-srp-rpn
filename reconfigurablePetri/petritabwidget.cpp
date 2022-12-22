@@ -415,6 +415,11 @@ PTNscene* PetriTabWidget::getSCene()
     return this->scene;
 }
 
+QString PetriTabWidget::getName()
+{
+    return this->name;
+}
+
 /* error message */
 void PetriTabWidget::showErrorMessage (const QString &title, const QString &errorMsg)
 {

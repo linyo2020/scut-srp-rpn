@@ -52,6 +52,7 @@ public:
     bool checkNodesConnections();
     void checkNodesNames();
     PTNscene* getSCene();
+    QString getName();
 
 //    GraphVisualizer * createGraphVis ();
 //    GraphVisualizer * getGraphVis ();

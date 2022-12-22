@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "editrulelibrary.h"
 #include "simulation/plot.h"
 #include <QDebug>
@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
       setCentralWidget (tabWidget);
 
       this->comType="A";
-       editcommenu=new neweditcom(this);
+       //editcommenu=new neweditcom(this);
 
       //初始化
       createToolBar ();
@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
+      //不要调整顺序
+      connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
       connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
 }
 
@@ -317,9 +319,10 @@ void MainWindow::createComponentDock()
 
     //---------不要调整下面connect顺序，会报错--------------------
     newComponent->setText(tr("保存"));
-    connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
-    connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
-    connect(this,&MainWindow::createComponentFinished,this,[=](){
+    connect(tabWidget,&TabWidget::saveComponentFinished,tabWidget,&TabWidget::setElementId);
+    //connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
+    //connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
+    //connect(this,&MainWindow::createComponentFinished,this,[=](){
 
         //获取用户输入的type
         //this->component_controller->newtype=this->comType;
@@ -328,12 +331,13 @@ void MainWindow::createComponentDock()
 //        this->component_controller->WriteListFile();
 //        this->component_controller->ReadListFile();
         //this->component_controller->type_list.insert()
-        tabWidget->componentTypeNum=1;
-    });
-    connect(editcommenu,&neweditcom::editFinished,tabWidget,&TabWidget::setElementId);
-    connect(editcommenu,&neweditcom::typechange,this,&MainWindow::changecomType);
-    connect(editcommenu,&neweditcom::typechange,tabWidget,&TabWidget::setComponentType);
-    connect(newComponent,&QToolButton::clicked,this,[=](){this->editcommenucreate();});
+        //tabWidget->componentTypeNum=1;
+    //});
+    //connect(editcommenu,&neweditcom::editFinished,tabWidget,&TabWidget::ElementIdEditFinished);
+    //connect(editcommenu,&neweditcom::typechange,this,&MainWindow::changecomType);
+    //connect(editcommenu,&neweditcom::typechange,tabWidget,&TabWidget::setComponentType);
+    //connect(newComponent,&QToolButton::clicked,this,[=](){this->editcommenucreate();});
+    connect(newComponent,&QToolButton::clicked,tabWidget,&TabWidget::saveComponent);
 
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
@@ -366,7 +370,9 @@ void MainWindow::createComponentDock()
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
 
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
-    connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);});
+    connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);
+
+    });
     componentDock->setWidget(mywid1);
     componentDock->show ();
 }
@@ -380,11 +386,11 @@ void MainWindow::Tex(QString tex)
     qDebug()<<tex;
 }
 
-void MainWindow::editcommenucreate()
-{
+//void MainWindow::editcommenucreate()
+//{
 
-    editcommenu->show();
-}
+//    editcommenu->show();
+//}
 //当且仅当用户新建组件时触发
 void MainWindow::changecomType(QString text)
 {
@@ -718,7 +724,8 @@ void MainWindow::openRuleLibrary()
 }
 void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
 {
-    component_controller->addComponentTreeNode(componentTree,this->comType,componentName,componentPath);
+    //component_controller->addComponentTreeNode(componentTree,this->comType,componentName,componentPath);
+    component_controller->addComponentTreeNode(componentTree,"已废弃属性",componentName,componentPath);
 }
 //删除当前组件库浮动窗口上的组件
 void MainWindow::deleteComponentTreeNode(QTreeWidget* tree)
@@ -775,5 +782,5 @@ MainWindow::~MainWindow()
     delete addComponent;
     delete deleteComponent;
     delete componentBar;
-    delete editcommenu;
+    //delete editcommenu;
 }

@@ -69,6 +69,8 @@ signals:
     void tabChanged (int index);
     void errorMessage (const QString &msg);
     void ElementIdEditFinished();
+    void addComponentFinished();
+    void saveComponentFinished();
 protected:
     //连接具体页面的信号和槽，用于传递Undo，Redo，netChanged，error信息
     void connectSignalAndSlot(PetriTabWidget * tab);
