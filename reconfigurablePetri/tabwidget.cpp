@@ -140,7 +140,7 @@ void TabWidget::saveAsComponent()
     QString nameStr = fileInfo.fileName();
     nameStr = nameStr.remove(nameStr.size()-5,5);
     tab->setName(nameStr);
-    tab->setId(nameStr);
+    //tab->setId(nameStr);
     XmlWriter writer(tab->componentToXml());
     writer.writeXML(&file);
 
@@ -171,7 +171,7 @@ void TabWidget::saveAsComponent()
      if(this->component_List[0]->getComponent_type()!=NULL)
      {
          PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
-         tab->setId(component_List[0]->getComponent_type()+"&"+"C1");
+         tab->setId(component_List[0]->getComponent_type()+"&"+"C1"+"&"+tab->getId());
          PTNscene*s=tab->getSCene();
 
          qDebug()<<"set"<<component_List[0]->getComponent_type()+"&"+"C1";
