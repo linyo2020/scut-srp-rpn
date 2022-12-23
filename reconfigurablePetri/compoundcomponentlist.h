@@ -8,7 +8,7 @@ class CompoundComponentList : public QObject
     Q_OBJECT
 public:
     explicit CompoundComponentList(QObject *parent = nullptr);
-    CompoundComponentList(QVector<Component*>com_arry);
+    CompoundComponentList();
 
     //如果未找到返回空值
     CompoundComponent* getCertainCompoundComponent( QString ID);
@@ -44,7 +44,7 @@ public:
 
 private:
     QList<CompoundComponent*>CompoundComponent_List;
-    QVector<Component*>old;//在仿真前保存的所有组件信息
+
 signals:
 
 };

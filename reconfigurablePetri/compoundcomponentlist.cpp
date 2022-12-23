@@ -5,11 +5,6 @@ CompoundComponentList::CompoundComponentList(QObject *parent) : QObject(parent)
 
 }
 
-CompoundComponentList::CompoundComponentList(QVector<Component *> com_arry)
-{
-    this->old=com_arry;
-
-}
 
 CompoundComponent *CompoundComponentList::getCertainCompoundComponent(QString ID)
 {
