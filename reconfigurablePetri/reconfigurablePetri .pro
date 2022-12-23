@@ -34,6 +34,8 @@ SOURCES += \
     command.cpp \
     component.cpp \
     componentcontroller.cpp \
+    compoundcomponent.cpp \
+    compoundcomponentlist.cpp \
     dockwidget.cpp \
     editrulelibrary.cpp \
     editComponent.cpp \
@@ -82,6 +84,8 @@ HEADERS += \
     command.h \
     component.h \
     componentcontroller.h \
+    compoundcomponent.h \
+    compoundcomponentlist.h \
     defs.h \
     dockwidget.h \
     editrulelibrary.h \

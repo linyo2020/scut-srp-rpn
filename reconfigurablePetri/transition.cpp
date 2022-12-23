@@ -41,6 +41,7 @@ Transition::Transition(const QString &id, const QPointF &position)
     label->setPos(position.x(),position.y());
 }
 
+
 void Transition::setShow(bool flag)
 {
     show = flag;

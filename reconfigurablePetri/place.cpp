@@ -12,6 +12,11 @@ Place::Place(const QString &id)
     label->setPos(30, 30);
 }
 
+Place::Place()
+{
+    label=new QGraphicsSimpleTextItem();
+}
+
 /* From XML */
 Place::Place(const PLACE_ATTR &place)
 {
@@ -47,6 +52,8 @@ Place::Place(const QString &id, const QPointF &position)
     //might have bug
     label->setPos(position.x(),position.y());
 }
+
+
 
 bool Place::getShow()
 {
@@ -86,6 +93,18 @@ bool Place::isInComponent()
 void Place::setIncomponent(bool isInComponent)
 {
     this->InComponent=isInComponent;
+}
+
+bool Place::isNormalPort()
+{
+    if(isCompoundPort==false)
+    {
+        if(this->isInputPort()||this->isOutputPort())
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 

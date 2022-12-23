@@ -7,7 +7,7 @@
 #include"ptnet.h"
 #include"ptnscene.h"
 #include"QDateTime"
-class Component
+class Component: public QObject
 {
 public:
     //特别注意,组件类创建的时机以及方式.
@@ -23,8 +23,11 @@ public:
     QString label;//该数据获取方式:用户在新建控件时输入\系统读取控件xml文件时读取
 
 
+    //废弃属性
     QString Component_type;
 
+    //只获取普通端口，不获取复合端口
+    QList<Place*>getNormalPort();
 
     PTNet *mynet;
     bool net_att_isEdited;//useless
@@ -37,14 +40,9 @@ public:
     void setComponent_type(QString type);//slots//UI
     void setLabel(const QString &value);//slots//UI
     //variable :net need to connect,source ,target
-    Component merge(PTNet otherNet, QString thisNet_port,QString otherNet_port);
-    //todo
-    //放在UI？
-    //void deleteComponent();
-    //void AddComponent();
-    //todo
-    bool isport();
-    bool check();
+
+    Place* getCertainPlace(QString PlaceID);
+
 
 
 

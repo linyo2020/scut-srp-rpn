@@ -19,6 +19,8 @@ class Transition : public QGraphicsRectItem
     Transition(const TRANSITION_ATTR &transition);
     //控件用到
     Transition(const QString &id,const QPointF &position);
+    Transition();
+
     ~Transition ();
 
     void createTransition();
@@ -84,6 +86,7 @@ class Transition : public QGraphicsRectItem
 
  private:
 
+
     QString id;
     QString name;
     QString m_comment;
@@ -108,6 +111,7 @@ class Transition : public QGraphicsRectItem
     QColor m_brushColor = defalut_brushColor;
     QColor m_penColor = defalut_penColor;
 
+    //不要碰
     bool InComponent=false;
 
 };

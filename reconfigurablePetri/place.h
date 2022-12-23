@@ -12,9 +12,13 @@ class Place : public QGraphicsEllipseItem
     enum { Type = UserType + 1 };
 
     explicit Place(const QString &id);
+    Place();
     Place(const PLACE_ATTR &place);
     //用于控件计算的place
     Place(const QString &id,const QPointF &position);
+
+
+
     ~Place ();
 
     void createPlace();
@@ -71,6 +75,8 @@ class Place : public QGraphicsEllipseItem
     bool isInComponent();
     void setIncomponent(bool isInComponent);
 
+    bool isNormalPort();
+
  protected:
 
     void paint ( QPainter * painter,
@@ -79,13 +85,14 @@ class Place : public QGraphicsEllipseItem
 
  private:
 
+
     QString id;
     QString name;
     QString m_comment;
     bool show = false;
     double tokens=0;
     double capacity=0;
-    QString component_id;
+    //QString component_id;
     QGraphicsSimpleTextItem * label;
 
     QList<Arc*> input;
@@ -98,9 +105,15 @@ class Place : public QGraphicsEllipseItem
     static const QColor defalut_penColor;
 
     //判断是否为端口
-    bool inputPort=false;
-    bool outputPort=false;
+    bool inputPort;
+    bool outputPort;
 
+    //是否为复合端口
+    bool isCompoundPort=false;
+    //该端口复合了几个端口（当且仅当isCompoundPort值为true时生效)
+    int contain_portNum=1;
+
+    //不要动
     bool InComponent=false;
 
 };
