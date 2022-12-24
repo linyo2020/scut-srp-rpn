@@ -1,6 +1,6 @@
 #include "compoundcomponentlist.h"
 
-CompoundComponentList::CompoundComponentList(QObject *parent) : QObject(parent)
+CompoundComponentList::CompoundComponentList(QList<Component*>OriginComponetnList)
 {
 
 }
@@ -60,6 +60,40 @@ void CompoundComponentList::initial(QVector<Component *> com_arry)
     }
 }
 
+//
+//Component* CompoundComponentList::getOriginComponent(QString ComponentID)
+//{
+//    Component*com=new Component();
+//    //遍历保存的组件列表
+//    for(int i=0;i<OriginComponetnList.size();i++)
+//    {
+//        if (OriginComponetnList[i].id==ComponentID)
+//        {
+//            for(int i=0;i<OriginComponetnList[i].mynet.PlaceList.size();i++)
+//            {
+//                Place *P=new Place();
+//                把OriginComponetnList[i].mynet.PlaceList[i]的id、赋值给p；
+//                    //注意Place中弧的复制！！！！！place里的弧全部都是指针
+//                    for(int i=0;i<OriginComponetnList[i].mynet.PlaceList[i].input.size();i++)
+//                {
+//                    Arc*arc=new Arc();
+//                    把arc入与出赋值好,注意arc里面有个item对象
+//                }
+//                .....
+
+//            }
+//            ...transition与Arc同理
+
+//        }
+//    }
+//    return com;
+//}
+
+double CompoundComponentList::getDefaultComponent(QString str,QString ID)
+{
+    return component_Controller->getToken(str,ID);
+}
+
 void CompoundComponentList::updataAllID()
 {
     for(int i=0;i<this->CompoundComponent_List.size();i++)
@@ -101,4 +135,33 @@ Place *CompoundComponentList::getCertainPlace(QString PlaceID)
 QList<Place *> CompoundComponentList::getPortinComponent(QString ComponentID)
 {
     return getCertainCompoundComponent(ComponentID)->getCertainComponet(ComponentID)->getNormalPort();
+}
+
+void CompoundComponentList::addComponentPort(QString portID1,QString portID2)
+{
+    QString placeID=portID1+portID2;
+    Place *P=new Place();
+    P->setName(placeID);
+    P->setCapacity(getCertainPlace(portID1)->getCapacity()+getCertainPlace(portID2)->getCapacity());
+    P->setTokens(getCertainPlace(portID1)->getTokens()+getCertainPlace(portID2)->getTokens());
+    P->setInputPort(true);
+    P->setOutputPort(true);
+    P->setCompoundPort(true);
+    P->setcontain_portNum(P->getcontain_portNum()+1);
+    foreach(Arc* a,getCertainPlace(portID1)->getinput())
+    {
+        a->setTargetId(portID1);
+    }
+    foreach(Arc* a,getCertainPlace(portID1)->getoutput())
+    {
+        a->setsourceId(portID1);
+    }
+    foreach(Arc* a,getCertainPlace(portID2)->getinput())
+    {
+        a->setTargetId(portID2);
+    }
+    foreach(Arc* a,getCertainPlace(portID2)->getoutput())
+    {
+        a->setsourceId(portID2);
+    }
 }

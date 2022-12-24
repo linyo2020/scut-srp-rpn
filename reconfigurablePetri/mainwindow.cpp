@@ -121,6 +121,10 @@ void MainWindow::createToolBar ()
     animateToolButton->setCheckable(true);
     animateToolButton->setIcon(QIcon(QPixmap(":/images/animate.png")));
     animateToolButton->setToolTip(tr("Simulation"));
+    connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveLocalComponent();});
+    //connect(animateToolButton,&QToolButton::clicked,this,[=](){emit passCom_arry(this->tabWidget->getcom_arry());});
+    //connect(this,&MainWindow::passCom_arry,compound_component_list,&CompoundComponentList::getCompoundComponentList);
+
 
     //按钮组设置,指定按钮的id
     buttonGroup = new QButtonGroup (this);
@@ -367,15 +371,18 @@ void MainWindow::createComponentDock()
     VerticalLayout->addWidget(componentBar);
     VerticalLayout->addWidget(componentTree);
     mywid1->setLayout(VerticalLayout);
+    emit passComponnetController(component_controller);
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
 
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
     connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);
+    connect(this,&MainWindow::passComponnetController,compound_component_list,&CompoundComponentList::getComponent);
 
     });
     componentDock->setWidget(mywid1);
     componentDock->show ();
 }
+
 void MainWindow::componentPopMenu()
 {
     componentEditMenu->exec(QCursor::pos());
@@ -638,6 +645,7 @@ void MainWindow::buttonGroupClicked(int id)
             }*/
             view->show();
          }
+        tabWidget->openLocalComponent();
     }
 
     tab->setMode (id);
@@ -725,7 +733,7 @@ void MainWindow::openRuleLibrary()
 void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
 {
     //component_controller->addComponentTreeNode(componentTree,this->comType,componentName,componentPath);
-    component_controller->addComponentTreeNode(componentTree,"已废弃属性",componentName,componentPath);
+    component_controller->addComponentTreeNode(componentTree,componentName,componentPath);
 }
 //删除当前组件库浮动窗口上的组件
 void MainWindow::deleteComponentTreeNode(QTreeWidget* tree)
@@ -748,11 +756,11 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
     emit addComponentController(component_path);
 
 }
-void MainWindow::editComponentInfo(QString componentName, QString componentType)
+void MainWindow::editComponentInfo(QString componentName)
 {
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     currentItem->setText(0,componentName);
-    currentItem->setText(1,componentType);
+    //currentItem->setText(1,componentType);
 }
 
 MainWindow::~MainWindow()

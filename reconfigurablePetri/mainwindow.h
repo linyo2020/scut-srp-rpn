@@ -20,6 +20,7 @@
 #include "tabwidget.h"
 #include "dockwidget.h"
 #include "componentcontroller.h"
+#include "compoundcomponentlist.h"
 #include "editcomponent.h"
 #include"neweditcom.h"
 
@@ -54,9 +55,11 @@ public:
     void componentPopMenu();
     void Tex(QString tex);
     void openComponentDock();
+
 signals:
     void addComponentController(QString componentPath);
-
+    void passComponnetController(componentController *componentController);
+    void passCom_arry(QVector<Component*>com_arry);
 private:
 
     //各个菜单栏及其动作
@@ -140,6 +143,7 @@ private:
     //用于缩放的滑动条
     QSlider  * slider;
 
+    CompoundComponentList* compound_component_list;
     neweditcom*editcommenu;
     void editcommenucreate();
     QString comType;
@@ -155,12 +159,18 @@ private:
     void createComponentDock();
 
     //组件库信息
-    void editComponentInfo(QString componentName,QString componentType);
+    void editComponentInfo(QString componentName);
+
+
 
 signals:
     void createComponentFinished();
     void deleteComponentFinished();
     void importComponentFinished();
+
+
+
+
 };
 
 #endif // MAINWINDOW_H

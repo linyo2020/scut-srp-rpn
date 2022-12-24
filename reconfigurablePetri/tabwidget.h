@@ -12,7 +12,9 @@
 #include "xmlwriter.h"
 #include "messagehandler.h"
 #include "petritabwidget.h"
+#include "ptnscene.h"
 #include"component.h"
+#include"compoundcomponentlist.h"
 #include"QVector"
 class TabWidget : public QTabWidget
 {
@@ -49,9 +51,16 @@ public:
     //保存组件
     void saveComponent ();
     void saveAsComponent ();
-
+    //点击仿真按钮时执行的保存操作
+    void saveLocalComponent();
+    //仿真结束后重新读取本地保存文件
+    void openLocalComponent();
+    //还没写
+    //把复合组件的内容写到Scene
+    void writeToScene(CompoundComponent* comp_com,PTNscene*scene);
     //获取组件名
     QStringList getFileNames ();
+    QVector<Component*> getcom_arry();
 
     //关于组件id的设置
     void setComponentType(QString type);
@@ -71,6 +80,8 @@ signals:
     void ElementIdEditFinished();
     void addComponentFinished();
     void saveComponentFinished();
+    void startSimulation();
+    void finishSimulation();
 protected:
     //连接具体页面的信号和槽，用于传递Undo，Redo，netChanged，error信息
     void connectSignalAndSlot(PetriTabWidget * tab);

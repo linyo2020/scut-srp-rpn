@@ -75,6 +75,10 @@ void Place::setInputPort(bool flag)
     inputPort = flag;
 }
 
+void Place::setCompoundPort(bool flag)
+{
+    isCompoundPort=flag;
+}
 bool Place::isOutputPort()
 {
     return outputPort;
@@ -106,8 +110,23 @@ bool Place::isNormalPort()
     }
     return false;
 }
+QList<Arc*> Place::getinput()
+{
+    return input;
+}
+QList<Arc*> Place::getoutput()
+{
+    return output;
+}
+void Place::setcontain_portNum(int n)
+{
+    contain_portNum=n;
+}
 
-
+int Place::getcontain_portNum()
+{
+    return contain_portNum;
+}
 QColor Place::getBrushColor() const
 {
     return m_brushColor;
