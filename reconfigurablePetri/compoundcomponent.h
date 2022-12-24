@@ -1,6 +1,6 @@
 #ifndef CompoundComponent_H
 #define CompoundComponent_H
-
+//已废弃
 #include <QObject>
 #include"component.h"
 #include"QList"

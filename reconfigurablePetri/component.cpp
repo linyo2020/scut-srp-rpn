@@ -89,6 +89,21 @@ Component::Component(QString PTnet_ID, PTNscene *scene)
     }
 }
 
+QList<Place *> Component::getPlaceList()
+{
+    return this->mynet->PlaceList;
+}
+
+QList<Transition *> Component::getTransitionList()
+{
+    return this->mynet->TransitionList;
+}
+
+QString Component::getComponentFileName()
+{
+    return (this->getID().split("&")[0]);
+}
+
 QList<Place *> Component::getNormalPort()
 {
     QList<Place *> p;
@@ -112,6 +127,29 @@ QString Component::getLabel() const
 void Component::setID(QString id)
 {
     this->Component_id=id;
+    for(int i=0;i<mynet->PlaceList.size();i++)
+    {
+        Place*p=mynet->PlaceList[i];
+        QString name=p->getId().split("&")[2];
+        p->setPlaceID(id+"&"+name);
+    }
+    for(int i=0;i<mynet->TransitionList.size();i++)
+    {
+        Transition*p=mynet->TransitionList[i];
+        QString name=p->getId().split("&")[2];
+        p->setID(id+"&"+name);
+    }
+
+    for(int i=0;i<mynet->ArcList.size();i++)
+    {
+        Arc*p=mynet->ArcList[i];
+        QString name=p->getId().split("&")[2];
+        QString sName=p->getSourceId().split("&")[2];
+        QString TName=p->getTargetId().split("&")[2];
+        p->setTargetId(id+"&"+TName);
+        p->setsourceId(id+"&"+sName);
+        p->setID(id+"&"+name);
+    }
 }
 
 QString Component::getID()
@@ -122,11 +160,6 @@ QString Component::getID()
 void Component::setLabel(const QString &value)
 {
     label = value;
-}
-
-QString Component::getComponent_id()
-{
-    return this->Component_id;
 }
 
 

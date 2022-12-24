@@ -1,34 +1,25 @@
-#ifndef COMPOUNDCOMPONENTLIST_H
-#define COMPOUNDCOMPONENTLIST_H
-//已废弃
+#ifndef COMPONENTLIST_H
+#define COMPONENTLIST_H
+//inuse
 #include <QObject>
-#include"compoundcomponent.h"
-class CompoundComponentList : public QObject
+#include<component.h>
+
+class ComponentList : public QObject
 {
     Q_OBJECT
 public:
-    explicit CompoundComponentList(QObject *parent = nullptr);
-    CompoundComponentList();
+    explicit ComponentList(QObject *parent = nullptr);
+    ComponentList(QVector<Component*>com_list);
 
-    //如果未找到返回空值
-    CompoundComponent* getCertainCompoundComponent( QString ID);
 
-    //针对现有框架设置的参数，该参数在tabwidget中有写过
-    void initial(QVector<Component*>com_arry);
-
-    void updataAllID();
-
-    //得到该复合组件
-    QList<Component*> parseCompoundComponentID(QString CompoundComponentID);
+    //如果未找到返回nullptr
+    Component* getCertainComponent( QString ComID);
 
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);
 
-
-
     //获取指定组件的端口对象（仅返回普通端口）
     QList<Place*> getPortinComponent(QString ComponentID);
-    QList<Place*> getPortinComponent(Component*com);
 
     //返回指定组件的Place与Transition的name（ID的第三部分)
     QList<QString> getCertainPlaceName(QString ComponentID);
@@ -43,7 +34,8 @@ public:
 
     //todo 欣然
     void addComponentPort(QString portID1,QString portID2);
-    void addNewComponent(Component*newCom  );
+
+    void addNewComponent(Component*newCom  );//记得调用setnewComponentIDinSimulation
 
     //todo 田俊杰
     //注意new place时的细节
@@ -52,13 +44,11 @@ public:
 
 
 
-
-
 private:
-    QList<CompoundComponent*>CompoundComponent_List;
-    QList<Component*>garbage;
+    QVector<Component*>com_list;
+    QVector<Component*>garbage;
 signals:
 
 };
 
-#endif // COMPOUNDCOMPONENTLIST_H
+#endif // COMPONENTLIST_H

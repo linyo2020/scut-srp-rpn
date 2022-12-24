@@ -22,9 +22,15 @@ public:
     //The name displayed on the UI
     QString label;//该数据获取方式:用户在新建控件时输入\系统读取控件xml文件时读取
 
+    //返回该组件中所有place
+    QList<Place*> getPlaceList();
+    //返回TransitionList
+    QList<Transition*>getTransitionList();
 
     //废弃属性
     QString Component_type;
+
+    QString getComponentFileName();
 
     //只获取普通端口，不获取复合端口
     QList<Place*>getNormalPort();
@@ -33,7 +39,7 @@ public:
     bool net_att_isEdited;//useless
 
     QString getComponent_type() const;
-    QString getComponent_id();
+    //QString getComponent_id();
     QString getLabel() const;
     void setID(QString id);
     QString getID();
