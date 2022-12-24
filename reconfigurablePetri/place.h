@@ -77,6 +77,11 @@ class Place : public QGraphicsEllipseItem
 
     bool isNormalPort();
 
+    void setCompoundPort(bool);
+    void setcontain_portNum(int);
+    int getcontain_portNum();
+    QList<Arc*> getinput();
+    QList<Arc*> getoutput();
  protected:
 
     void paint ( QPainter * painter,

@@ -11,18 +11,18 @@ void componentController::componentTreeInitial(QTreeWidget *newTree)
     newTree->clear();
     newTree->headerItem()->setText(0,QString());	//设置表头为空
     QStringList hraders;
-    hraders<<"Type"<<"name";  //显示的设备列表信息
+    hraders<<"name";  //显示的设备列表信息
     newTree->setHeaderLabels(hraders);		//添加树表的表头
 
 }
 
-void componentController::addComponentTreeNode(QTreeWidget *newTree,QString component_type,QString component_name,QString component_path)
+void componentController::addComponentTreeNode(QTreeWidget *newTree,QString component_name,QString component_path)
 {
     bool flag=1;
     //遍历treeWidget
         QTreeWidgetItemIterator it(newTree);
         while (*it) {
-             if((*it)->text(2)==component_path)
+             if((*it)->text(1)==component_path||(*it)->text(0)==component_name)
              {
                  flag=0;
              }
@@ -31,9 +31,10 @@ void componentController::addComponentTreeNode(QTreeWidget *newTree,QString comp
         if(flag)
         {
             QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
-            Item->setText(0,component_type);
-            Item->setText(1,component_name);
-            Item->setText(2,component_path);
+            itemsFile[component_name]=component_path;
+            //Item->setText(0,component_type);
+            Item->setText(0,component_name);
+            Item->setText(1,component_path);
             Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
             Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
             //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
@@ -46,6 +47,48 @@ void componentController::removeComponentTreeNode(QTreeWidgetItem *item)
         delete item;
 
 }
+
+double componentController::getToken(QString filename,QString ID)
+{
+    QMapIterator<QString,QString>iterator(itemsFile);
+    double tokenNum;
+    double capacityNum;
+    while(iterator.hasNext())
+    {
+        if(filename==iterator.key())
+        {
+            QFile file(iterator.value());
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            //![3] parse xml file
+            file.seek(0);
+            QTextStream textstream(&file);
+            QString xmlContent = textstream.readAll();
+            file.close();
+
+            XmlParser parser;
+            parser.parseXML(xmlContent);
+
+            PTNET_ATTR net = parser.getXML_net ();
+            QList<PAGE_ATTR> page=net.pages;
+
+            foreach(PAGE_ATTR p,page)
+            {
+                foreach(PLACE_ATTR pl,p.placeNodes)
+                {
+                    if(ID==pl.id)
+                    {
+                    tokenNum=pl.initmark;
+                    capacityNum=pl.capacity;
+                    }
+                }
+            }
+
+        }
+    }
+    return tokenNum;
+}
+
 
 void componentController::ReadListFile(QString str)
 {

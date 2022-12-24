@@ -88,6 +88,43 @@ void TabWidget::print()
 
 }
 
+void TabWidget::saveLocalComponent()
+{
+    tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
+    QString filename = tab_copy->getFilename();
+
+
+    if(filename.isNull())
+    {
+        saveAsComponent();
+        qDebug()<<"saveComponentFinished emit";
+        emit saveComponentFinished();
+    }
+
+    //调整了信号触发时机，只有当用户第一次创建这个组件时才会触发信号，使得画板上所有元素的ID被设置
+    //当该文件是已被编辑过的则不会调用setElementId这个函数
+    else
+    {
+        qDebug()<<"fail";
+        QFile file(filename);
+
+        if(!file.open(QIODevice::WriteOnly))
+            QMessageBox::critical(this, "Open Component Error", \
+                                  "The Component could not be opened.");
+
+        XmlWriter writer(tab_copy->componentToXml());
+        writer.writeXML(&file);
+        tab_copy->cleanUndostack();
+    }
+
+    emit startSimulation();
+
+}
+void TabWidget::openLocalComponent()
+{
+    setCurrentWidget(tab_copy);
+    emit finishSimulation();
+}
 //use
 void TabWidget::saveComponent()
 {
@@ -165,7 +202,10 @@ void TabWidget::saveAsComponent()
          fileNames << filename;
 }
 
-
+QVector<Component*> TabWidget::getcom_arry()
+{
+    return com_arry;
+}
 
  QStringList TabWidget::getFileNames ()
  {
@@ -666,6 +706,8 @@ void TabWidget::addComponent(QString componentPath)
     tab->setComponent(net, componentPath);
     emit addComponentFinished();
 }
+
+
 bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
 {
     //![0] validate XML schema
