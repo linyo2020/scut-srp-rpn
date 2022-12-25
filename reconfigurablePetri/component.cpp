@@ -104,6 +104,17 @@ QString Component::getComponentFileName()
     return (this->getID().split("&")[0]);
 }
 
+Place *Component::getCertainPlaceByName(QString p0)
+{
+    for(int i=0;i<mynet->PlaceList.size();i++)
+    {
+        if(mynet->PlaceList[i]->getId().split("&")[2]==p0)
+        {
+            return mynet->PlaceList[i];
+        }
+    }
+}
+
 QList<Place *> Component::getNormalPort()
 {
     QList<Place *> p;
