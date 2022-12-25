@@ -352,12 +352,25 @@ void ComponentList::deleteComponent(QString ComponentID)
             {
                 s->addItem(com->mynet->ArcList[i]);
             }
+
+            //恢复成默认值
+            Component*c=this->OriginComponent(ComponentID.split("&")[0]);
+            for(int y=0;i<com_list[i]->mynet->PlaceList.size();y++)
+            {
+                for(int z=0;z<c->mynet->PlaceList.size();z++)
+                {
+                    if(c->mynet->PlaceList[z]->getName()==com_list[i]->mynet->PlaceList[y]->getName())
+                    {
+                        com_list[i]->mynet->PlaceList[y]->setTokens(c->mynet->PlaceList[z]->getTokens());
+                        com_list[i]->mynet->PlaceList[y]->setCapacity(c->mynet->PlaceList[z]->getCapacity());
+                    }
+                }
+            }
+
             garbage.insert(ComponentID,s);
             com_list.remove(i);
         }
     }
-    //恢复成默认值
-
 
 }
 
