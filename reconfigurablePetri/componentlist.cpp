@@ -5,12 +5,12 @@ ComponentList::ComponentList(QObject *parent) : QObject(parent)
 
 }
 
-ComponentList::ComponentList(QVector<Component *> c_list)
+ComponentList::ComponentList(QVector<Component *> com_list, QVector<Component *> OriginComponent_List, PTNscene *Scene, componentController *comController)
 {
-    for(int i=0;i<c_list.size();i++)
-    {
-        this->com_list.push_back(c_list[i]);
-    }
+    this->com_list=com_list;
+    this->OriginComponent_List=OriginComponent_List;
+    this->Scene=Scene;
+    this->comController=comController;
 }
 
 
@@ -116,9 +116,9 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
         }
     }
 
-    for(int i=0;i<garbage.size();i++)
+    for(int i=0;i<garbage_comID.size();i++)
     {
-        if(garbage[i]->getComponentFileName()==newComponent->getComponentFileName())
+        if(garbage_comID[i].split("&")[0]==newComponent->getComponentFileName())
         {
             count++;
         }
@@ -126,4 +126,42 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 
     newComponent->setID(newComponent->getComponentFileName()+QString::number(count));
     return (newComponent->getComponentFileName()+QString::number(count));
+}
+
+
+void ComponentList::addComponentPort(QString portID1, QString portID2)
+{
+    QString placeID=portID1+portID2;
+    Place *P=new Place();
+    P->setName(placeID);
+    P->setCapacity(getCertainPlace(portID1)->getCapacity()+getCertainPlace(portID2)->getCapacity());
+    P->setTokens(getCertainPlace(portID1)->getTokens()+getCertainPlace(portID2)->getTokens());
+    P->setInputPort(true);
+    P->setOutputPort(true);
+    P->setCompoundPort(true);
+    P->setcontain_portNum(P->getcontain_portNum()+1);
+    foreach(Arc* a,getCertainPlace(portID1)->getinput())
+    {
+        a->setTargetId(portID1);
+    }
+    foreach(Arc* a,getCertainPlace(portID1)->getoutput())
+    {
+        a->setsourceId(portID1);
+    }
+    foreach(Arc* a,getCertainPlace(portID2)->getinput())
+    {
+        a->setTargetId(portID2);
+    }
+    foreach(Arc* a,getCertainPlace(portID2)->getoutput())
+    {
+        a->setsourceId(portID2);
+    }
+}
+
+void ComponentList::seperateCompoundPort(QString CompoundPortID)
+{
+    QStringList id=CompoundPortID.split("+");
+    QString ID1=id[0];
+    QString ID2=id[1];
+    Place
 }

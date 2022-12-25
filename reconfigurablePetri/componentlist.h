@@ -2,15 +2,17 @@
 #define COMPONENTLIST_H
 //inuse
 #include <QObject>
+#include"ptnscene.h"
 #include<component.h>
+#include "componentcontroller.h"
 
 class ComponentList : public QObject
 {
     Q_OBJECT
 public:
     explicit ComponentList(QObject *parent = nullptr);
-    ComponentList(QVector<Component*>com_list);
-
+    ComponentList(QVector<Component*>com_list,QVector<Component*>OriginComponent_List,PTNscene*Scene,componentController*comController);
+    ComponentList();
 
     //如果未找到返回nullptr
     Component* getCertainComponent( QString ComID);
@@ -29,12 +31,8 @@ public:
     QString setnewComponentIDinSimulation(Component *newComponent);
 
 
-
-
-
     //todo 欣然
     void addComponentPort(QString portID1,QString portID2);
-
     void addNewComponent(Component*newCom  );//记得调用setnewComponentIDinSimulation
 
     //todo 田俊杰
@@ -46,7 +44,10 @@ public:
 
 private:
     QVector<Component*>com_list;
-    QVector<Component*>garbage;
+    QList<QString>garbage_comID;
+    QVector<Component*>OriginComponent_List;//尚未赋值
+    PTNscene*Scene;//尚未赋值
+    componentController*comController;//尚未赋值
 signals:
 
 };
