@@ -116,9 +116,12 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
         }
     }
 
-    for(int i=0;i<garbage_comID.size();i++)
-    {
-        if(garbage_comID[i].split("&")[0]==newComponent->getComponentFileName())
+    QMapIterator<QString,PTNscene*>it(this->garbage);
+    Component*com=new Component();
+    PTNscene*s=new PTNscene;
+    while (it.hasNext()) {
+        it.next();
+        if(it.key().split("&")[0]==newComponent->getComponentFileName())
         {
             count++;
         }
@@ -332,6 +335,7 @@ void ComponentList::deleteComponent(QString ComponentID)
             PTNscene*s=new PTNscene();
             for(int i=0;i<com->mynet->PlaceList.size();i++)
             {
+
                 s->addItem(com->mynet->PlaceList[i]);
             }
             for(int i=0;i<com->mynet->TransitionList.size();i++)
@@ -341,10 +345,49 @@ void ComponentList::deleteComponent(QString ComponentID)
 
             for(int i=0;i<com->mynet->ArcList.size();i++)
             {
-                s->addItem(com->mynet->TransitionList[i]);
+                s->addItem(com->mynet->ArcList[i]);
             }
             garbage.insert(ComponentID,s);
             com_list.remove(i);
         }
     }
+
+}
+
+void ComponentList::recoverComponent(QString ComponentID)
+{
+    QMapIterator<QString,PTNscene*>it(this->garbage);
+    Component*com=new Component();
+    PTNscene*s=new PTNscene;
+    while (it.hasNext()) {
+        it.next();
+        if(it.key()==ComponentID)
+        {
+            s=it.value();
+        }
+    }
+
+    foreach(QGraphicsItem*item,s->items())
+    {
+        if(item->type()==Place::Type)
+        {
+            Place * place = qgraphicsitem_cast<Place*>(item);
+            com->mynet->PlaceList.push_back(place);
+
+        }
+        else if(item->type()==Transition::Type)
+        {
+            Transition * place = qgraphicsitem_cast<Transition*>(item);
+            com->mynet->TransitionList.push_back(place);
+
+        }
+        else if(item->type()==Arc::Type)
+        {
+            Arc * place = qgraphicsitem_cast<Arc*>(item);
+            com->mynet->ArcList.push_back(place);
+
+        }
+
+    }
+    com_list.push_back(com);
 }
