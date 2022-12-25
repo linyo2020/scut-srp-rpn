@@ -128,7 +128,7 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
     return (newComponent->getComponentFileName()+QString::number(count));
 }
 
-
+//对象不存在则无法合并
 void ComponentList::addComponentPort(QString portID1, QString portID2)
 {
     QString placeID=portID1+portID2;
@@ -142,26 +142,181 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
     P->setcontain_portNum(P->getcontain_portNum()+1);
     foreach(Arc* a,getCertainPlace(portID1)->getinput())
     {
-        a->setTargetId(portID1);
+        a->setTargetId(placeID);
+        a->setTargetItem(P);
     }
     foreach(Arc* a,getCertainPlace(portID1)->getoutput())
     {
-        a->setsourceId(portID1);
+        a->setsourceId(placeID);
+        a->setSourceItem(P);
     }
     foreach(Arc* a,getCertainPlace(portID2)->getinput())
     {
-        a->setTargetId(portID2);
+        a->setTargetId(placeID);
+        a->setTargetItem(P);
     }
     foreach(Arc* a,getCertainPlace(portID2)->getoutput())
     {
-        a->setsourceId(portID2);
+        a->setsourceId(placeID);
+        a->setSourceItem(P);
     }
+
+    this->Scene->addItem(P);
+
+    this->Scene->removeItem(getCertainPlace(portID1));
+    this->Scene->removeItem(getCertainPlace(portID2));
 }
 
+//分开之后，将原来的place恢复为初始状态//需要讨论
 void ComponentList::seperateCompoundPort(QString CompoundPortID)
 {
     QStringList id=CompoundPortID.split("+");
     QString ID1=id[0];
+    QString comID1=ID1.split("&")[0]+ID1.split("&")[1];
     QString ID2=id[1];
-    Place
+    QString comID2=ID2.split("&")[0]+ID2.split("&")[1];
+    Place *p1=new Place();
+    Place*p2=new Place();
+    p1->setPlaceID(ID1);
+    p2->setPlaceID(ID2);
+    double p1Token=0;
+    double p2Token=0;
+    double p1Capacity=0;
+    double p2Capacity=0;
+    QString FName1=ID1.split("&")[0];
+    QString FName2=ID2.split("&")[0];
+    for(int i=0;i<OriginComponent_List.size();i++)
+    {
+        if(OriginComponent_List[i]->getID().split("&")[0]==FName1)
+        {
+            p1Token=OriginComponent_List[i]->getCertainPlaceByName(ID1.split("&")[2])->getTokens();
+            p1Capacity=OriginComponent_List[i]->getCertainPlaceByName(ID1.split("&")[2])->getCapacity();
+        }
+
+        if(OriginComponent_List[i]->getID().split("&")[0]==FName2)
+        {
+            p1Token=OriginComponent_List[i]->getCertainPlaceByName(ID2.split("&")[2])->getTokens();
+            p1Capacity=OriginComponent_List[i]->getCertainPlaceByName(ID2.split("&")[2])->getCapacity();
+        }
+
+    }
+    p1->setTokens(p1Token);
+    p2->setTokens(p2Token);
+    p1->setCapacity(p1Capacity);
+    p2->setCapacity(p2Capacity);
+    p1->setcontain_portNum(1);
+    p2->setcontain_portNum(1);
+    p1->setCompoundPort(false);
+    p2->setCompoundPort(false);
+    QList<Arc*>l1;
+    QList<Arc*>l2;
+    Place*compoundPort=this->getCertainPlace(CompoundPortID);
+
+    for(int i=0;i<compoundPort->getinput().size();i++)
+    {
+        QString arcComID=compoundPort->getinput()[i]->getId().split("&")[0]+compoundPort->getinput()[i]->getId().split("&")[1];
+        if(arcComID==comID1)
+        {
+            l1.push_back(compoundPort->getoutput()[i]);
+        }
+    }
+
+
+
+    for(int i=0;i<compoundPort->getoutput().size();i++)
+    {
+        QString arcComID=compoundPort->getoutput()[i]->getId().split("&")[0]+compoundPort->getoutput()[i]->getId().split("&")[1];
+        if(arcComID==comID1)
+        {
+            l2.push_back(compoundPort->getoutput()[i]);
+        }
+    }
+
+    if(compoundPort->getoutput().size()==0)
+    {
+        p1->setOutputPort(true);
+        p2->setOutputPort(true);
+
+        p1->setInputPort(false);
+        p2->setInputPort(false);
+
+        for(int i=0;i<l1.size();i++)
+        {
+            l1[i]->setTargetId(ID1);
+            l1[i]->setTargetItem(p1);
+        }
+
+        for(int i=0;i<l2.size();i++)
+        {
+            l2[i]->setTargetId(ID2);
+            l2[i]->setTargetItem(p2);
+        }
+
+    }
+
+    else if(compoundPort->getinput().size()==0)
+    {
+        p1->setInputPort(true);
+        p2->setInputPort(true);
+
+        p1->setOutputPort(false);
+        p2->setOutputPort(false);
+
+        for(int i=0;i<l1.size();i++)
+        {
+            l1[i]->setsourceId(ID1);
+            l1[i]->setSourceItem(p1);
+        }
+
+        for(int i=0;i<l2.size();i++)
+        {
+            l2[i]->setsourceId(ID2);
+            l2[i]->setSourceItem(p2);
+        }
+    }
+
+    else
+    {
+        if((compoundPort->getinput()[0]->getId().split("&")[0]+compoundPort->getinput()[0]->getId().split("&")[1])==comID1)
+        {
+            p1->setOutputPort(true);
+            p2->setInputPort(true);
+            p1->setInputPort(false);
+            p2->setOutputPort(false);
+            for(int i=0;i<l1.size();i++)
+            {
+                l1[i]->setTargetId(ID1);
+                l1[i]->setTargetItem(p1);
+
+            }
+            for(int i=0;i<l2.size();i++)
+            {
+                l1[i]->setsourceId(ID1);
+                l1[i]->setSourceItem(p1);
+            }
+        }
+        else
+        {
+            p1->setOutputPort(false);
+            p2->setInputPort(false);
+            p1->setInputPort(true);
+            p2->setOutputPort(true);
+            for(int i=0;i<l1.size();i++)
+            {
+                l1[i]->setsourceId(ID1);
+                l1[i]->setSourceItem(p1);
+
+            }
+            for(int i=0;i<l2.size();i++)
+            {
+                l1[i]->setTargetId(ID1);
+                l1[i]->setTargetItem(p1);
+            }
+        }
+    }
+    //如何将新创建的place添加到scene中
+    this->Scene->addItem(p1);
+    this->Scene->addItem(p2);
+    this->Scene->removeItem(compoundPort);
+
 }
