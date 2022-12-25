@@ -71,6 +71,8 @@ class Place : public QGraphicsEllipseItem
     bool isOutputPort();
     void setInputPort(bool);
     void setOutputPort(bool);
+    bool isACompoundPort();
+
 
     bool isInComponent();
     void setIncomponent(bool isInComponent);
@@ -110,8 +112,8 @@ class Place : public QGraphicsEllipseItem
     static const QColor defalut_penColor;
 
     //判断是否为端口
-    bool inputPort;
-    bool outputPort;
+    bool inputPort=false;
+    bool outputPort=false;
 
     //是否为复合端口
     bool isCompoundPort=false;

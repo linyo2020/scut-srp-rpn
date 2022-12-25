@@ -89,6 +89,11 @@ void Place::setOutputPort(bool flag)
     outputPort = flag;
 }
 
+bool Place::isACompoundPort()
+{
+    return this->isCompoundPort;
+}
+
 bool Place::isInComponent()
 {
     return this->InComponent;

@@ -143,6 +143,8 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
     P->setOutputPort(true);
     P->setCompoundPort(true);
     P->setcontain_portNum(P->getcontain_portNum()+1);
+    QString comID1=portID1.split("&")[0]+portID1.split("&")[1];
+    QString comID2=portID2.split("&")[0]+portID2.split("&")[1];
     foreach(Arc* a,getCertainPlace(portID1)->getinput())
     {
         a->setTargetId(placeID);
@@ -164,6 +166,13 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
         a->setSourceItem(P);
     }
 
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==comID1||com_list[i]->getID()==comID2)
+        {
+            com_list[i]->mynet->PlaceList.push_back(P);
+        }
+    }
     this->Scene->addItem(P);
 
     this->Scene->removeItem(getCertainPlace(portID1));
@@ -322,6 +331,19 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
             }
         }
     }
+
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==comID1)
+        {
+            com_list[i]->mynet->PlaceList.push_back(p1);
+        }
+        else if(com_list[i]->getID()==comID2)
+        {
+            com_list[i]->mynet->PlaceList.push_back(p2);
+        }
+    }
+
     //如何将新创建的place添加到scene中
     this->Scene->addItem(p1);
     this->Scene->addItem(p2);
