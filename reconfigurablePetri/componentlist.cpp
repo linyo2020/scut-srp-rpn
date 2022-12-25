@@ -170,6 +170,11 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
     this->Scene->removeItem(getCertainPlace(portID2));
 }
 
+Component *ComponentList::OriginComponent(QString Filename)
+{
+
+}
+
 //分开之后，将原来的place恢复为初始状态//需要讨论
 void ComponentList::seperateCompoundPort(QString CompoundPortID)
 {
@@ -351,6 +356,8 @@ void ComponentList::deleteComponent(QString ComponentID)
             com_list.remove(i);
         }
     }
+    //恢复成默认值
+
 
 }
 
