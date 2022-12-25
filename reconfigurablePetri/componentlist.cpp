@@ -320,3 +320,31 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
     this->Scene->removeItem(compoundPort);
 
 }
+
+void ComponentList::deleteComponent(QString ComponentID)
+{
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==ComponentID)
+        {
+            Component*com=new Component;
+            com=com_list[i];
+            PTNscene*s=new PTNscene();
+            for(int i=0;i<com->mynet->PlaceList.size();i++)
+            {
+                s->addItem(com->mynet->PlaceList[i]);
+            }
+            for(int i=0;i<com->mynet->TransitionList.size();i++)
+            {
+                s->addItem(com->mynet->TransitionList[i]);
+            }
+
+            for(int i=0;i<com->mynet->ArcList.size();i++)
+            {
+                s->addItem(com->mynet->TransitionList[i]);
+            }
+            garbage.insert(ComponentID,s);
+            com_list.remove(i);
+        }
+    }
+}
