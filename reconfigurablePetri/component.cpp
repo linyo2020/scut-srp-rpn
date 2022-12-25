@@ -98,7 +98,10 @@ QList<Transition *> Component::getTransitionList()
 {
     return this->mynet->TransitionList;
 }
-
+QList<Arc*>Component::getTArcList()
+{
+    return this->mynet->ArcList;
+}
 QString Component::getComponentFileName()
 {
     return (this->getID().split("&")[0]);

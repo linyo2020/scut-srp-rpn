@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QFile>
 #include<QMap>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include"component.h"
 #include "xmlparser.h"
 class componentController
@@ -16,6 +18,9 @@ public:
     void removeComponentTreeNode(QTreeWidgetItem *item);
 
     double getToken(QString filename,QString ID);
+    Component * getComponent(QString filename);
+    QList<PAGE_ATTR> getXMLpages(QString filename);
+    PTNET_ATTR getPTnet(QString filename);
 
     //通过读取文件，读取type数量
     void ReadListFile(QString str="./list.txt");

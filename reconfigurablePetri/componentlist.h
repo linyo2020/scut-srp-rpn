@@ -53,9 +53,10 @@ private:
     QMap<QString,PTNscene*>garbage;
     QVector<Component*>OriginComponent_List;//尚未赋值
     PTNscene*Scene;//尚未赋值
-    componentController*comController;//尚未赋值
-signals:
-
+    componentController*comController;
+public slots:
+    void getComponent(componentController *comController){comController=comController;}
+    void getPTNScene(PTNscene * scene){Scene=scene;}
 };
 
 #endif // COMPONENTLIST_H

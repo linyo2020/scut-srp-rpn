@@ -26,7 +26,8 @@ public:
     QList<Place*> getPlaceList();
     //返回TransitionList
     QList<Transition*>getTransitionList();
-
+    //返回ArcList
+    QList<Arc*>getTArcList();
     //废弃属性
     QString Component_type;
 

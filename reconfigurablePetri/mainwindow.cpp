@@ -376,7 +376,7 @@ void MainWindow::createComponentDock()
 
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
     connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);
-    connect(this,&MainWindow::passComponnetController,compound_component_list,&CompoundComponentList::getComponent);
+    connect(this,&MainWindow::passComponnetController,component_list,&ComponentList::getComponent);
 
     });
     componentDock->setWidget(mywid1);

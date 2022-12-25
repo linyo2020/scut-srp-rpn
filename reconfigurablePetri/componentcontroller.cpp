@@ -20,32 +20,171 @@ void componentController::addComponentTreeNode(QTreeWidget *newTree,QString comp
 {
     bool flag=1;
     //遍历treeWidget
-        QTreeWidgetItemIterator it(newTree);
-        while (*it) {
-             if((*it)->text(1)==component_path||(*it)->text(0)==component_name)
-             {
-                 flag=0;
-             }
-            ++it;
-        }
-        if(flag)
+    QTreeWidgetItemIterator it(newTree);
+    while (*it) {
+        if((*it)->text(1)==component_path||(*it)->text(0)==component_name)
         {
-            QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
-            itemsFile[component_name]=component_path;
-            //Item->setText(0,component_type);
-            Item->setText(0,component_name);
-            Item->setText(1,component_path);
-            Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
-            Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-            //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
+            flag=0;
         }
+        ++it;
+    }
+    if(flag)
+    {
+        QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
+        itemsFile[component_name]=component_path;
+        //Item->setText(0,component_type);
+        Item->setText(0,component_name);
+        Item->setText(1,component_path);
+        Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
+        Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+        //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
+    }
 }
 
 void componentController::removeComponentTreeNode(QTreeWidgetItem *item)
 {
     //if(item->checkState(0)==Qt::Checked)
-        delete item;
+    delete item;
 
+}
+PTNET_ATTR componentController::getPTnet(QString filename)
+{
+    QMapIterator<QString,QString>iterator(itemsFile);
+    PTNET_ATTR net;
+    while(iterator.hasNext())
+    {
+        if(filename==iterator.key())
+        {
+            QFile file(iterator.value());
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            //![3] parse xml file
+            file.seek(0);
+            QTextStream textstream(&file);
+            QString xmlContent = textstream.readAll();
+            file.close();
+
+            XmlParser parser;
+            parser.parseXML(xmlContent);
+
+            net = parser.getXML_net ();
+        }
+    }
+    return net;
+}
+QList<PAGE_ATTR> componentController::getXMLpages(QString filename)
+{
+    QMapIterator<QString,QString>iterator(itemsFile);
+    QList<PAGE_ATTR> page;
+    while(iterator.hasNext())
+    {
+        if(filename==iterator.key())
+        {
+            QFile file(iterator.value());
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            //![3] parse xml file
+            file.seek(0);
+            QTextStream textstream(&file);
+            QString xmlContent = textstream.readAll();
+            file.close();
+
+            XmlParser parser;
+            parser.parseXML(xmlContent);
+
+            PTNET_ATTR net = parser.getXML_net ();
+            page=net.pages;
+        }
+    }
+    return page;
+}
+//不再使用复制的方法了
+Component * componentController::getComponent(QString filename)
+{
+    QMapIterator<QString,QString>iterator(itemsFile);
+    Component*com=new Component();
+    while(iterator.hasNext())
+    {
+        if(filename==iterator.key())
+        {
+            QFile file(iterator.value());
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            //![3] parse xml file
+            file.seek(0);
+            QTextStream textstream(&file);
+            QString xmlContent = textstream.readAll();
+            file.close();
+
+            XmlParser parser;
+            parser.parseXML(xmlContent);
+
+            PTNET_ATTR net = parser.getXML_net ();
+            QList<PAGE_ATTR> page=net.pages;
+            foreach(PAGE_ATTR p,page)
+            {
+
+                foreach(PLACE_ATTR pl,p.placeNodes)
+                {
+                    Place * place=new Place(pl);
+                    com->mynet->AddPlace(place);
+                }
+                foreach(TRANSITION_ATTR tr,p.transitionNodes)
+                {
+                    Transition *trans=new Transition(tr);
+                    com->mynet->AddTransition(trans);
+                }
+                foreach(ARC_ATTR a,p.arcs)
+                {
+                    QGraphicsItem * sourceItem = 0;
+                    QGraphicsItem * targetItem = 0;
+                    foreach(Place * place,com->mynet->PlaceList)
+                    {
+                        if(place->getId() == a.source)
+                        {
+                            sourceItem = place;
+                            continue;
+                        }
+                        if(place->getId() == a.target)
+                        {
+                            targetItem = place;
+                            continue;
+                        }
+                    }
+                    foreach(Transition * transition,com->mynet->TransitionList)
+                    {
+                        if(transition->getId() == a.source)
+                        {
+                            sourceItem = transition;
+                            continue;}
+                        if(transition->getId() == a.target)
+                        {
+                            targetItem = transition;
+                            continue;
+                        }
+                    }
+                    QPainterPath path(sourceItem->boundingRect().center());
+
+                    foreach(QPointF p, a.points)
+                        path.lineTo(p);
+
+                    path.lineTo(targetItem->boundingRect ().center());
+                    Arc * arc = new Arc(sourceItem, targetItem, path, a);
+                    if(sourceItem->type() == Place::Type)
+                        qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
+                    else if(sourceItem->type() == Transition::Type)
+                        qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
+                    if(targetItem->type() == Place::Type)
+                        qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
+                    else if(targetItem->type() == Transition::Type)
+                        qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
+                    com->mynet->AddArc(arc);
+
+                }
+            }
+        }
+    }
+    return com;
 }
 
 double componentController::getToken(QString filename,QString ID)
@@ -78,8 +217,8 @@ double componentController::getToken(QString filename,QString ID)
                 {
                     if(ID==pl.id)
                     {
-                    tokenNum=pl.initmark;
-                    capacityNum=pl.capacity;
+                        tokenNum=pl.initmark;
+                        capacityNum=pl.capacity;
                     }
                 }
             }
@@ -114,9 +253,9 @@ void componentController::ReadListFile(QString str)
 
 void componentController::WriteListFile(QString str)
 {
-//    this->type_list.insert("AB",3);
-//    this->type_list.insert("BH",4);
-//    this->type_list.insert("r",8);
+    //    this->type_list.insert("AB",3);
+    //    this->type_list.insert("BH",4);
+    //    this->type_list.insert("r",8);
 
     QFile file(str);
 

@@ -20,7 +20,7 @@
 #include "tabwidget.h"
 #include "dockwidget.h"
 #include "componentcontroller.h"
-#include "compoundcomponentlist.h"
+#include "componentlist.h"
 #include "editcomponent.h"
 #include"neweditcom.h"
 
@@ -143,7 +143,7 @@ private:
     //用于缩放的滑动条
     QSlider  * slider;
 
-    CompoundComponentList* compound_component_list;
+    ComponentList* component_list;
     neweditcom*editcommenu;
     void editcommenucreate();
     QString comType;

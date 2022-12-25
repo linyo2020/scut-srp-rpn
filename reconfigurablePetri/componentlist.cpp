@@ -179,9 +179,31 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
     this->Scene->removeItem(getCertainPlace(portID2));
 }
 
+void ComponentList::addNewComponent(Component*newCom)
+{
+    newCom->setID(setnewComponentIDinSimulation(newCom));
+    com_list.push_back(newCom);
+
+    foreach(Place* pl,newCom->getPlaceList())
+    {
+        Scene->addItem(pl);
+    }
+    foreach(Transition *tran,newCom->getTransitionList())
+    {
+        Scene->addItem(tran);
+    }
+    foreach(Arc* ar,newCom->getTArcList())
+    {
+        Scene->addItem(ar);
+    }
+}
 Component *ComponentList::OriginComponent(QString Filename)
 {
 
+    PTNscene* sce=new PTNscene();
+    sce->from_Xml(comController->getXMLpages(Filename));
+    Component *Com=new Component(comController->getPTnet(Filename),sce);
+    return Com;
 }
 
 //分开之后，将原来的place恢复为初始状态//需要讨论
