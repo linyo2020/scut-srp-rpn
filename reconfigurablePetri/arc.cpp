@@ -219,6 +219,16 @@ void Arc::setIncomponent(bool isInComponent)
     this->InComponent=isInComponent;
 }
 
+void Arc::setSourceItem(QGraphicsItem *it)
+{
+    this->sourceItem=it;
+}
+
+void Arc::setTargetItem(QGraphicsItem *it)
+{
+    this->targetItem=it;
+}
+
 QColor Arc::getBrushColor() const
 {
     return m_brushColor;

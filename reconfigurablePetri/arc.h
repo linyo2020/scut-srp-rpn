@@ -61,6 +61,9 @@ class Arc : public QGraphicsPathItem
     bool isInComponent();
     void setIncomponent(bool isInComponent);
 
+    void setSourceItem(QGraphicsItem*it);
+    void setTargetItem(QGraphicsItem*it);
+
     //void updateradius(int);
 
  protected:
