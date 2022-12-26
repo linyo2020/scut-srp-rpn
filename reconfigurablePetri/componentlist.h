@@ -51,7 +51,7 @@ public:
 
     void getComponent(componentController *comController){comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
-
+    void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
 private:
     QVector<Component*>com_list;
     QMap<QString,PTNscene*>garbage;

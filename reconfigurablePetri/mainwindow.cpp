@@ -124,6 +124,7 @@ void MainWindow::createToolBar ()
     //仿真操作要在这个信号上面
     //初始化
     connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,&ComponentList::getPTNScene);
+    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,[=](){tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());});
     //connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget,&TabWidget::gets);
     connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
     //connect(animateToolButton,&QToolButton::clicked,this,[=](){emit passCom_arry(this->tabWidget->getcom_arry());});
