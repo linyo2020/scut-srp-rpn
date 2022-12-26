@@ -7,15 +7,6 @@ ComponentList::ComponentList()
 
 }
 
-ComponentList::ComponentList(QVector<Component *> com_list, QVector<Component *> OriginComponent_List, PTNscene *Scene, componentController *comController)
-{
-    this->com_list=com_list;
-    this->OriginComponent_List=OriginComponent_List;
-    this->Scene=Scene;
-    this->comController=comController;
-}
-
-
 
 
 Component *ComponentList::getCertainComponent(QString ComID)
@@ -389,13 +380,24 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
 
 void ComponentList::deleteComponent(QString ComponentID)
 {
-    for(int i=0;i<com_list.size();i++)
+    QString Filename=ComponentID.split("&")[0];
+    for(int z=0;z<com_list.size();z++)
     {
-        if(com_list[i]->getID()==ComponentID)
+        if(com_list[z]->getID()==ComponentID)
         {
             Component*com=new Component;
-            com=com_list[i];
+            com=com_list[z];
             PTNscene*s=new PTNscene();
+
+            //断开所有复合端口
+            for(int y=0;y<com->mynet->PlaceList.size();y++)
+            {
+                if(com->mynet->PlaceList[y]->isACompoundPort())
+                {
+                    this->seperateCompoundPort(com->mynet->PlaceList[y]->getId());
+                }
+            }
+
             for(int i=0;i<com->mynet->PlaceList.size();i++)
             {
 
@@ -410,25 +412,8 @@ void ComponentList::deleteComponent(QString ComponentID)
             {
                 s->addItem(com->mynet->ArcList[i]);
             }
-
-            //恢复成默认值
-
-            //改
-            Component*c=this->OriginComponent(ComponentID.split("&")[0]);
-            for(int y=0;i<com_list[i]->mynet->PlaceList.size();y++)
-            {
-                for(int z=0;z<c->mynet->PlaceList.size();z++)
-                {
-                    if(c->mynet->PlaceList[z]->getName()==com_list[i]->mynet->PlaceList[y]->getName())
-                    {
-                        com_list[i]->mynet->PlaceList[y]->setTokens(c->mynet->PlaceList[z]->getTokens());
-                        com_list[i]->mynet->PlaceList[y]->setCapacity(c->mynet->PlaceList[z]->getCapacity());
-                    }
-                }
-            }
-
             garbage.insert(ComponentID,s);
-            com_list.remove(i);
+            com_list.remove(z);
         }
     }
 

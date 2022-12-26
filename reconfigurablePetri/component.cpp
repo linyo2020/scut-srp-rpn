@@ -133,6 +133,19 @@ QList<Place *> Component::getNormalPort()
     return p;
 }
 
+QList<Place *> Component::getCompoundPort()
+{
+    QList<Place*>l;
+    for(int i=0;i<mynet->PlaceList.size();i++)
+    {
+        if(mynet->PlaceList[i]->isACompoundPort()==true)
+        {
+            l.push_back(mynet->PlaceList[i]);
+        }
+    }
+    return l;
+}
+
 QString Component::getLabel() const
 {
     return label;

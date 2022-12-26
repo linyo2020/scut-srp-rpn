@@ -38,6 +38,8 @@ public:
     //只获取普通端口，不获取复合端口
     QList<Place*>getNormalPort();
 
+    QList<Place*>getCompoundPort();
+
     PTNet *mynet;
     bool net_att_isEdited;//useless
 

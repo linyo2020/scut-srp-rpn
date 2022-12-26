@@ -12,10 +12,9 @@ class ComponentList : public QObject
 public:
     //端口的定义，只有入或者仅有出
     ComponentList();
-    ComponentList(QVector<Component*>com_list,QVector<Component*>OriginComponent_List,PTNscene*Scene,componentController*comController);
 
-    //如果未找到返回nullptr
-    Component* getCertainComponent( QString ComID);
+
+
 
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);
@@ -27,36 +26,33 @@ public:
     QList<QString> getCertainPlaceName(QString ComponentID);
     QList<QString>getCertainTransitionName(QString ComponentID);
 
-    //!!!一定要在addNewComponent()函数中调用，返回已分配好ID的组件
-    QString setnewComponentIDinSimulation(Component *newComponent);
 
-    //注意new place时的细节
     //！
     void seperateCompoundPort(QString CompoundPortID);
     //！
     void deleteComponent(QString ComponentID);
     //！
     void recoverComponent(QString ComponentID);
-
-
-    //todo 欣然
     void addComponentPort(QString portID1,QString portID2);
-    void addNewComponent(Component*newCom);//记得调用setnewComponentIDinSimulation
-
     void addNewComponent(QString Filename);
 
 
-    //todo
-    Component* OriginComponent(QString Filename);
 
     void getComponent(componentController *comController){comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
 private:
+    //func
+    //如果未找到返回nullptr
+    Component* getCertainComponent( QString ComID);
+    //!!!一定要在addNewComponent()函数中调用，返回已分配好ID的组件
+    QString setnewComponentIDinSimulation(Component *newComponent);
+    Component* OriginComponent(QString Filename);
+    void addNewComponent(Component*newCom);
+
     QVector<Component*>com_list;
     QMap<QString,PTNscene*>garbage;
-    QVector<Component*>OriginComponent_List;//尚未赋值
-    PTNscene*Scene;//尚未赋值
+    PTNscene*Scene;
     componentController*comController;
 
 
