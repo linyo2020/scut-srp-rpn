@@ -7,7 +7,7 @@
 #include <QXmlSchemaValidator>
 #include <QTextStream>
 
-
+#include"componentlist.h"
 #include "xmlparser.h"
 #include "xmlwriter.h"
 #include "messagehandler.h"
@@ -71,6 +71,12 @@ public:
     void setImportComponentId_AND_classsifyComponenet();
     QString getComponenttype(QString id);
 
+    void saveModel();
+
+    ComponentList*com_list;
+
+
+    void gets(PTNscene*scene);
 signals:
     void addComponentTreeNode (QString componentName,QString componentPath);
     void canRedoChange (bool canRedo);
@@ -80,7 +86,7 @@ signals:
     void ElementIdEditFinished();
     void addComponentFinished();
     void saveComponentFinished();
-    void startSimulation();
+    void startSimulation(PTNscene*scene);
     void finishSimulation();
 protected:
     //连接具体页面的信号和槽，用于传递Undo，Redo，netChanged，error信息
@@ -92,6 +98,7 @@ private:
     QVector<Component*>component_List;//bug
     QVector<Component*>com_arry;
     QMap<QString,int>type_count;
+
     //todo，保存的Pertritabwidget复制
     PetriTabWidget*tab_copy;
 };

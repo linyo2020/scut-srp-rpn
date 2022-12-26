@@ -144,6 +144,7 @@ Component * componentController::getComponent(QString filename)
                         {
                             sourceItem = place;
                             continue;
+
                         }
                         if(place->getId() == a.target)
                         {

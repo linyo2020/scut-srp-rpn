@@ -1,7 +1,9 @@
 #include "componentlist.h"
 
-ComponentList::ComponentList(QObject *parent) : QObject(parent)
+ComponentList::ComponentList()
 {
+    Scene=new PTNscene();
+    comController=new componentController();
 
 }
 
@@ -12,6 +14,8 @@ ComponentList::ComponentList(QVector<Component *> com_list, QVector<Component *>
     this->Scene=Scene;
     this->comController=comController;
 }
+
+
 
 
 Component *ComponentList::getCertainComponent(QString ComID)
@@ -196,13 +200,36 @@ void ComponentList::addNewComponent(Component*newCom)
     {
         Scene->addItem(ar);
     }
+
+
+}
+
+void ComponentList::addNewComponent(QString Filename)
+{
+    Component*com=this->OriginComponent(Filename);
+    com->setID(setnewComponentIDinSimulation(com));
+    com_list.push_back(com);
+
+    foreach(Place* pl,com->getPlaceList())
+    {
+        Scene->addItem(pl);
+    }
+    foreach(Transition *tran,com->getTransitionList())
+    {
+        Scene->addItem(tran);
+    }
+    foreach(Arc* ar,com->getTArcList())
+    {
+        Scene->addItem(ar);
+    }
 }
 Component *ComponentList::OriginComponent(QString Filename)
 {
 
     PTNscene* sce=new PTNscene();
     sce->from_Xml(comController->getXMLpages(Filename));
-    Component *Com=new Component(comController->getPTnet(Filename),sce);
+    //Component *Com=new Component(comController->getPTnet(Filename),sce);
+    Component *Com=this->comController->getComponent(Filename);
     return Com;
 }
 
@@ -218,31 +245,18 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
     Place*p2=new Place();
     p1->setPlaceID(ID1);
     p2->setPlaceID(ID2);
-    double p1Token=0;
-    double p2Token=0;
-    double p1Capacity=0;
-    double p2Capacity=0;
     QString FName1=ID1.split("&")[0];
     QString FName2=ID2.split("&")[0];
-    for(int i=0;i<OriginComponent_List.size();i++)
-    {
-        if(OriginComponent_List[i]->getID().split("&")[0]==FName1)
-        {
-            p1Token=OriginComponent_List[i]->getCertainPlaceByName(ID1.split("&")[2])->getTokens();
-            p1Capacity=OriginComponent_List[i]->getCertainPlaceByName(ID1.split("&")[2])->getCapacity();
-        }
 
-        if(OriginComponent_List[i]->getID().split("&")[0]==FName2)
-        {
-            p1Token=OriginComponent_List[i]->getCertainPlaceByName(ID2.split("&")[2])->getTokens();
-            p1Capacity=OriginComponent_List[i]->getCertainPlaceByName(ID2.split("&")[2])->getCapacity();
-        }
+    Component*com1=this->OriginComponent(FName1);
+    //暂时
+    p1->setTokens(com1->getCertainPlaceByName(ID1.split("&")[2])->getTokens());
+    p1->setCapacity(com1->getCertainPlaceByName(ID1.split("&")[2])->getCapacity());
+    Component*com2=this->OriginComponent(FName2);
+    p2->setTokens(com2->getCertainPlaceByName(ID2.split("&")[2])->getTokens());
+    p2->setCapacity(com2->getCertainPlaceByName(ID2.split("&")[2])->getCapacity());
 
-    }
-    p1->setTokens(p1Token);
-    p2->setTokens(p2Token);
-    p1->setCapacity(p1Capacity);
-    p2->setCapacity(p2Capacity);
+
     p1->setcontain_portNum(1);
     p2->setcontain_portNum(1);
     p1->setCompoundPort(false);
@@ -398,6 +412,8 @@ void ComponentList::deleteComponent(QString ComponentID)
             }
 
             //恢复成默认值
+
+            //改
             Component*c=this->OriginComponent(ComponentID.split("&")[0]);
             for(int y=0;i<com_list[i]->mynet->PlaceList.size();y++)
             {
@@ -437,18 +453,21 @@ void ComponentList::recoverComponent(QString ComponentID)
         {
             Place * place = qgraphicsitem_cast<Place*>(item);
             com->mynet->PlaceList.push_back(place);
+            Scene->addItem(place);
 
         }
         else if(item->type()==Transition::Type)
         {
             Transition * place = qgraphicsitem_cast<Transition*>(item);
             com->mynet->TransitionList.push_back(place);
+            Scene->addItem(place);
 
         }
         else if(item->type()==Arc::Type)
         {
             Arc * place = qgraphicsitem_cast<Arc*>(item);
             com->mynet->ArcList.push_back(place);
+            Scene->addItem(place);
 
         }
 

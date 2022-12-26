@@ -121,7 +121,11 @@ void MainWindow::createToolBar ()
     animateToolButton->setCheckable(true);
     animateToolButton->setIcon(QIcon(QPixmap(":/images/animate.png")));
     animateToolButton->setToolTip(tr("Simulation"));
-    connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveLocalComponent();});
+    //仿真操作要在这个信号上面
+    //初始化
+    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,&ComponentList::getPTNScene);
+    //connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget,&TabWidget::gets);
+    connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
     //connect(animateToolButton,&QToolButton::clicked,this,[=](){emit passCom_arry(this->tabWidget->getcom_arry());});
     //connect(this,&MainWindow::passCom_arry,compound_component_list,&CompoundComponentList::getCompoundComponentList);
 

@@ -11,9 +11,8 @@ class ComponentList : public QObject
     Q_OBJECT
 public:
     //端口的定义，只有入或者仅有出
-    explicit ComponentList(QObject *parent = nullptr);
-    ComponentList(QVector<Component*>com_list,QVector<Component*>OriginComponent_List,PTNscene*Scene,componentController*comController);
     ComponentList();
+    ComponentList(QVector<Component*>com_list,QVector<Component*>OriginComponent_List,PTNscene*Scene,componentController*comController);
 
     //如果未找到返回nullptr
     Component* getCertainComponent( QString ComID);
@@ -32,9 +31,11 @@ public:
     QString setnewComponentIDinSimulation(Component *newComponent);
 
     //注意new place时的细节
+    //！
     void seperateCompoundPort(QString CompoundPortID);
+    //！
     void deleteComponent(QString ComponentID);
-
+    //！
     void recoverComponent(QString ComponentID);
 
 
@@ -42,11 +43,14 @@ public:
     void addComponentPort(QString portID1,QString portID2);
     void addNewComponent(Component*newCom);//记得调用setnewComponentIDinSimulation
 
+    void addNewComponent(QString Filename);
 
 
     //todo
     Component* OriginComponent(QString Filename);
 
+    void getComponent(componentController *comController){comController=comController;}
+    void getPTNScene(PTNscene * scene){Scene=scene;}
 
 private:
     QVector<Component*>com_list;
@@ -54,9 +58,8 @@ private:
     QVector<Component*>OriginComponent_List;//尚未赋值
     PTNscene*Scene;//尚未赋值
     componentController*comController;
-public slots:
-    void getComponent(componentController *comController){comController=comController;}
-    void getPTNScene(PTNscene * scene){Scene=scene;}
+
+
 };
 
 #endif // COMPONENTLIST_H

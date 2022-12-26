@@ -12,6 +12,7 @@ TabWidget::TabWidget(QWidget * parent)
     setTabsClosable(false);
     Component*com=new Component();
     component_List.push_back(com);
+    com_list=new ComponentList();
     //点击了标签上的关闭按钮 ,移除tab页
     connect (this, &TabWidget::tabCloseRequested,this, &TabWidget::closeTab);
 
@@ -117,7 +118,6 @@ void TabWidget::saveLocalComponent()
         tab_copy->cleanUndostack();
     }
 
-    emit startSimulation();
 
 }
 void TabWidget::openLocalComponent()
@@ -546,6 +546,42 @@ QVector<Component*> TabWidget::getcom_arry()
  {
      QStringList list=id.split("&");
      return list[0];
+ }
+
+ void TabWidget::saveModel()
+ {
+     tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
+     QString filename = tab_copy->getFilename();
+
+
+     if(filename.isNull())
+     {
+         saveAsComponent();
+
+
+     }
+
+     else
+     {
+         qDebug()<<"fail";
+         QFile file(filename);
+
+         if(!file.open(QIODevice::WriteOnly))
+             QMessageBox::critical(this, "Open Component Error", \
+                                   "The Component could not be opened.");
+
+         XmlWriter writer(tab_copy->componentToXml());
+         writer.writeXML(&file);
+         tab_copy->cleanUndostack();
+     }
+     qDebug()<<"startSimulation emit";
+
+     emit startSimulation(tab_copy->getSCene());
+ }
+
+ void TabWidget::gets(PTNscene *scene)
+ {
+     qDebug()<<"111"<<scene;
  }
 void TabWidget::undo()
 {
