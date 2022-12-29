@@ -68,7 +68,19 @@ SOURCES += \
     transitioneditdialog.cpp \
     undostack.cpp \
     xmlparser.cpp \
-    xmlwriter.cpp
+    xmlwriter.cpp \
+    rule/baserule.cpp \
+    rulemanager.cpp \
+    rule/timerule.cpp \
+    operation/baseoperation.cpp \
+    operation/deleteoperation.cpp \
+    operation/seperateoperation.cpp \
+    operation/mergeoperation.cpp \
+    operation/addoperation.cpp \
+    operation/recoveroperation.cpp \
+    operation/replacewithnewoperation.cpp \
+    operation/replacewithexistinstanceoperation.cpp \
+    rule/eventrule.cpp
 
 
 HEADERS += \
@@ -119,7 +131,20 @@ HEADERS += \
     transitioneditdialog.h \
     undostack.h \
     xmlparser.h \
-    xmlwriter.h
+    xmlwriter.h \
+    rule/baserule.h \
+    rulemanager.h \
+    rule/timerule.h \
+    baseoperation.h \
+    operation/baseoperation.h \
+    operation/deleteoperation.h \
+    operation/seperateoperation.h \
+    operation/mergeoperation.h \
+    operation/addoperation.h \
+    operation/recoveroperation.h \
+    operation/replacewithnewoperation.h \
+    operation/replacewithexistinstanceoperation.h \
+    rule/eventrule.h
 
 
 # Default rules for deployment.
