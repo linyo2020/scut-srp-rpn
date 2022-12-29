@@ -98,7 +98,6 @@ private:
     QVector<Component*>component_List;//bug
     QVector<Component*>com_arry;
     QMap<QString,int>type_count;
-
     //todo，保存的Pertritabwidget复制
     PetriTabWidget*tab_copy;
 };

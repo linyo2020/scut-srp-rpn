@@ -192,10 +192,9 @@ void ComponentList::addNewComponent(Component*newCom)
         Scene->addItem(ar);
     }
 
-
 }
 
-void ComponentList::addNewComponent(QString Filename)
+QString ComponentList::addNewComponent(QString Filename)
 {
     Component*com=this->OriginComponent(Filename);
     com->setID(setnewComponentIDinSimulation(com));
@@ -213,6 +212,8 @@ void ComponentList::addNewComponent(QString Filename)
     {
         Scene->addItem(ar);
     }
+
+    return com->getID();
 }
 Component *ComponentList::OriginComponent(QString Filename)
 {

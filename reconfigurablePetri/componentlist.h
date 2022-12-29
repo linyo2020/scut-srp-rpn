@@ -34,7 +34,7 @@ public:
     //！
     void recoverComponent(QString ComponentID);
     void addComponentPort(QString portID1,QString portID2);
-    void addNewComponent(QString Filename);
+    QString addNewComponent(QString Filename);
 
 
 
