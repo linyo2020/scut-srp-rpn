@@ -17,10 +17,10 @@ void ReplaceWithNewOperation::execOperation(ComponentList* componentList)
     QString newComponentId=componentList->addNewComponent(newComponentName);
     for(QPair<QString,QString>ports:mergePortList)
     {
-        if(QString("&&&&")==ports.first)
-            ports.first=newComponentId;
-        if(QString("&&&&")==ports.second)
-            ports.second=newComponentId;
+        if(ports.first.contains(NEW_COMPONENT_ID))
+            ports.first=newComponentId+ports.first.mid(NEW_COMPONENT_ID.size());
+        if(ports.second.contains(NEW_COMPONENT_ID))
+            ports.second=newComponentId+ports.second.mid(NEW_COMPONENT_ID.size());
         componentList->addComponentPort(ports.first,ports.second);
     }
 }

@@ -108,7 +108,7 @@ typedef struct{
 } COLOR;
 
 //[规则库相关定义]
-enum ComparisonSymbol{EQUAL,NOT_EQUAL,GREATER,LESS,GREATER_EQUAL,LESS_EQUAL};
+enum ComparisonSymbol{EQUAL=1,NOT_EQUAL,GREATER,LESS,GREATER_EQUAL,LESS_EQUAL};
 /*
  * 比较类型选项
  */
