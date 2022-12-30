@@ -106,8 +106,8 @@ class Transition : public QGraphicsRectItem
     QString m_action;
     QGraphicsSimpleTextItem * label;
 
-    bool isNormalPort;//normalport就是指该transition未与其他端口复合
-    bool isCompoundPort;//与其他端口复合后，该属性为true
+    bool isNormalPort=false;//normalport就是指该transition未与其他端口复合
+    bool isCompoundPort=false;//与其他端口复合后，该属性为true
 
     //todo
     QList<Arc *> input;
