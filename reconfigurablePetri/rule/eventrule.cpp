@@ -32,7 +32,7 @@ bool EventRule::isSatisfy(ComponentList* componentList)
                         andComputeResult&=false;
                     break;
                 case GREATER:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()<!=andCompute.value.toDouble())
+                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()<=andCompute.value.toDouble())
                         andComputeResult&=false;
                     break;
                 case LESS:
