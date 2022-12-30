@@ -107,4 +107,34 @@ typedef struct{
     int blue;
 } COLOR;
 
+//[规则库相关定义]
+enum ComparisonSymbol{EQUAL=1,NOT_EQUAL,GREATER,LESS,GREATER_EQUAL,LESS_EQUAL};
+/*
+ * 比较类型选项
+ */
+//时间相关条件
+enum ComparisionType{
+    /*时间规则相关类型*/
+    REACH_TIME_POINT=1,//到达某个时间点
+    FIRE_REACH_TIME_DURATION=2,//持续触发达到某个时长
+    /*事件规则相关类型*/
+    TOKEN_COMPARE//比较token是否符合范围
+};
+//<监控的因素（token等)><比较符号（大于/小于等）><要比较的数值>
+typedef struct
+{
+    ComparisionType conditionOption;//比较的类型，如库所token的比较，时间的比较
+    QString monitorFactor;//监控的因素
+    ComparisonSymbol symbol;//比较的符号
+    QVariant value;//比较的数值
+} CONDITION,* pCONDITION;
+
+//仿真前，提供给规则的仿真信息
+typedef struct
+{
+    double step;//仿真步长
+}RULE_INITIALIZE_INFOMATION;
+
+//[/规则库相关定义]
+
 #endif

@@ -1,0 +1,4 @@
+#ifndef BASEOPERATION_H
+#define BASEOPERATION_H
+
+#endif // BASEOPERATION_H
