@@ -38,7 +38,7 @@ public:
 
 
 
-    void getComponent(componentController *comController){comController=comController;}
+    void getComponent(componentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
 private:
