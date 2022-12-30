@@ -70,10 +70,24 @@ QList<QString> ComponentList::getCertainPlaceName(QString ComponentID)
             {
                 Place*p=com_list[i]->getPlaceList()[i];
                 QStringList ID=p->getId().split("+");
-                for(int i=0;i<ID.size();i++)
+                if(ID.size()==1)
                 {
-                    list.push_back(ID[i].split("&")[2]);
+                    list.push_back(ID[0].split("&")[2]);
                 }
+                //对于复合端口单独处理
+                else
+                {
+                    for(int i=0;i<ID.size();i++)
+                    {
+                        QString ComID=ID[i].split("&")[0]+ID[i].split("&")[1];
+                        if(ComID==ComponentID)
+                        {
+                            list.push_back(ID[i].split("&")[2]);
+                        }
+
+                    }
+                }
+
             }
 
         }
@@ -81,6 +95,8 @@ QList<QString> ComponentList::getCertainPlaceName(QString ComponentID)
     return list;
 }
 
+//todo
+//新增对于复合transition的处理，需要与place一样对ID进行判断，返回ComponentID这一侧的元素name
 QList<QString> ComponentList::getCertainTransitionName(QString ComponentID)
 {
     QList<QString>list;
@@ -127,6 +143,10 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 }
 
 //对象不存在则无法合并
+//todo（1.1号之后)
+//增加transition与transition直接的连接、transition与place的连接
+//已于规则库达成共识，规定前一个传参端口连接到后一个传参端口
+//transition与place的连接直接加弧
 void ComponentList::addComponentPort(QString portID1, QString portID2)
 {
     QString placeID=portID1+portID2;
@@ -226,6 +246,10 @@ Component *ComponentList::OriginComponent(QString Filename)
 }
 
 //分开之后，将原来的place恢复为初始状态//需要讨论
+//todo（1.1号之后）
+//需要针对transition与transition、transition与place进行单独处理
+//transition与transition：删除复合transition，新建两个新的transition，把连接好的相关边进行分配
+//transition与place：直接删除相关边即可（判断两种情况——连接方向）
 void ComponentList::seperateCompoundPort(QString CompoundPortID)
 {
     QStringList id=CompoundPortID.split("+");
@@ -379,6 +403,8 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
 
 }
 
+//todo
+//对于新增的transition部分要进行处理。
 void ComponentList::deleteComponent(QString ComponentID)
 {
     QString Filename=ComponentID.split("&")[0];
