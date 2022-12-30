@@ -78,6 +78,12 @@ class Transition : public QGraphicsRectItem
     bool isInComponent();
     void setIncomponent(bool isInComponent);
 
+    bool IsNormalPort();
+    bool IsCompoundPort();
+
+    void setNormalPort(bool flag);
+    void setCompoundPort(bool flag);
+
  protected:
 
     void paint ( QPainter * painter,
@@ -93,10 +99,15 @@ class Transition : public QGraphicsRectItem
     bool show = false;
     int rotation;
 
+
+
     QString self_function="MassAction(1)";
     QString m_function;
     QString m_action;
     QGraphicsSimpleTextItem * label;
+
+    bool isNormalPort;//normalport就是指该transition未与其他端口复合
+    bool isCompoundPort;//与其他端口复合后，该属性为true
 
     //todo
     QList<Arc *> input;

@@ -79,6 +79,26 @@ void Transition::setIncomponent(bool isInComponent)
     this->InComponent=isInComponent;
 }
 
+bool Transition::IsNormalPort()
+{
+    return this->isNormalPort;
+}
+
+bool Transition::IsCompoundPort()
+{
+    return this->isCompoundPort;
+}
+
+void Transition::setNormalPort(bool flag)
+{
+    this->isNormalPort=flag;
+}
+
+void Transition::setCompoundPort(bool flag)
+{
+    this->isCompoundPort=flag;
+}
+
 bool Transition::getShow()
 {
     return show;
