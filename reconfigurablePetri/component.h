@@ -7,6 +7,7 @@
 #include"ptnet.h"
 #include"ptnscene.h"
 #include"QDateTime"
+  #include <QtGlobal>
 class Component: public QObject
 {
 public:

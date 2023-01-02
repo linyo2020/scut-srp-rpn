@@ -123,6 +123,16 @@ QList<Arc*> Place::getoutput()
 {
     return output;
 }
+
+void Place::pushInput(Arc *a)
+{
+    this->input.push_back(a);
+}
+
+void Place::pushOutput(Arc *a)
+{
+    this->output.push_back(a);
+}
 void Place::setcontain_portNum(int n)
 {
     contain_portNum=n;

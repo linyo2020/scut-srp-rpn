@@ -5,15 +5,6 @@ PTNet::PTNet()
 
 }
 
-PTNet::PTNet(PTNet &mynet)
-{
-    for(int i=0;i<mynet.PlaceList.size();i++)
-    {
-        Place*p=new Place();
-
-    }
-
-}
 
 void PTNet::AddPlace(Place *myplace)
 {

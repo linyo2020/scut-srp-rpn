@@ -151,18 +151,23 @@ QString Component::getLabel() const
     return label;
 }
 
+//如果组件中已经存在复合端口，此时调用此函数会导致报错
 void Component::setID(QString id)
 {
     this->Component_id=id;
     for(int i=0;i<mynet->PlaceList.size();i++)
     {
         Place*p=mynet->PlaceList[i];
+        QStringList ids=p->getId().split("+");
+        Q_ASSERT_X(ids.size()==1,"id error","use Component::setID while there has been a compound port in this component");
         QString name=p->getId().split("&")[2];
         p->setPlaceID(id+"&"+name);
     }
     for(int i=0;i<mynet->TransitionList.size();i++)
     {
         Transition*p=mynet->TransitionList[i];
+        QStringList ids=p->getId().split("+");
+        Q_ASSERT_X(ids.size()==1,"id error","use Component::setID while there has been a compound port in this component");
         QString name=p->getId().split("&")[2];
         p->setID(id+"&"+name);
     }

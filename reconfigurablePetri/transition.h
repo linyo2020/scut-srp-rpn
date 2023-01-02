@@ -81,8 +81,20 @@ class Transition : public QGraphicsRectItem
     bool IsNormalPort();
     bool IsCompoundPort();
 
+    QList<Arc*>getinput();
+
+    QList<Arc*>getoutput();
+
+    void pushInput(Arc*a);
+    void pushOutput(Arc*a);
+
     void setNormalPort(bool flag);
     void setCompoundPort(bool flag);
+
+    QList<Arc *> input;
+    QList<Arc *> output;
+
+
 
  protected:
 
@@ -109,9 +121,8 @@ class Transition : public QGraphicsRectItem
     bool isNormalPort=false;//normalport就是指该transition未与其他端口复合
     bool isCompoundPort=false;//与其他端口复合后，该属性为true
 
-    //todo
-    QList<Arc *> input;
-    QList<Arc *> output;
+
+
 
     int mode;
     QColor color;

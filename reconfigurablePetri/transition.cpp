@@ -41,6 +41,11 @@ Transition::Transition(const QString &id, const QPointF &position)
     label->setPos(position.x(),position.y());
 }
 
+Transition::Transition()
+{
+
+}
+
 
 void Transition::setShow(bool flag)
 {
@@ -87,6 +92,26 @@ bool Transition::IsNormalPort()
 bool Transition::IsCompoundPort()
 {
     return this->isCompoundPort;
+}
+
+QList<Arc *> Transition::getinput()
+{
+    return this->input;
+}
+
+QList<Arc *> Transition::getoutput()
+{
+    return  this->output;
+}
+
+void Transition::pushInput(Arc *a)
+{
+    this->input.push_back(a);
+}
+
+void Transition::pushOutput(Arc *a)
+{
+    this->output.push_back(a);
 }
 
 void Transition::setNormalPort(bool flag)

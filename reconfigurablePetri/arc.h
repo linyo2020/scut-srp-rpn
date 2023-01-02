@@ -27,6 +27,8 @@ class Arc : public QGraphicsPathItem
     Arc(QGraphicsItem * item1, QGraphicsItem * item2,
         QPainterPath paintpath, const ARC_ATTR &arc);
 
+    Arc();
+
     ~Arc();
 
     void createArc();

@@ -84,6 +84,15 @@ class Place : public QGraphicsEllipseItem
     int getcontain_portNum();
     QList<Arc*> getinput();
     QList<Arc*> getoutput();
+    void pushInput(Arc*a);
+    void pushOutput(Arc*a);
+
+
+    QList<Arc*> input;
+    QList<Arc*> output;
+
+
+
  protected:
 
     void paint ( QPainter * painter,
@@ -102,8 +111,7 @@ class Place : public QGraphicsEllipseItem
     //QString component_id;
     QGraphicsSimpleTextItem * label;
 
-    QList<Arc*> input;
-    QList<Arc*> output;
+
 
     QColor m_brushColor=defalut_brushColor;
     QColor m_penColor=defalut_penColor;

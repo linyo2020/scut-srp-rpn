@@ -49,7 +49,7 @@ private:
     QString setnewComponentIDinSimulation(Component *newComponent);
     Component* OriginComponent(QString Filename);
     void addNewComponent(Component*newCom);
-
+    Transition*getcertainTransition(QString tranID);
     QVector<Component*>com_list;
     QMap<QString,PTNscene*>garbage;
     PTNscene*Scene;

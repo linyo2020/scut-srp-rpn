@@ -48,6 +48,11 @@ Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
     updatePosition();
 }
 
+Arc::Arc()
+{
+    label=new QGraphicsSimpleTextItem();
+}
+
 Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
          QString TargetId, const QString &ArcId,double ArcWeight)
 {

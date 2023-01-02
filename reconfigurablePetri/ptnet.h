@@ -8,7 +8,7 @@ class PTNet: public QObject
 {
 public:
     PTNet();
-    PTNet(PTNet&mynet);
+
     QList<Place*>PlaceList;
     QList<Transition*>TransitionList;
     //contained in place and transition
