@@ -73,11 +73,27 @@ bool Place::isInputPort()
 void Place::setInputPort(bool flag)
 {
     inputPort = flag;
+    if(inputPort&&!outputPort&&!isCompoundPort)
+        drawInputport();
+    else if(!inputPort&&outputPort&&!isCompoundPort)
+        drawOutputport();
+    else if(inputPort&&outputPort&&isCompoundPort)
+        drawCompoundport();
+    else
+        cancelSetPort();
 }
 
 void Place::setCompoundPort(bool flag)
 {
     isCompoundPort=flag;
+    if(inputPort&&!outputPort&&!isCompoundPort)
+        drawInputport();
+    else if(!inputPort&&outputPort&&!isCompoundPort)
+        drawOutputport();
+    else if(inputPort&&outputPort&&isCompoundPort)
+        drawCompoundport();
+    else
+        cancelSetPort();
 }
 bool Place::isOutputPort()
 {
@@ -87,6 +103,14 @@ bool Place::isOutputPort()
 void Place::setOutputPort(bool flag)
 {
     outputPort = flag;
+    if(inputPort&&!outputPort&&!isCompoundPort)
+        drawInputport();
+    else if(!inputPort&&outputPort&&!isCompoundPort)
+        drawOutputport();
+    else if(inputPort&&outputPort&&isCompoundPort)
+        drawCompoundport();
+    else
+        cancelSetPort();
 }
 
 bool Place::isACompoundPort()
@@ -319,8 +343,6 @@ void Place::drawInputport()
    label->setText(lb);
 
     m_brushColor = QColor(170, 255, 127);
-    setInputPort(true);
-    setOutputPort(false);
     update();
 }
 void Place::drawOutputport()
@@ -332,15 +354,21 @@ void Place::drawOutputport()
    label->setText(lb);
 
    m_brushColor = QColor(255, 170, 127);
-   setOutputPort(true);
-   setInputPort(false);
+   update();
+}
+void Place::drawCompoundport()
+{
+    QString lb;
+
+        lb=QString (name+"\n"+"compoundPort");
+
+   label->setText(lb);
+
+   m_brushColor = QColor(255, 127, 170);
    update();
 }
 void Place::cancelSetPort()
 {
-     setInputPort(false);
-     setOutputPort(false);
-
      m_brushColor =defalut_brushColor;
      m_penColor =defalut_penColor;
      update();
@@ -450,14 +478,14 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     label->setBrush (PenColor);
     painter->setBrush (BrushColor);
     painter->setRenderHint (QPainter::Antialiasing);
+    //画圆
+    painter->drawEllipse (0, 0, place_diameter, place_diameter);
     //判断是否为端口再画图
     if(isInputPort())
     {
-        painter->drawEllipse (0, 0, place_diameter, place_diameter);
         painter->drawEllipse (3, 3, place_diameter-6, place_diameter-6);
     }
-    else if (isOutputPort()) {
-        painter->drawEllipse (0, 0, place_diameter, place_diameter);
+    if (isOutputPort()) {
         //用drawConvexPolygon画三角形
             static const QPointF points[3] = {
                   QPointF(place_diameter/2-place_diameter*0.866/2, place_diameter*1.5/2),
@@ -467,11 +495,6 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
             painter->drawConvexPolygon(points, 3);
 
     }
-    else {
-        painter->drawEllipse (0, 0, place_diameter, place_diameter);
-    }
-
-
 
     painter->setBrush (PenColor);
 
@@ -568,7 +591,6 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     }*/
 
 }
-
 
 
 bool Place::collidesWithItem ( const QGraphicsItem * other, Qt::ItemSelectionMode mode ) const
