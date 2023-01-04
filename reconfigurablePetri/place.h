@@ -87,9 +87,14 @@ class Place : public QGraphicsEllipseItem
     void pushInput(Arc*a);
     void pushOutput(Arc*a);
 
-
+    //传入组号，获取改组号的name
+    QString getName(QString singleComID);
+    QStringList getFileName();
+    QStringList getComponentID();
     QList<Arc*> input;
     QList<Arc*> output;
+
+
 
 
 

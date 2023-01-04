@@ -124,6 +124,42 @@ void Transition::setCompoundPort(bool flag)
     this->isCompoundPort=flag;
 }
 
+QString Transition::getName(QString ComID)
+{
+    Q_ASSERT_X(this->getComponentID().size()<=2,"transition ID","the number of transition(in compoundPort) exceeds the limit");
+    if(this->getComponentID()[0]==ComID)
+    {
+        return this->getId().split("+")[0].split("&")[2];
+    }
+    else if(this->getComponentID()[1]==ComID)
+    {
+        return this->getId().split("+")[1].split("&")[2];
+    }
+}
+
+QStringList Transition::getFileName()
+{
+    QStringList id;
+    id.push_back(this->getComponentID()[0].split("&")[0]);
+    if(this->getComponentID().size()==2)
+    {
+        id.push_back(this->getComponentID()[1].split("&")[0]);
+    }
+    return id;
+}
+
+QStringList Transition::getComponentID()
+{
+    QStringList ID=this->getId().split("+");
+    QStringList cID;
+    cID.push_back(ID[0].split("&")[0]+"&"+ID[0].split("&")[1]);
+    if(ID.size()==2)
+    {
+        cID.push_back(ID[1].split("&")[0]+"&"+ID[1].split("&")[1]);
+    }
+    return cID;
+}
+
 bool Transition::getShow()
 {
     return show;

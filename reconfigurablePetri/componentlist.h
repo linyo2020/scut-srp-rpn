@@ -36,6 +36,8 @@ public:
     void addComponentPort(QString portID1,QString portID2);
     QString addNewComponent(QString Filename);
 
+    void deleteArc(QString placeId,QString transitionID);
+
 
 
     void getComponent(componentController *comController){this->comController=comController;}
@@ -44,16 +46,18 @@ public:
 private:
     //func
     //如果未找到返回nullptr
-    Component* getCertainComponent( QString ComID);
+    //Component* getCertainComponent( QString ComID);
     //!!!一定要在addNewComponent()函数中调用，返回已分配好ID的组件
     QString setnewComponentIDinSimulation(Component *newComponent);
     Component* OriginComponent(QString Filename);
     void addNewComponent(Component*newCom);
     Transition*getcertainTransition(QString tranID);
-    QVector<Component*>com_list;
-    QMap<QString,PTNscene*>garbage;
-    PTNscene*Scene;
-    componentController*comController;
+
+
+    QVector<Component*>com_list;//修改
+    QMap<QString,PTNscene*>garbage;//要
+    PTNscene*Scene;//要
+    componentController*comController;//要
 
 
 };

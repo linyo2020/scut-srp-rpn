@@ -51,6 +51,7 @@ public:
     QString getID();
     void setComponent_type(QString type);//slots//UI
     void setLabel(const QString &value);//slots//UI
+    QString getFileName();
     //variable :net need to connect,source ,target
 
     Place* getCertainPlace(QString PlaceID);

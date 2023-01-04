@@ -194,6 +194,11 @@ void Component::setLabel(const QString &value)
     label = value;
 }
 
+QString Component::getFileName()
+{
+    return this->getID().split("&")[0];
+}
+
 
 
 Place *Component::getCertainPlace(QString PlaceID)

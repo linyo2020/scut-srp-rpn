@@ -1,5 +1,5 @@
 #include "place.h"
-
+#include<QtGlobal>
 const QColor Place::defalut_brushColor = Qt::white;
 const QColor Place::defalut_penColor = Qt::black;
 
@@ -132,6 +132,46 @@ void Place::pushInput(Arc *a)
 void Place::pushOutput(Arc *a)
 {
     this->output.push_back(a);
+}
+
+//传入单独的组号，返回该组号下对应的name
+//无校验
+QString Place::getName(QString singleComID)
+{
+    Q_ASSERT_X(this->getComponentID().size()<=2,"Place ID","the number of place(in compoundPort) exceeds the limit");
+    if(this->getComponentID()[0]==singleComID)
+    {
+        return this->getId().split("+")[0].split("&")[2];
+    }
+    else if(this->getComponentID()[1]==singleComID)
+    {
+        return this->getId().split("+")[1].split("&")[2];
+    }
+
+}
+
+QStringList Place::getFileName()
+{
+    QStringList id;
+    id.push_back(this->getComponentID()[0].split("&")[0]);
+    if(this->getComponentID().size()==2)
+    {
+        id.push_back(this->getComponentID()[1].split("&")[0]);
+    }
+    return id;
+}
+
+QStringList Place::getComponentID()
+{
+    QStringList ID=this->getId().split("+");
+    QStringList cID;
+    cID.push_back(ID[0].split("&")[0]+"&"+ID[0].split("&")[1]);
+    if(ID.size()==2)
+    {
+        cID.push_back(ID[1].split("&")[0]+"&"+ID[1].split("&")[1]);
+    }
+
+    return cID;
 }
 void Place::setcontain_portNum(int n)
 {

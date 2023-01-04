@@ -91,6 +91,9 @@ class Transition : public QGraphicsRectItem
     void setNormalPort(bool flag);
     void setCompoundPort(bool flag);
 
+    QString getName(QString ComID);
+    QStringList getFileName();
+    QStringList getComponentID();
     QList<Arc *> input;
     QList<Arc *> output;
 
