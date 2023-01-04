@@ -1,5 +1,5 @@
 #include "ptnscene.h"
-
+#include<QMessageBox>
 PTNscene::PTNscene(QObject * parent)
     :QGraphicsScene (parent)
 {
@@ -289,6 +289,33 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
             return;//MAYBE BUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         emit itemMoved (itemAt(mouseEvent->scenePos(),transform), oldPos);
         oldPos = QPointF(0,0);
+        if (currentItem->type()==Place::Type)
+        {
+            Place* pitem1=dynamic_cast<Place*>(currentItem);
+            QList<QGraphicsItem*> collItems=currentItem->collidingItems();
+            if(collItems.size()==1)
+            {
+                QGraphicsItem* collItem=collItems.front();
+                if(collItem->type()==Place::Type)
+                {
+                    Place* pitem2=dynamic_cast<Place*>(collItem);
+                    QString text="Do you want to merge ";
+                    text+=(pitem1->getId()+" and ");
+                    text+=(pitem2->getId()+" ?");
+                    QMessageBox::StandardButton result=QMessageBox::question(dynamic_cast<QWidget*>(this->parent()),tr("Merge"),text);
+                    if(result==QMessageBox::Yes)
+                    {
+                        pitem1->setInputPort(true);
+                        pitem1->setOutputPort(true);
+                        pitem1->setCompoundPort(true);
+                        removeItem(pitem2);
+                        delete pitem2;
+                    }
+                }
+
+            }
+        }
+
     }
 
     if(((mode == drawArcMode)&&(pathitem != 0))&&(itemAt(mouseEvent->scenePos(),transform) != 0))

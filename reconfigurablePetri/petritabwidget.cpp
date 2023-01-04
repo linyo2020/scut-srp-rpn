@@ -551,16 +551,23 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     //端口识别和判断选择
     if(placeEditDialog->m_inputPort->isChecked())
     {
-        place->drawInputport();
+        if(place->isOutputPort())
+        place->setOutputPort(false);
+        place->setInputPort(true);
     }
     else if(placeEditDialog->m_outputPort->isChecked())
     {
-        place->drawOutputport();
+        if(place->isInputPort())
+        place->setInputPort(false);
+        place->setOutputPort(true);
 
     }
     else if(placeEditDialog->m_notPort->isChecked())
     {
-        place->cancelSetPort();
+        if(place->isInputPort())
+            place->setInputPort(false);
+        else if(place->isOutputPort())
+            place->setOutputPort(false);
     }
 }
 

@@ -44,6 +44,7 @@ class Place : public QGraphicsEllipseItem
     //设置端口
     void drawInputport();
     void drawOutputport();
+    void drawCompoundport();
     void cancelSetPort();
 
     bool reachCapacity(Arc* arc);
@@ -93,9 +94,6 @@ class Place : public QGraphicsEllipseItem
     QStringList getComponentID();
     QList<Arc*> input;
     QList<Arc*> output;
-
-
-
 
 
  protected:
