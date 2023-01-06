@@ -757,7 +757,7 @@ void MainWindow::openEditComponent()
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
     QTreeWidgetItem * currentItem = tree->currentItem();//获取当前节点
-    QString component_path=currentItem->text(2);
+    QString component_path=currentItem->text(1);
     emit addComponentController(component_path);
 
 }
@@ -765,7 +765,6 @@ void MainWindow::editComponentInfo(QString componentName)
 {
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     currentItem->setText(0,componentName);
-    //currentItem->setText(1,componentType);
 }
 
 MainWindow::~MainWindow()

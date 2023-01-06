@@ -32,7 +32,6 @@ void componentController::addComponentTreeNode(QTreeWidget *newTree,QString comp
     {
         QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
         itemsFile[component_name]=component_path;
-        //Item->setText(0,component_type);
         Item->setText(0,component_name);
         Item->setText(1,component_path);
         Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
