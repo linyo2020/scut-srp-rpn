@@ -14,6 +14,8 @@ PTNscene::PTNscene(QObject * parent)
 
     setSceneRect(0, 0, 5000, 5000);
     setItemIndexMethod(NoIndex);
+
+
 }
 void PTNscene::setisComponent(bool Component)
 {
@@ -395,9 +397,34 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         addXML_transitions (page.transitionNodes);
         addXML_arcs (page.arcs);
     }
+
 }
+void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
+{
+    //特殊类型的复合 item
+    QGraphicsItemGroup *pGroup = new QGraphicsItemGroup();
+    pGroup->setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 
+    foreach(auto item,selectedItems())
+        item->setSelected(0);
+    foreach (PAGE_ATTR page, pages)
+    {
+        addXML_places (page.placeNodes);
+        addXML_transitions (page.transitionNodes);
+        addXML_arcs (page.arcs);
+    }
 
+    foreach (QGraphicsItem * item, selectedItems())
+    {
+        pGroup->addToGroup(item);
+    }
+
+     QGraphicsRectItem *pRect = new QGraphicsRectItem();
+     pRect->setRect(pGroup->boundingRect());
+     pGroup->addToGroup(pRect);
+     addItem(pGroup);
+
+}
 void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
 {
     QStringList names;
@@ -409,6 +436,7 @@ void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
         Place * item = new Place (place);
         item->setSelected(1);
         addItem(item);
+
         item->setPos (place.x, place.y);
         names << place.name;
 
@@ -426,6 +454,7 @@ void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
      }
 
     emit nodesInserted(names);
+
 }
 
 void PTNscene::addXML_transitions (const QList <TRANSITION_ATTR> &transitions)
@@ -439,6 +468,8 @@ void PTNscene::addXML_transitions (const QList <TRANSITION_ATTR> &transitions)
         Transition * item = new Transition (transition);
         item->setSelected(1);
         addItem(item);
+
+
         item->setPos (transition.x, transition.y);
         item->setRotation(transition.rotation);
         names << transition.name;
@@ -501,7 +532,7 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
 
       Arc * arc = new Arc(sourceItem, targetItem, path, xmlarc);
 //      if(!arc->getFISStruct().m_sFISName.empty())arc->createRuleSet();
-      addItem(arc);
+        addItem(arc);
 
           if(sourceItem->type() == Place::Type)
               qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);

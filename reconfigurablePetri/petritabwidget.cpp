@@ -24,6 +24,8 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
     scene->from_Xml (ptnet.pages);
     view->centerOn(scene->itemsBoundingRect().center());
 }
+
+//设置组件
 void PetriTabWidget::setComponent(const PTNET_ATTR &ptnet, const QString& file)
 {
     id = ptnet.id;
@@ -31,7 +33,9 @@ void PetriTabWidget::setComponent(const PTNET_ATTR &ptnet, const QString& file)
 //    Component*com=new Component(id,scene);
 //    component_vector.push_back(com);
     // xml
-    scene->from_Xml (ptnet.pages);
+    scene->from_Xml_Component (ptnet.pages);
+
+    // 为视图设置场景
     view->centerOn(scene->itemsBoundingRect().center());
 
 }

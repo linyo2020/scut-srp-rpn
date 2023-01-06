@@ -32,6 +32,10 @@ public:
     void addXML_transitions (const QList <TRANSITION_ATTR> &transitions);
     void addXML_arcs (const QList <ARC_ATTR> &arcs);
 
+    void from_Xml_Component (const QList<PAGE_ATTR> &pages);
+
+
+
     Marking getInitialMarking () const;
     QMap<QString, QString> getPlacesNames ();
     QMap<QString, int> getPlacesCapacities ();
@@ -69,6 +73,8 @@ private:
 
     QGraphicsItem     * currentItem;
     QGraphicsPathItem * pathitem;
+
+
 
     SceneSelectionRectangle * selectionRect;
 

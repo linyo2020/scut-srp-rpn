@@ -737,7 +737,6 @@ void MainWindow::openRuleLibrary()
 }
 void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
 {
-    //component_controller->addComponentTreeNode(componentTree,this->comType,componentName,componentPath);
     component_controller->addComponentTreeNode(componentTree,componentName,componentPath);
 }
 //删除当前组件库浮动窗口上的组件
