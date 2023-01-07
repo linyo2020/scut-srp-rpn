@@ -63,6 +63,11 @@ int PetriTabWidget::getComponentSize()
 {
     return this->component_vector.size();
 }
+void PetriTabWidget::unbindComponent()
+{
+     scene->unbindComponent();
+}
+
 void PetriTabWidget::createTab ()
 {
     mode = normalMode;

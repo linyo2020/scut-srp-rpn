@@ -33,6 +33,7 @@ public:
     void addXML_arcs (const QList <ARC_ATTR> &arcs);
 
     void from_Xml_Component (const QList<PAGE_ATTR> &pages);
+    void unbindComponent();
 
 
 

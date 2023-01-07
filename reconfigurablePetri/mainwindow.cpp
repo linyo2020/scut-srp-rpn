@@ -324,6 +324,7 @@ void MainWindow::createComponentDock()
     newComponent=new QToolButton();
     deleteComponent=new QToolButton();
     addComponent=new QToolButton();
+    unbindComponent=new QToolButton();
     componentTree=new QTreeWidget();
 
     //---------不要调整下面connect顺序，会报错--------------------
@@ -356,11 +357,16 @@ void MainWindow::createComponentDock()
     connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);//bug
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
 
+    unbindComponent->setText(tr("解除绑定"));
+    unbindComponent->setToolTip(tr("Unbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    connect(unbindComponent,&QToolButton::clicked,this,[=](){this->unbindingComponent();});
+
     componentBar=new QToolBar();
 
     componentBar->addWidget(newComponent);
     componentBar->addWidget(deleteComponent);
     componentBar->addWidget(addComponent);
+     componentBar->addWidget(unbindComponent);
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
 
@@ -722,6 +728,11 @@ void MainWindow::openComponent()
         statusBar->showMessage("Component was not opened.", 1000);
     emit importComponentFinished();
 }
+void MainWindow::unbindingComponent()
+{
+    tabWidget->unbindComponent();
+}
+
 void MainWindow::openComponentDock()
 {
     componentDock->show ();

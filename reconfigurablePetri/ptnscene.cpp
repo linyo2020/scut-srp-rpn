@@ -191,9 +191,10 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
            selectionRect = new SceneSelectionRectangle;
            addItem(selectionRect);
         }
-        else
-            //oldPos = mouseEvent->scenePos();
+        else  if(currentItem->type() == Place::Type||currentItem->type() == Transition::Type)
+        {
             oldPos=currentItem->pos();
+        }
 
         break;
        case addToken:
@@ -402,8 +403,10 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
 void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
 {
     //特殊类型的复合 item
-    QGraphicsItemGroup *pGroup = new QGraphicsItemGroup();
-    pGroup->setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+    auto *pGroup = new QGraphicsItemGroup();
+    pGroup->setFlags( QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable| QGraphicsItem::ItemIsFocusable);
+    pGroup->setHandlesChildEvents(false);
+    pGroup->setZValue(1);
 
     foreach(auto item,selectedItems())
         item->setSelected(0);
@@ -414,17 +417,37 @@ void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
         addXML_arcs (page.arcs);
     }
 
-    foreach (QGraphicsItem * item, selectedItems())
+    foreach (auto *item, selectedItems())
     {
         pGroup->addToGroup(item);
+        item->setSelected(0);
     }
-
-     QGraphicsRectItem *pRect = new QGraphicsRectItem();
+     auto *pRect = new QGraphicsRectItem();
      pRect->setRect(pGroup->boundingRect());
      pGroup->addToGroup(pRect);
      addItem(pGroup);
-
 }
+//解除绑定组件
+void PTNscene::unbindComponent()
+{
+     if(this->currentItem != 0)
+    {
+        QGraphicsItemGroup  *group;
+        group=(QGraphicsItemGroup*)this->selectedItems().at(0);
+        foreach (QGraphicsItem *item, group->childItems()){
+            if(item->type() == Place::Type||item->type() == Arc::Type||item->type() == Transition::Type)
+            {
+                group->removeFromGroup(item);
+                item->setSelected(0);
+            }
+            else {
+                removeItem(item);
+            }
+            }
+        removeItem(group);
+    }
+}
+
 void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
 {
     QStringList names;
@@ -531,8 +554,8 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
       path.lineTo(targetItem->boundingRect ().center());
 
       Arc * arc = new Arc(sourceItem, targetItem, path, xmlarc);
-//      if(!arc->getFISStruct().m_sFISName.empty())arc->createRuleSet();
-        addItem(arc);
+      addItem(arc);
+
 
           if(sourceItem->type() == Place::Type)
               qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);

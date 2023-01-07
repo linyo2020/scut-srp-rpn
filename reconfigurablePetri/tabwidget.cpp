@@ -742,6 +742,11 @@ void TabWidget::addComponent(QString componentPath)
     tab->setComponent(net, componentPath);
     emit addComponentFinished();
 }
+void TabWidget::unbindComponent( )
+{
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    tab->unbindComponent();
+}
 
 
 bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
