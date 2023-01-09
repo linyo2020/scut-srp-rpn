@@ -458,6 +458,8 @@ void PetriTabWidget::connect_sigs_slots ()
 
     connect (scene, &PTNscene::arcInserted, undostack,  &UndoStack::arcInserted);
 
+    connect (scene, &PTNscene::connectorInserted, undostack,  &UndoStack::connectorInserted);
+
     connect (scene, &PTNscene::itemMoved, undostack,  &UndoStack::itemMoved);
 
     connect (scene, &PTNscene::nodeRemoved, undostack, &UndoStack::nodeRemoved);

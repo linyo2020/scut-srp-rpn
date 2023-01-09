@@ -245,3 +245,54 @@ void ArcClickCommand::redo()
 {
 }
 ArcClickCommand::~ArcClickCommand(){}
+//![6]
+AddConnectorCommand::AddConnectorCommand(QGraphicsItem * item1, QGraphicsItem * item2,
+                           const QPainterPath &connector_path,
+                   const QString &id, PTNscene * scene)
+{
+    sourceItem = item1;
+    targetItem = item2;
+    cid = id;
+
+    QString sid, tid;
+        sid = qgraphicsitem_cast<Place*>(sourceItem)->getId();
+        tid = qgraphicsitem_cast<Place*>(targetItem)->getId();
+
+    connector = new Arc(sourceItem, sid, targetItem, tid, connector_path, cid,0);
+
+    graphicsscene = scene;
+}
+
+void AddConnectorCommand::undo ()
+{
+    graphicsscene->removeItem(connector);
+    removeConnections();
+    graphicsscene->update();
+}
+
+void AddConnectorCommand::redo ()
+{
+    addConnections ();
+    connector->updatePosition();
+    graphicsscene->addItem(connector);
+    graphicsscene->update();
+}
+
+void AddConnectorCommand::addConnections ()
+{
+        qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(connector);
+        qgraphicsitem_cast<Place*>(targetItem)->addInputArc(connector);
+}
+
+void AddConnectorCommand::removeConnections()
+{
+        qgraphicsitem_cast<Place*>(sourceItem)->deleteArc(cid);
+        qgraphicsitem_cast<Place*>(targetItem)->deleteArc(cid);
+}
+
+AddConnectorCommand::~AddConnectorCommand()
+{
+    if(!graphicsscene)
+        delete connector;
+}
+//![6]

@@ -123,5 +123,26 @@ private:
     QPointF newPos;
 };
 //![5]
+//! [6] add connector command
+class AddConnectorCommand : public QUndoCommand
+{
+public:
+    AddConnectorCommand(QGraphicsItem * item1, QGraphicsItem * item2, const QPainterPath &connector_path,
+                  const QString &id, PTNscene * scene);
+    ~AddConnectorCommand();
+    void addConnections ();
+    void removeConnections ();
+
+    void undo ();
+    void redo ();
+
+private:
+    Arc * connector;
+    PTNscene * graphicsscene;
+    QGraphicsItem * sourceItem;
+    QGraphicsItem * targetItem;
+    QString cid;
+};
+//![6]
 
 #endif // COMMANDS_H

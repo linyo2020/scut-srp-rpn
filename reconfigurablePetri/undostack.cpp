@@ -15,6 +15,13 @@ void UndoStack::arcInserted(QGraphicsItem * item1, QGraphicsItem * item2,
     push(new AddArcCommand(item1, item2, arc_path, id, scene, ArcWeight));
 }
 
+void UndoStack::connectorInserted(QGraphicsItem * item1, QGraphicsItem * item2,
+                         const QPainterPath &connector_path,
+                  const QString &id, PTNscene * scene)
+{
+    push(new AddConnectorCommand(item1, item2, connector_path, id, scene));
+}
+
 void UndoStack::itemMoved (QGraphicsItem * movedItem, const QPointF &oldPosition)
 {
     push(new MoveCommand(movedItem, oldPosition));

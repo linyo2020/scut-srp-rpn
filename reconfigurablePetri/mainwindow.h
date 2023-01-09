@@ -131,6 +131,7 @@ private:
     QToolButton  * addPlaceToolButton;
     QToolButton  * addTransToolButton;
     QToolButton  * drawArcToolButton;
+    QToolButton  * drawConnectorToolButton;
 
     //仿真按钮
     QToolButton  * animateToolButton;

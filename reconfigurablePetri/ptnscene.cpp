@@ -6,6 +6,7 @@ PTNscene::PTNscene(QObject * parent)
     places_indexs = 0;
     transitions_indexs = 0;
     arcs_indexs = 0;
+    connector_indexs=0;
     mode = normalMode;
 
     pathitem = 0;
@@ -181,6 +182,27 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
             }
 
         break;
+       case drawConnectorMode:
+        currentItem = itemAt(mouseEvent->scenePos(),transform);
+        if(currentItem == 0)
+            return;
+
+        type = currentItem->type();
+
+        if( type == Place::Type)
+        {
+          if(pathitem == 0)
+           {
+                pathitem = new QGraphicsPathItem;
+                pathitem->setZValue(-1000.0);
+                pathitem->setPen(QPen(Qt::green, 5,
+                Qt::DashLine, Qt::RoundCap, Qt::MiterJoin));
+                points << mouseEvent->scenePos();
+                addItem(pathitem);
+           }
+        }
+
+    break;
        case normalMode:
 
         currentItem = itemAt(mouseEvent->scenePos(),transform);
@@ -249,7 +271,7 @@ void PTNscene::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     if(mode == animationMode)
         return;
 
-    if((mode == drawArcMode)&&(pathitem != 0))
+    if((mode == drawArcMode||mode==drawConnectorMode)&&(pathitem != 0))
     {
         QPainterPath newpath;
         newpath.moveTo(points[0]);
@@ -356,6 +378,46 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
                         QVariant v(arcs_indexs);
                         emit arcInserted(sourceItem, targetItem, path, QString("a%1").arg(v.toString()), this);
                         arcs_indexs++;
+                    }
+                }
+            }
+        }
+    }
+    if(((mode == drawConnectorMode)&&(pathitem != 0))&&(itemAt(mouseEvent->scenePos(),transform) != 0))
+     {
+       if ((itemAt(mouseEvent->scenePos(),transform)->type() == QGraphicsPathItem::Type )||
+           (itemAt(mouseEvent->scenePos(),transform) == 0))
+        {
+            points << mouseEvent->scenePos();
+            return;
+        }else
+         {
+
+            QPainterPath path = pathitem->path();
+            removeItem(pathitem);
+            delete pathitem;
+            pathitem = 0;
+
+            points.clear();
+
+            QGraphicsItem * sourceItem = itemAt(path.pointAtPercent(0),transform);
+            QGraphicsItem * targetItem = itemAt(mouseEvent->scenePos(),transform);
+
+            if((sourceItem != 0) && (targetItem != 0))
+            {
+
+                if(!sourceItem->collidesWithItem(targetItem, Qt::IntersectsItemShape))
+                {
+                    int source_type = sourceItem->type();
+                    int target_type = targetItem->type();
+
+            // ** Petri Net rule: no relation allowed between nodes
+            //(place or transition) of the same type!
+                    if(source_type==Place::Type && target_type==Place::Type)
+                    {
+                        QVariant v(connector_indexs);
+                        emit connectorInserted(sourceItem, targetItem, path, QString("c%1").arg(v.toString()), this);
+                        connector_indexs++;
                     }
                 }
             }

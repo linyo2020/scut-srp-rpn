@@ -115,6 +115,13 @@ void MainWindow::createToolBar ()
     drawArcToolButton->setCheckable(true);
     drawArcToolButton->setIcon(QIcon(QPixmap(":/images/arc.png")));
     drawArcToolButton->setToolTip(tr("Draw Polylines Arcs"));
+
+    drawConnectorToolButton= new QToolButton;
+    drawConnectorToolButton->setIconSize(QSize(50,50));
+    drawConnectorToolButton->setCheckable(true);
+    drawConnectorToolButton->setIcon(QIcon(QPixmap(":/images/connector.png")));
+    drawConnectorToolButton->setToolTip(tr("Draw Connectors"));
+
     //仿真
     animateToolButton = new QToolButton;
     animateToolButton->setIconSize(QSize(50, 50));
@@ -137,6 +144,7 @@ void MainWindow::createToolBar ()
     buttonGroup->addButton(addPlaceToolButton, addPlaceMode);
     buttonGroup->addButton(addTransToolButton, addTransMode);
     buttonGroup->addButton(drawArcToolButton, drawArcMode);
+    buttonGroup->addButton(drawConnectorToolButton,drawConnectorMode);
     buttonGroup->addButton(animateToolButton,animationMode);
     //设定按钮组互斥,设置为true，按钮组中的按钮每次都只能够有一个被选中
     buttonGroup->setExclusive(true);
@@ -167,6 +175,8 @@ void MainWindow::createToolBar ()
     toolBar->addWidget(addTransToolButton);
     toolBar->addWidget(drawArcToolButton);
         toolBar->addSeparator ();
+    toolBar->addWidget(drawConnectorToolButton);
+        toolBar->addSeparator();
     toolBar->addWidget(animateToolButton);
     toolBar->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea | Qt::RightToolBarArea);
     addToolBar(Qt::LeftToolBarArea, toolBar);
@@ -680,6 +690,7 @@ void MainWindow::updateWidgets (int mode)
     printToolButton->setDisabled (disable);
     addPlaceToolButton->setDisabled (disable);
     addTransToolButton->setDisabled (disable);
+    drawConnectorToolButton->setDisabled(disable);
     drawArcToolButton->setDisabled (disable);
     m_placeMenuAct->setDisabled(disable);
     m_transitionMenuAct->setDisabled(disable);
@@ -789,6 +800,7 @@ MainWindow::~MainWindow()
     delete addPlaceToolButton;
     delete addTransToolButton;
     delete drawArcToolButton;
+    delete drawConnectorToolButton;
     delete printToolButton;
     delete animateToolButton;
 

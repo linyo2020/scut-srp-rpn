@@ -15,7 +15,7 @@
 typedef QMap<QString, double> Marking;
 
 enum{normalMode=0, animationMode=1, addPlaceMode=2, \
-            addTransMode=3,drawArcMode=4, addToken=5, subToken=6};
+            addTransMode=3,drawArcMode=4, drawConnectorMode=5,addToken=6, subToken=7};
 
 typedef struct{
      QString id, name;

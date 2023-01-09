@@ -47,6 +47,8 @@ signals:
     void nodeInserted(const QPointF &itemPos, const QString &id);
     void arcInserted(QGraphicsItem * source, QGraphicsItem * target,
     const QPainterPath &arc_path, const QString &id, PTNscene * scene,double w=1.0);
+    void connectorInserted(QGraphicsItem * source, QGraphicsItem * target,
+    const QPainterPath &connector_path, const QString &id, PTNscene * scene);
     void itemMoved (QGraphicsItem * movedItem, const QPointF &oldPosition);
     void nodeRemoved (QGraphicsItem * item, PTNscene * scene);
     void arcRemoved (QGraphicsItem * item, PTNscene * scene);
@@ -68,6 +70,7 @@ private:
     int places_indexs;
     int transitions_indexs;
     int arcs_indexs;
+    int connector_indexs;
     int mode;
     QTransform transform;
     bool isComponent=false;
