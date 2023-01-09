@@ -80,7 +80,8 @@ SOURCES += \
     operation/recoveroperation.cpp \
     operation/replacewithnewoperation.cpp \
     operation/replacewithexistinstanceoperation.cpp \
-    rule/eventrule.cpp
+    rule/eventrule.cpp \
+    connector.cpp
 
 
 HEADERS += \
@@ -144,7 +145,8 @@ HEADERS += \
     operation/recoveroperation.h \
     operation/replacewithnewoperation.h \
     operation/replacewithexistinstanceoperation.h \
-    rule/eventrule.h
+    rule/eventrule.h \
+    connector.h
 
 
 # Default rules for deployment.
