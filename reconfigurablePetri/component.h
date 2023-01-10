@@ -8,6 +8,7 @@
 #include"ptnscene.h"
 #include"QDateTime"
   #include <QtGlobal>
+#include"ODESolver/ODEsolver.h"
 class Component: public QObject
 {
 public:
@@ -56,7 +57,40 @@ public:
 
     Place* getCertainPlace(QString PlaceID);
 
+    /**
+     * @brief setStep 设置仿真步长
+     * @author lwy
+     */
+    void setStep(double);
+    /**
+     * @brief getStep 读取仿真步长
+     * @author lwy
+     * @return
+     */
+    double getStep();
+    /**
+     * @brief makeFunction 读取组件结构，生成速率方程
+     * @author lwy
+     * @return
+     */
+    bool makeFunction();
 
+private:
+    /**
+     * @brief m_step 仿真步长
+     * @author lwy
+     */
+    double m_step;
+    /**
+     * @brief m_mInputVaraible2Value 库所变量-token值的映射
+     * @author lwy
+     */
+    map<string,double> m_mInputVaraible2Value;
+    /**
+     * @brief m_vFunDef 速率方程
+     * @author lwy
+     */
+    vector<FUNCTIONDEF> m_vFunDef;
 
 
 

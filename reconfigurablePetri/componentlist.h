@@ -39,7 +39,7 @@ public:
     void deleteArc(QString placeId,QString transitionID);
 
 
-
+    //lwy:set函数是设置属性，get函数是返回属性，以下函数应该是set函数才对吧？
     void getComponent(componentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}

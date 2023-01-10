@@ -27,7 +27,7 @@
 
 /** 页id和vector的映射*/
 extern map<QString,QVector<QString>> namevector;
-/** 页id映射 */
+/** 用于数据表格化 */
 extern map<QString,QVector<QVector<double>>> datavv;
 /** 页id映射页内库所对应的ode方程集合*/
 extern map<QString,vector<FUNCTIONDEF>> e_vFunDef;
