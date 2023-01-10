@@ -258,7 +258,7 @@ AddConnectorCommand::AddConnectorCommand(QGraphicsItem * item1, QGraphicsItem * 
         sid = qgraphicsitem_cast<Place*>(sourceItem)->getId();
         tid = qgraphicsitem_cast<Place*>(targetItem)->getId();
 
-    connector = new Arc(sourceItem, sid, targetItem, tid, connector_path, cid,0);
+    connector = new Connector(sourceItem, sid, targetItem, tid, connector_path, cid);
 
     graphicsscene = scene;
 }
@@ -266,13 +266,13 @@ AddConnectorCommand::AddConnectorCommand(QGraphicsItem * item1, QGraphicsItem * 
 void AddConnectorCommand::undo ()
 {
     graphicsscene->removeItem(connector);
-    removeConnections();
+    //removeConnections();
     graphicsscene->update();
 }
 
 void AddConnectorCommand::redo ()
 {
-    addConnections ();
+   // addConnections ();
     connector->updatePosition();
     graphicsscene->addItem(connector);
     graphicsscene->update();

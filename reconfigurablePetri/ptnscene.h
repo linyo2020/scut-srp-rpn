@@ -8,6 +8,7 @@
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
+#include "connector.h"
 #include "sceneselectionrectangle.h"
 
 class PTNscene : public QGraphicsScene

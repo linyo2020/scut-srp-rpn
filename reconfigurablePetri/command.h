@@ -137,7 +137,7 @@ public:
     void redo ();
 
 private:
-    Arc * connector;
+    Connector * connector;
     PTNscene * graphicsscene;
     QGraphicsItem * sourceItem;
     QGraphicsItem * targetItem;
