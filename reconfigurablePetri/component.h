@@ -81,7 +81,7 @@ public:
     bool makeFunction();
 
     QList<PLACE_ATTR>* getPList();
-
+    void transform();
 private:
     /**
      * @brief m_step 仿真步长
@@ -99,9 +99,9 @@ private:
      */
     vector<FUNCTIONDEF> m_vFunDef;
 
-    QList<PLACE_ATTR> *placeList;
-    QList<TRANSITION_ATTR> *transitionList;
-    QList<ARC_ATTR> *arcList;
+    QList<PLACE_ATTR> placeList;
+    QList<TRANSITION_ATTR> transitionList;
+    QList<ARC_ATTR> arcList;
 
 
 };
