@@ -207,6 +207,23 @@ QVector<Component*> TabWidget::getcom_arry()
     return com_arry;
 }
 
+QList<Connector *> TabWidget::init_cl()
+{
+    PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+    //扫描页面上所有元素
+    PTNscene*s=tab->getSCene();
+    QList<Connector*>cl;
+    foreach(QGraphicsItem*item,s->items())
+    {
+        if(item->type()==Connector::Type)
+        {
+            Connector*c=qgraphicsitem_cast<Connector*>(item);
+            cl.push_back(c);
+        }
+    }
+    return cl;
+}
+
  QStringList TabWidget::getFileNames ()
  {
      return fileNames;

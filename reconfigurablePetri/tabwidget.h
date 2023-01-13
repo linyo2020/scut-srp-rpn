@@ -16,6 +16,7 @@
 #include"component.h"
 #include"compoundcomponentlist.h"
 #include"QVector"
+
 class TabWidget : public QTabWidget
 {
      Q_OBJECT
@@ -64,7 +65,7 @@ public:
     //获取组件名
     QStringList getFileNames ();
     QVector<Component*> getcom_arry();
-
+    QList<Connector*> init_cl();
     //关于组件id的设置
     void setComponentType(QString type);
     void setElementId();
@@ -99,6 +100,7 @@ private:
     int nets_indexes;
     QStringList fileNames;
     QVector<Component*>component_List;//bug
+
     QVector<Component*>com_arry;
     QMap<QString,int>type_count;
     //todo，保存的Pertritabwidget复制

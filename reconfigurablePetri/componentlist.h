@@ -52,6 +52,7 @@ public:
     void getComponent(componentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
+    void initConnector_list(QList<Connector*>l){connectList=l;};
 private:
     //func
     //如果未找到返回nullptr
