@@ -46,13 +46,14 @@ public:
     QList<Place*>getNormalPort();
 
     QList<Place*>getCompoundPort();
-
+    //！！！不要删除，会报错！！！
     PTNet *mynet;
     bool net_att_isEdited;//useless
 
     QString getComponent_type() const;
     //QString getComponent_id();
     QString getLabel() const;
+    void setID(QString comID,int i);
     void setID(QString id);
     QString getID();
     void setComponent_type(QString type);//slots//UI
@@ -61,6 +62,10 @@ public:
     //variable :net need to connect,source ,target
 
     Place* getCertainPlace(QString PlaceID);
+
+    QList<PLACE_ATTR>getPlace_ATTRList();
+    QList<TRANSITION_ATTR>getTransition_ATTRList();
+    QList<ARC_ATTR>getArc_ATTRList();
 
     /**
      * @brief setStep 设置仿真步长
@@ -80,7 +85,6 @@ public:
      */
     bool makeFunction();
 
-    QList<PLACE_ATTR>* getPList();
     void transform();
 private:
     /**

@@ -412,6 +412,7 @@ QVector<Component*> TabWidget::getcom_arry()
      //元素id格式：文件名&num&p\t\a
      // tab id 格式：文件名&num
      //拿到所有元素
+
      PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
      //扫描页面上所有元素
      PTNscene*s=tab->getSCene();
@@ -454,91 +455,97 @@ QVector<Component*> TabWidget::getcom_arry()
      {
          count+=1;
          qDebug()<<"5.5 count:"<<tab->getId()<<": "<<count;
-         if(item->type() == Place::Type)
+         foreach(QGraphicsItem*i,item->childItems())
          {
-             Place * place = qgraphicsitem_cast<Place*>(item);
-             QStringList list=place->getId().split("&");
-             qDebug()<<"6: "<<tab->getId()<<": "<<place->getId();
-             qDebug()<<"7:"<<tab->getId()<<": "<<place->isInComponent();
-             //这个元素已经被包含在组件内了
-             if(place->isInComponent())
+             if(i->type() == Place::Type)
              {
-                 qDebug()<<"10:"<<tab->getId()<<": "<<place->getId();
-                 continue;
+                 Place * place = qgraphicsitem_cast<Place*>(i);
+                 QStringList list=place->getId().split("&");
+                 qDebug()<<"6: "<<tab->getId()<<": "<<place->getId();
+                 qDebug()<<"7:"<<tab->getId()<<": "<<place->isInComponent();
+                 //这个元素已经被包含在组件内了
+                 if(place->isInComponent())
+                 {
+                     qDebug()<<"10:"<<tab->getId()<<": "<<place->getId();
+                     continue;
+                 }
+                 else
+                 {
+
+                     //设置id
+                     QString newId=type+"&"+s1+"&"+list[2];
+                     qDebug()<<"8:"<<tab->getId()<<": "<<newId;
+                     place->setPlaceID(newId);
+                     place->setIncomponent(true);
+                     com->mynet->AddPlace(place);
+
+
+                 }
              }
-             else
+
+             else if(i->type() == Transition::Type)
              {
+                 Transition * trans = qgraphicsitem_cast<Transition*>(i);
+                 QStringList list=trans->getId().split("&");
+                 qDebug()<<"11"<<trans->getId();
+                 qDebug()<<"14"<<tab->getId()<<": "<<trans->isInComponent();
+                 //这个元素已经被包含在组件内了
+                 if(trans->isInComponent())
+                 {
+                     qDebug()<<"12"<<tab->getId()<<": "<<trans->getId();
+                     continue;
+                 }
+                 else
+                 {
 
-                 //设置id
-                 QString newId=type+"&"+s1+"&"+list[2];
-                 qDebug()<<"8:"<<tab->getId()<<": "<<newId;
-                 place->setPlaceID(newId);
-                 place->setIncomponent(true);
-                 com->mynet->AddPlace(place);
+                     //设置id
+                     QString newId=type+"&"+s1+"&"+list[2];
+                     qDebug()<<"9:"<<tab->getId()<<": "<<newId;
+                     trans->setID(newId);
+                     trans->setIncomponent(true);
+                     com->mynet->AddTransition(trans);
 
 
+                 }
              }
-         }
-         else if(item->type() == Transition::Type)
-         {
-             Transition * trans = qgraphicsitem_cast<Transition*>(item);
-             QStringList list=trans->getId().split("&");
-             qDebug()<<"11"<<trans->getId();
-             qDebug()<<"14"<<tab->getId()<<": "<<trans->isInComponent();
-             //这个元素已经被包含在组件内了
-             if(trans->isInComponent())
+             else if(i->type() == Arc::Type)
              {
-                 qDebug()<<"12"<<tab->getId()<<": "<<trans->getId();
-                 continue;
-             }
-             else
-             {
+                 Arc * arc = qgraphicsitem_cast<Arc*>(i);
+                 QStringList list=arc->getId().split("&");
+                 qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
+                 qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();
+                 //这个元素已经被包含在组件内了
+                 if(arc->isInComponent())
+                 {
+                     qDebug()<<"17"<<tab->getId()<<": "<<arc->isInComponent();
+                     continue;
+                 }
+                 else
+                 {
 
-                 //设置id
-                 QString newId=type+"&"+s1+"&"+list[2];
-                 qDebug()<<"9:"<<tab->getId()<<": "<<newId;
-                 trans->setID(newId);
-                 trans->setIncomponent(true);
-                 com->mynet->AddTransition(trans);
+                     //设置id
+                     QString newId=type+"&"+s1+"&"+list[2];
+                     QString source=arc->getSourceId();
+                     QStringList sl=source.split("&");
 
+                     QString target=arc->getTargetId();
+                     QStringList gl=target.split("&");
 
-             }
-         }
-         else if(item->type() == Arc::Type)
-         {
-             Arc * arc = qgraphicsitem_cast<Arc*>(item);
-             QStringList list=arc->getId().split("&");
-             qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
-             qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();
-             //这个元素已经被包含在组件内了
-             if(arc->isInComponent())
-             {
-                 qDebug()<<"17"<<tab->getId()<<": "<<arc->isInComponent();
-                 continue;
-             }
-             else
-             {
+                     arc->setsourceId(type+"&"+s1+"&"+sl[2]);
+                     arc->setTargetId(type+"&"+s1+"&"+gl[2]);
+                     qDebug()<<"18:"<<tab->getId()<<": "<<newId;
+                     arc->setID(newId);
+                     arc->setIncomponent(true);
+                     com->mynet->AddArc(arc);
+                 }
+            }
 
-                 //设置id
-                 QString newId=type+"&"+s1+"&"+list[2];
-                 QString source=arc->getSourceId();
-                 QStringList sl=source.split("&");
-
-                 QString target=arc->getTargetId();
-                 QStringList gl=target.split("&");
-
-                 arc->setsourceId(type+"&"+s1+"&"+sl[2]);
-                 arc->setTargetId(type+"&"+s1+"&"+gl[2]);
-                 qDebug()<<"18:"<<tab->getId()<<": "<<newId;
-                 arc->setID(newId);
-                 arc->setIncomponent(true);
-                 com->mynet->AddArc(arc);
-             }
          }
      }
 
      com->setID(tab->getId());
      qDebug()<<"13"<<com->getID();
+     com->transform();
      com_arry.push_back(com);
  }
 

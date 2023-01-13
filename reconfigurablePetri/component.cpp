@@ -151,6 +151,26 @@ QString Component::getLabel() const
     return label;
 }
 
+void Component::setID(QString comID, int i=0)
+{
+    if(i==0)
+    {
+        this->Component_id=comID;
+        for(int i=0;i<this->placeList.size();i++)
+        {
+            this->placeList[i].id=comID+"&"+this->placeList[i].id;
+        }
+        for(int i=0;i<this->transitionList.size();i++)
+        {
+            this->transitionList[i].id=comID+"&"+this->transitionList[i].id;
+        }
+        for(int i=0;i<this->arcList.size();i++)
+        {
+            this->arcList[i].id=comID+"&"+this->arcList[i].id;
+        }
+    }
+}
+
 //如果组件中已经存在复合端口，此时调用此函数会导致报错
 void Component::setID(QString id)
 {
@@ -210,6 +230,21 @@ Place *Component::getCertainPlace(QString PlaceID)
             return mynet->PlaceList[i];
         }
     }
+}
+
+QList<PLACE_ATTR> Component::getPlace_ATTRList()
+{
+    return this->placeList;
+}
+
+QList<TRANSITION_ATTR> Component::getTransition_ATTRList()
+{
+    return this->transitionList;
+}
+
+QList<ARC_ATTR> Component::getArc_ATTRList()
+{
+    return this->getArc_ATTRList();
 }
 
 
@@ -453,9 +488,26 @@ bool Component::makeFunction()
     }
 }
 
-QList<PLACE_ATTR> *Component::getPList()
+
+
+void Component::transform()
 {
-    return this->placeList;
+    for(int i=0;i<mynet->PlaceList.size();i++)
+    {
+        PLACE_ATTR p=mynet->PlaceList[i]->toXml();
+        this->placeList.push_back(p);
+    }
+    for(int i=0;i<mynet->TransitionList.size();i++)
+    {
+         TRANSITION_ATTR t=mynet->TransitionList[i]->toXml();
+         this->transitionList.push_back(t);
+    }
+    for(int i=0;i<mynet->ArcList.size();i++)
+    {
+         ARC_ATTR a=mynet->ArcList[i]->toXml();
+         this->arcList.push_back(a);
+    }
+
 }
 
 

@@ -24,36 +24,37 @@ ComponentList::ComponentList()
 
 //修改，直接遍历scene
 //O(n)
-Place *ComponentList::getCertainPlace(QString PlaceID)
-{
-//    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
-//    for(int i=0;i<com_list.size();i++)
+//Place *ComponentList::getCertainPlace(QString PlaceID)
+//{
+////    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+////    for(int i=0;i<com_list.size();i++)
+////    {
+////        if(com_list[i]->getID()==comID)
+////        {
+////            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
+////            {
+////                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
+////                {
+////                    return com_list[i]->getPlaceList()[i];
+////                }
+////            }
+////        }
+////    }
+//    //2
+//    foreach(QGraphicsItem*item,this->Scene->items())
 //    {
-//        if(com_list[i]->getID()==comID)
+//        if(item->type()==Place::Type)
 //        {
-//            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
+//            Place * place = qgraphicsitem_cast<Place*>(item);
+//            if(place->getId()==PlaceID)
 //            {
-//                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
-//                {
-//                    return com_list[i]->getPlaceList()[i];
-//                }
+//                return place;
 //            }
 //        }
 //    }
-    foreach(QGraphicsItem*item,this->Scene->items())
-    {
-        if(item->type()==Place::Type)
-        {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-            if(place->getId()==PlaceID)
-            {
-                return place;
-            }
-        }
-    }
 
-    //遍历com_list
-}
+
+//}
 
 //todo
 //修改，直接遍历scene
@@ -132,16 +133,30 @@ QList<QString> ComponentList::getCertainPlaceName(QString ComponentID)
 //        }
 //    }
 //    return list;
+    //2
+//    QList<QString>l;
+//    foreach(QGraphicsItem*item,this->Scene->items())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            Place*p=qgraphicsitem_cast<Place*>(item);
+//            QStringList cID=p->getComponentID();
+//            if(cID.contains(ComponentID))
+//            {
+//                l.push_back(p->getName(ComponentID));
+//            }
+//        }
+//    }
+//    return l;
+
     QList<QString>l;
-    foreach(QGraphicsItem*item,this->Scene->items())
+    for(int i=0;i<com_list.size();i++)
     {
-        if(item->type()==Place::Type)
+        if(com_list[i]->getID()==ComponentID)
         {
-            Place*p=qgraphicsitem_cast<Place*>(item);
-            QStringList cID=p->getComponentID();
-            if(cID.contains(ComponentID))
+            for(int y=0;y<com_list[i]->getPlace_ATTRList().size();y++)
             {
-                l.push_back(p->getName(ComponentID));
+                l.push_back(com_list[i]->getPlace_ATTRList()[i].id);
             }
         }
     }
@@ -192,9 +207,20 @@ QList<QString> ComponentList::getCertainTransitionName(QString ComponentID)
     return l;
 }
 
+void ComponentList::deleteConnect(QString PlaceID1, QString PlaceID2)
+{
+    for(int i=0;i<connectList.size();i++)
+    {
+        if((connectList[i]->getSourceId()==PlaceID1&&connectList[i]->getTargetId()==PlaceID2)||(connectList[i]->getSourceId()==PlaceID2&&connectList[i]->getTargetId()==PlaceID1))
+        {
+            connectList.removeAt(i);
+        }
+    }
+}
+
 //todo
 //遍历当前scene与garbage
-QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
+void ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 {
 //    int count=0;
 //    for(int i=0;i<com_list.size();i++)
@@ -217,73 +243,98 @@ QString ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 //    newComponent->setID(newComponent->getComponentFileName()+QString::number(count));
 //    return (newComponent->getComponentFileName()+QString::number(count));
 
-    int maxnum=0;
-    QList<QString> cid;
-    foreach(QGraphicsItem*item,this->Scene->items())
+    //2
+//    int maxnum=0;
+//    QList<QString> cid;
+//    foreach(QGraphicsItem*item,this->Scene->items())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            Place*p=qgraphicsitem_cast<Place*>(item);
+//            QStringList cid=p->getComponentID();
+//            if(p->getFileName().contains(newComponent->getFileName()))
+//            {
+//                if(cid[0]==newComponent->getID())
+//                {
+//                    if(maxnum<cid[0].split("&")[1].toInt())
+//                    {
+//                        maxnum=cid[0].split("&")[1].toInt();
+//                    }
+
+//                }
+//                if(cid.size()==2&&cid[1]==newComponent->getID())
+//                {
+//                    if(maxnum<cid[1].split("&")[1].toInt())
+//                    {
+//                        maxnum=cid[1].split("&")[1].toInt();
+//                    }
+
+//                }
+//            }
+//        }
+//        if(item->type()==Transition::Type)
+//        {
+//            Transition*p=qgraphicsitem_cast<Transition*>(item);
+//            QStringList cid=p->getComponentID();
+//            if(p->getFileName().contains(newComponent->getFileName()))
+//            {
+//                if(cid[0]==newComponent->getID())
+//                {
+//                    if(maxnum<cid[0].split("&")[1].toInt())
+//                    {
+//                        maxnum=cid[0].split("&")[1].toInt();
+//                    }
+
+//                }
+//                if(cid.size()==2&&cid[1]==newComponent->getID())
+//                {
+//                    if(maxnum<cid[1].split("&")[1].toInt())
+//                    {
+//                        maxnum=cid[1].split("&")[1].toInt();
+//                    }
+
+//                }
+//            }
+//        }
+//    }
+
+//    QMapIterator<QString,PTNscene*>it(this->garbage);
+//    while (it.hasNext()) {
+//        it.next();
+//        if(it.key().split("&")[0]==newComponent->getComponentFileName())
+//        {
+//            if(it.key().split("&")[1].toInt()>maxnum)
+//            {
+//                maxnum=it.key().split("&")[1].toInt();
+//            }
+//        }
+//    }
+//    newComponent->setID(newComponent->getComponentFileName()+"&"+QString::number(maxnum));
+//    return (newComponent->getComponentFileName()+"&"+QString::number(maxnum));
+
+    int max=1;
+    QString filename=newComponent->getID().split("&")[0];
+    for(int i=0;i<com_list.size();i++)
     {
-        if(item->type()==Place::Type)
+        QString fn=com_list[i]->getID().split("&")[0];
+        if(fn==filename)
         {
-            Place*p=qgraphicsitem_cast<Place*>(item);
-            QStringList cid=p->getComponentID();
-            if(p->getFileName().contains(newComponent->getFileName()))
-            {
-                if(cid[0]==newComponent->getID())
-                {
-                    if(maxnum<cid[0].split("&")[1].toInt())
-                    {
-                        maxnum=cid[0].split("&")[1].toInt();
-                    }
-
-                }
-                if(cid.size()==2&&cid[1]==newComponent->getID())
-                {
-                    if(maxnum<cid[1].split("&")[1].toInt())
-                    {
-                        maxnum=cid[1].split("&")[1].toInt();
-                    }
-
-                }
-            }
-        }
-        if(item->type()==Transition::Type)
-        {
-            Transition*p=qgraphicsitem_cast<Transition*>(item);
-            QStringList cid=p->getComponentID();
-            if(p->getFileName().contains(newComponent->getFileName()))
-            {
-                if(cid[0]==newComponent->getID())
-                {
-                    if(maxnum<cid[0].split("&")[1].toInt())
-                    {
-                        maxnum=cid[0].split("&")[1].toInt();
-                    }
-
-                }
-                if(cid.size()==2&&cid[1]==newComponent->getID())
-                {
-                    if(maxnum<cid[1].split("&")[1].toInt())
-                    {
-                        maxnum=cid[1].split("&")[1].toInt();
-                    }
-
-                }
-            }
+            max++;
         }
     }
-
-    QMapIterator<QString,PTNscene*>it(this->garbage);
-    while (it.hasNext()) {
-        it.next();
-        if(it.key().split("&")[0]==newComponent->getComponentFileName())
+    for(int i=0;i<garbage2.size();i++)
+    {
+        QString fn=garbage2[i]->getID().split("&")[0];
+        if(fn==filename)
         {
-            if(it.key().split("&")[1].toInt()>maxnum)
-            {
-                maxnum=it.key().split("&")[1].toInt();
-            }
+            max++;
         }
     }
-    newComponent->setID(newComponent->getComponentFileName()+"&"+QString::number(maxnum));
-    return (newComponent->getComponentFileName()+"&"+QString::number(maxnum));
+    QString cID=filename+"&"+QString::number(max);
+    newComponent->setID(cID,0);
+
+
+
 }
 
 //对象不存在则无法合并
@@ -545,24 +596,24 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
 }
 
 //useless
-void ComponentList::addNewComponent(Component*newCom)
-{
-    this->setnewComponentIDinSimulation(newCom);
+//void ComponentList::addNewComponent(Component*newCom)
+//{
+//    this->setnewComponentIDinSimulation(newCom);
 
-    foreach(Place* pl,newCom->getPlaceList())
-    {
-        Scene->addItem(pl);
-    }
-    foreach(Transition *tran,newCom->getTransitionList())
-    {
-        Scene->addItem(tran);
-    }
-    foreach(Arc* ar,newCom->getTArcList())
-    {
-        Scene->addItem(ar);
-    }
+//    foreach(Place* pl,newCom->getPlaceList())
+//    {
+//        Scene->addItem(pl);
+//    }
+//    foreach(Transition *tran,newCom->getTransitionList())
+//    {
+//        Scene->addItem(tran);
+//    }
+//    foreach(Arc* ar,newCom->getTArcList())
+//    {
+//        Scene->addItem(ar);
+//    }
 
-}
+//}
 
 Transition *ComponentList::getcertainTransition(QString tranID)
 {
@@ -594,26 +645,40 @@ Transition *ComponentList::getcertainTransition(QString tranID)
     }
 }
 
-//!!!原始组件内部不要有复合端口
+
 QString ComponentList::addNewComponent(QString Filename)
 {
+//    Component*com=this->OriginComponent(Filename);
+//    setnewComponentIDinSimulation(com);
+
+//    foreach(Place* pl,com->getPlaceList())
+//    {
+//        Scene->addItem(pl);
+//    }
+//    foreach(Transition *tran,com->getTransitionList())
+//    {
+//        Scene->addItem(tran);
+//    }
+//    foreach(Arc* ar,com->getTArcList())
+//    {
+//        Scene->addItem(ar);
+//    }
+
+//    return com->getID();
     Component*com=this->OriginComponent(Filename);
-    setnewComponentIDinSimulation(com);
+    this->setnewComponentIDinSimulation(com);
+    this->com_list.push_back(com);
 
-    foreach(Place* pl,com->getPlaceList())
-    {
-        Scene->addItem(pl);
-    }
-    foreach(Transition *tran,com->getTransitionList())
-    {
-        Scene->addItem(tran);
-    }
-    foreach(Arc* ar,com->getTArcList())
-    {
-        Scene->addItem(ar);
-    }
+}
 
-    return com->getID();
+const QList<Connector *> ComponentList::getConnectorList()
+{
+    return  this->connectList;
+}
+
+void ComponentList::push_back_connectorList(Connector *c)
+{
+    this->connectList.push_back(c);
 }
 
 void ComponentList::deleteArc(QString placeId, QString transitionID)
@@ -647,412 +712,412 @@ Component *ComponentList::OriginComponent(QString Filename)
 //需要针对transition与transition、transition与place进行单独处理
 //transition与transition：删除复合transition，新建两个新的transition，把连接好的相关边进行分配
 //transition与place：直接删除相关边即可（判断两种情况——连接方向）
-void ComponentList::seperateCompoundPort(QString CompoundPortID)
-{
+//void ComponentList::seperateCompoundPort(QString CompoundPortID)
+//{
 
-//    QStringList id=CompoundPortID.split("+");
-//    //下面认为place作为端口时，input与output应该有一个为空
-//    if(id[0].split("&")[2][0]=="p"&&id[1].split("&")[2][0]=="p")
+////    QStringList id=CompoundPortID.split("+");
+////    //下面认为place作为端口时，input与output应该有一个为空
+////    if(id[0].split("&")[2][0]=="p"&&id[1].split("&")[2][0]=="p")
+////    {
+////        QString ID1=id[0];
+////        QString comID1=ID1.split("&")[0]+"&"+ID1.split("&")[1];
+////        QString ID2=id[1];
+////        QString comID2=ID2.split("&")[0]+"&"+ID2.split("&")[1];
+////        Place *p1=new Place();
+////        Place*p2=new Place();
+////        p1->setPlaceID(ID1);
+////        p2->setPlaceID(ID2);
+////        QString FName1=ID1.split("&")[0];
+////        QString FName2=ID2.split("&")[0];
+
+////        Component*com1=this->OriginComponent(FName1);
+////        //暂时
+////        p1->setTokens(com1->getCertainPlaceByName(ID1.split("&")[2])->getTokens());
+////        p1->setCapacity(com1->getCertainPlaceByName(ID1.split("&")[2])->getCapacity());
+////        Component*com2=this->OriginComponent(FName2);
+////        p2->setTokens(com2->getCertainPlaceByName(ID2.split("&")[2])->getTokens());
+////        p2->setCapacity(com2->getCertainPlaceByName(ID2.split("&")[2])->getCapacity());
+
+
+////        p1->setcontain_portNum(1);
+////        p2->setcontain_portNum(1);
+////        p1->setCompoundPort(false);
+////        p2->setCompoundPort(false);
+////        QList<Arc*>l1;
+////        QList<Arc*>l2;
+////        Place*compoundPort=this->getCertainPlace(CompoundPortID);
+
+////        for(int i=0;i<compoundPort->getinput().size();i++)
+////        {
+////            QString arcComID=compoundPort->getinput()[i]->getId().split("&")[0]+"&"+compoundPort->getinput()[i]->getId().split("&")[1];
+////            if(arcComID==comID1)
+////            {
+////                l1.push_back(compoundPort->getoutput()[i]);
+
+////            }
+////        }
+
+
+
+////        for(int i=0;i<compoundPort->getoutput().size();i++)
+////        {
+////            QString arcComID=compoundPort->getoutput()[i]->getId().split("&")[0]+"&"+compoundPort->getoutput()[i]->getId().split("&")[1];
+////            if(arcComID==comID1)
+////            {
+////                l2.push_back(compoundPort->getoutput()[i]);
+////            }
+////        }
+
+////        if(compoundPort->getoutput().size()==0)
+////        {
+////            p1->setOutputPort(true);
+////            p2->setOutputPort(true);
+
+////            p1->setInputPort(false);
+////            p2->setInputPort(false);
+
+////            for(int i=0;i<l1.size();i++)
+////            {
+////                l1[i]->setTargetId(ID1);
+////                l1[i]->setTargetItem(p1);
+////            }
+
+////            for(int i=0;i<l2.size();i++)
+////            {
+////                l2[i]->setTargetId(ID2);
+////                l2[i]->setTargetItem(p2);
+////            }
+
+////        }
+
+////        else if(compoundPort->getinput().size()==0)
+////        {
+////            p1->setInputPort(true);
+////            p2->setInputPort(true);
+
+////            p1->setOutputPort(false);
+////            p2->setOutputPort(false);
+
+////            for(int i=0;i<l1.size();i++)
+////            {
+////                l1[i]->setsourceId(ID1);
+////                l1[i]->setSourceItem(p1);
+////            }
+
+////            for(int i=0;i<l2.size();i++)
+////            {
+////                l2[i]->setsourceId(ID2);
+////                l2[i]->setSourceItem(p2);
+////            }
+////        }
+
+////        else
+////        {
+////            if((compoundPort->getinput()[0]->getId().split("&")[0]+"&"+compoundPort->getinput()[0]->getId().split("&")[1])==comID1)
+////            {
+////                p1->setOutputPort(true);
+////                p2->setInputPort(true);
+////                p1->setInputPort(false);
+////                p2->setOutputPort(false);
+////                for(int i=0;i<l1.size();i++)
+////                {
+////                    l1[i]->setTargetId(ID1);
+////                    l1[i]->setTargetItem(p1);
+
+////                }
+////                for(int i=0;i<l2.size();i++)
+////                {
+////                    l1[i]->setsourceId(ID1);
+////                    l1[i]->setSourceItem(p1);
+////                }
+////            }
+////            else
+////            {
+////                p1->setOutputPort(false);
+////                p2->setInputPort(false);
+////                p1->setInputPort(true);
+////                p2->setOutputPort(true);
+////                for(int i=0;i<l1.size();i++)
+////                {
+////                    l1[i]->setsourceId(ID1);
+////                    l1[i]->setSourceItem(p1);
+
+////                }
+////                for(int i=0;i<l2.size();i++)
+////                {
+////                    l1[i]->setTargetId(ID1);
+////                    l1[i]->setTargetItem(p1);
+////                }
+////            }
+////        }
+
+////        for(int i=0;i<com_list.size();i++)
+////        {
+////            if(com_list[i]->getID()==comID1)
+////            {
+////                com_list[i]->mynet->PlaceList.push_back(p1);
+////            }
+////            else if(com_list[i]->getID()==comID2)
+////            {
+////                com_list[i]->mynet->PlaceList.push_back(p2);
+////            }
+////        }
+
+////        for(int i=0;i<com_list.size();i++)
+////        {
+////            if(com_list[i]->getID()==comID1)
+////            {
+////                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
+////                {
+////                    if(com_list[i]->getPlaceList()[y]->getId()==CompoundPortID)
+////                    {
+////                        com_list[i]->mynet->PlaceList.removeAt(y);
+////                    }
+////                }
+////            }
+////            else if(com_list[i]->getID()==comID2)
+////            {
+////                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
+////                {
+////                    if(com_list[i]->getPlaceList()[y]->getId()==CompoundPortID)
+////                    {
+////                        com_list[i]->mynet->PlaceList.removeAt(y);
+////                    }
+////                }
+////            }
+////        }
+
+
+////        //如何将新创建的place添加到scene中
+////        this->Scene->addItem(p1);
+////        this->Scene->addItem(p2);
+////        this->Scene->removeItem(compoundPort);
+
+////    }
+
+////    else if(id[0].split("&")[2][0]=="t"&&id[1].split("&")[2][0]=="t")
+////    {
+////        Transition*t1=new Transition();
+////        Transition*t2=new Transition();
+////        t1->setCompoundPort(false);
+////        t2->setCompoundPort(false);
+////        QString ID1=id[0];
+////        QString comID1=ID1.split("&")[0]+"&"+ID1.split("&")[1];
+////        QString ID2=id[1];
+////        QString comID2=ID2.split("&")[0]+"&"+ID2.split("&")[1];
+////        t1->setID(ID1);
+////        t2->setID(ID2);
+////        t1->setName(ID1.split("&")[2]);
+////        t2->setName(ID2.split("&")[2]);
+////        QList<Arc*>t1_in;
+////        QList<Arc*>t1_out;
+////        QList<Arc*>t2_in;
+////        QList<Arc*>t2_out;
+////        Transition*t=getcertainTransition(CompoundPortID);
+////        for(int i=0;i<t->getinput().size();i++)
+////        {
+////            QString cID=t->getinput()[i]->getId().split("&")[0]+"&"+t->getinput()[i]->getId().split("&")[1];
+////            if(cID==comID1)
+////            {
+////                t1_in.push_back(t->getinput()[i]);
+////            }
+////            else if(cID==comID2)
+////            {
+////                t2_in.push_back(t->getinput()[i]);
+////            }
+////        }
+////        for(int i=0;i<t->getoutput().size();i++)
+////        {
+////            QString cID=t->getoutput()[i]->getId().split("&")[0]+"&"+t->getoutput()[i]->getId().split("&")[1];
+////            if(cID==comID1)
+////            {
+////                t1_out.push_back(t->getoutput()[i]);
+////            }
+////            else if(cID==comID2)
+////            {
+////                t2_out.push_back(t->getoutput()[i]);
+////            }
+////        }
+
+////        for(int i=0;i<t1_in.size();i++)
+////        {
+////            t1->pushInput(t1_in[i]);
+////        }
+
+////        for(int i=0;i<t1_out.size();i++)
+////        {
+////            t1->pushOutput(t1_out[i]);
+////        }
+////        for(int i=0;i<t2_in.size();i++)
+////        {
+////            t2->pushInput(t2_in[i]);
+////        }
+
+////        for(int i=0;i<t2_out.size();i++)
+////        {
+////            t2->pushOutput(t2_out[i]);
+////        }
+
+
+////        for(int i=0;i<com_list.size();i++)
+////        {
+////            if(com_list[i]->getID()==comID1)
+////            {
+////                com_list[i]->mynet->TransitionList.push_back(t1);
+////            }
+////            else if(com_list[i]->getID()==comID2)
+////            {
+////                com_list[i]->mynet->TransitionList.push_back(t2);
+////            }
+////        }
+
+////        for(int i=0;i<com_list.size();i++)
+////        {
+////            if(com_list[i]->getID()==comID1)
+////            {
+////                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
+////                {
+////                    if(com_list[i]->getTransitionList()[y]->getId()==CompoundPortID)
+////                    {
+////                        com_list[i]->mynet->TransitionList.removeAt(y);
+////                    }
+////                }
+////            }
+////            else if(com_list[i]->getID()==comID2)
+////            {
+////                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
+////                {
+////                    if(com_list[i]->getTransitionList()[y]->getId()==CompoundPortID)
+////                    {
+////                        com_list[i]->mynet->TransitionList.removeAt(y);
+////                    }
+////                }
+////            }
+////        }
+
+////        this->Scene->addItem(t1);
+////        this->Scene->addItem(t2);
+////        this->Scene->removeItem(t);
+
+////    }
+//    QStringList ids=CompoundPortID.split("+");
+
+//    if(ids[0].split("&")[2]=="p"&&ids[1].split("&")[2]=="p")
 //    {
-//        QString ID1=id[0];
-//        QString comID1=ID1.split("&")[0]+"&"+ID1.split("&")[1];
-//        QString ID2=id[1];
-//        QString comID2=ID2.split("&")[0]+"&"+ID2.split("&")[1];
-//        Place *p1=new Place();
+//        Place*p=getCertainPlace(CompoundPortID);
+//        Place*p1=new Place();
+//        p1->setPlaceID(ids[0]);
 //        Place*p2=new Place();
-//        p1->setPlaceID(ID1);
-//        p2->setPlaceID(ID2);
-//        QString FName1=ID1.split("&")[0];
-//        QString FName2=ID2.split("&")[0];
+//        p2->setPlaceID(ids[1]);
+//        Component*com1=OriginComponent(p1->getFileName()[0]);
+//        Component*com2=OriginComponent(p2->getFileName()[0]);
 
-//        Component*com1=this->OriginComponent(FName1);
-//        //暂时
-//        p1->setTokens(com1->getCertainPlaceByName(ID1.split("&")[2])->getTokens());
-//        p1->setCapacity(com1->getCertainPlaceByName(ID1.split("&")[2])->getCapacity());
-//        Component*com2=this->OriginComponent(FName2);
-//        p2->setTokens(com2->getCertainPlaceByName(ID2.split("&")[2])->getTokens());
-//        p2->setCapacity(com2->getCertainPlaceByName(ID2.split("&")[2])->getCapacity());
-
-
-//        p1->setcontain_portNum(1);
-//        p2->setcontain_portNum(1);
-//        p1->setCompoundPort(false);
-//        p2->setCompoundPort(false);
-//        QList<Arc*>l1;
-//        QList<Arc*>l2;
-//        Place*compoundPort=this->getCertainPlace(CompoundPortID);
-
-//        for(int i=0;i<compoundPort->getinput().size();i++)
+//        foreach(Place*p3,com1->mynet->PlaceList)
 //        {
-//            QString arcComID=compoundPort->getinput()[i]->getId().split("&")[0]+"&"+compoundPort->getinput()[i]->getId().split("&")[1];
-//            if(arcComID==comID1)
+//            if(p3->getId().split("&")[2]==p1->getId().split("&")[2])
 //            {
-//                l1.push_back(compoundPort->getoutput()[i]);
-
+//                p1->setTokens(p3->getTokens());
+//                p1->setCapacity(p3->getCapacity());
+//                //bug 此处因为输出端口与输入端口的属性对于目前不重要，因此没有设置
 //            }
 //        }
 
-
-
-//        for(int i=0;i<compoundPort->getoutput().size();i++)
+//        foreach(Place*p3,com2->mynet->PlaceList)
 //        {
-//            QString arcComID=compoundPort->getoutput()[i]->getId().split("&")[0]+"&"+compoundPort->getoutput()[i]->getId().split("&")[1];
-//            if(arcComID==comID1)
+//            if(p3->getId().split("&")[2]==p2->getId().split("&")[2])
 //            {
-//                l2.push_back(compoundPort->getoutput()[i]);
+//                p2->setTokens(p3->getTokens());
+//                p2->setCapacity(p3->getCapacity());
+//                //bug 此处因为输出端口与输入端口的属性对于目前不重要，因此没有设置
 //            }
 //        }
 
-//        if(compoundPort->getoutput().size()==0)
+//        //bug,没有处理新增的arc
+//        for(int i=0;i<p->input.size();i++)
 //        {
-//            p1->setOutputPort(true);
-//            p2->setOutputPort(true);
-
-//            p1->setInputPort(false);
-//            p2->setInputPort(false);
-
-//            for(int i=0;i<l1.size();i++)
+//            QString arc_cid=p->input[i]->getId().split("&")[0]+"&"+p->input[i]->getId().split("&")[1];
+//            if(arc_cid==p1->getComponentID()[0])
 //            {
-//                l1[i]->setTargetId(ID1);
-//                l1[i]->setTargetItem(p1);
+//                p->input[i]->setTargetId(p1->getId());
+//                p->input[i]->setTargetItem(p1);
+//                p1->input.push_back(p->input[i]);
 //            }
-
-//            for(int i=0;i<l2.size();i++)
+//            else if(arc_cid==p2->getComponentID()[0])
 //            {
-//                l2[i]->setTargetId(ID2);
-//                l2[i]->setTargetItem(p2);
-//            }
-
-//        }
-
-//        else if(compoundPort->getinput().size()==0)
-//        {
-//            p1->setInputPort(true);
-//            p2->setInputPort(true);
-
-//            p1->setOutputPort(false);
-//            p2->setOutputPort(false);
-
-//            for(int i=0;i<l1.size();i++)
-//            {
-//                l1[i]->setsourceId(ID1);
-//                l1[i]->setSourceItem(p1);
-//            }
-
-//            for(int i=0;i<l2.size();i++)
-//            {
-//                l2[i]->setsourceId(ID2);
-//                l2[i]->setSourceItem(p2);
+//                p->input[i]->setTargetId(p2->getId());
+//                p->input[i]->setTargetItem(p2);
+//                p2->input.push_back(p->input[i]);
 //            }
 //        }
 
-//        else
+//        for(int i=0;i<p->output.size();i++)
 //        {
-//            if((compoundPort->getinput()[0]->getId().split("&")[0]+"&"+compoundPort->getinput()[0]->getId().split("&")[1])==comID1)
+//            QString arc_cid=p->output[i]->getId().split("&")[0]+"&"+p->output[i]->getId().split("&")[1];
+//            if(arc_cid==p1->getComponentID()[0])
 //            {
-//                p1->setOutputPort(true);
-//                p2->setInputPort(true);
-//                p1->setInputPort(false);
-//                p2->setOutputPort(false);
-//                for(int i=0;i<l1.size();i++)
-//                {
-//                    l1[i]->setTargetId(ID1);
-//                    l1[i]->setTargetItem(p1);
-
-//                }
-//                for(int i=0;i<l2.size();i++)
-//                {
-//                    l1[i]->setsourceId(ID1);
-//                    l1[i]->setSourceItem(p1);
-//                }
+//                p->output[i]->setsourceId(p1->getId());
+//                p->output[i]->setSourceItem(p1);
+//                p1->output.push_back(p->output[i]);
 //            }
-//            else
+//            else if(arc_cid==p2->getComponentID()[0])
 //            {
-//                p1->setOutputPort(false);
-//                p2->setInputPort(false);
-//                p1->setInputPort(true);
-//                p2->setOutputPort(true);
-//                for(int i=0;i<l1.size();i++)
-//                {
-//                    l1[i]->setsourceId(ID1);
-//                    l1[i]->setSourceItem(p1);
-
-//                }
-//                for(int i=0;i<l2.size();i++)
-//                {
-//                    l1[i]->setTargetId(ID1);
-//                    l1[i]->setTargetItem(p1);
-//                }
+//                p->output[i]->setTargetId(p2->getId());
+//                p->output[i]->setTargetItem(p2);
+//                p2->output.push_back(p->output[i]);
 //            }
 //        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
-//            {
-//                com_list[i]->mynet->PlaceList.push_back(p1);
-//            }
-//            else if(com_list[i]->getID()==comID2)
-//            {
-//                com_list[i]->mynet->PlaceList.push_back(p2);
-//            }
-//        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
-//            {
-//                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
-//                {
-//                    if(com_list[i]->getPlaceList()[y]->getId()==CompoundPortID)
-//                    {
-//                        com_list[i]->mynet->PlaceList.removeAt(y);
-//                    }
-//                }
-//            }
-//            else if(com_list[i]->getID()==comID2)
-//            {
-//                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
-//                {
-//                    if(com_list[i]->getPlaceList()[y]->getId()==CompoundPortID)
-//                    {
-//                        com_list[i]->mynet->PlaceList.removeAt(y);
-//                    }
-//                }
-//            }
-//        }
-
-
-//        //如何将新创建的place添加到scene中
 //        this->Scene->addItem(p1);
 //        this->Scene->addItem(p2);
-//        this->Scene->removeItem(compoundPort);
+//        this->Scene->removeItem(p);
 
 //    }
-
-//    else if(id[0].split("&")[2][0]=="t"&&id[1].split("&")[2][0]=="t")
+//    else if(ids[0].split("&")[2]=="t"&&ids[1].split("&")[2]=="t")
 //    {
-//        Transition*t1=new Transition();
-//        Transition*t2=new Transition();
-//        t1->setCompoundPort(false);
-//        t2->setCompoundPort(false);
-//        QString ID1=id[0];
-//        QString comID1=ID1.split("&")[0]+"&"+ID1.split("&")[1];
-//        QString ID2=id[1];
-//        QString comID2=ID2.split("&")[0]+"&"+ID2.split("&")[1];
-//        t1->setID(ID1);
-//        t2->setID(ID2);
-//        t1->setName(ID1.split("&")[2]);
-//        t2->setName(ID2.split("&")[2]);
-//        QList<Arc*>t1_in;
-//        QList<Arc*>t1_out;
-//        QList<Arc*>t2_in;
-//        QList<Arc*>t2_out;
-//        Transition*t=getcertainTransition(CompoundPortID);
-//        for(int i=0;i<t->getinput().size();i++)
+//        Transition*p=getcertainTransition(CompoundPortID);
+//        Transition*p1=new Transition();
+//        p1->setID(ids[0]);
+//        Transition*p2=new Transition();
+//        p2->setID(ids[1]);
+
+//        //bug,没有处理新增的arc
+//        for(int i=0;i<p->input.size();i++)
 //        {
-//            QString cID=t->getinput()[i]->getId().split("&")[0]+"&"+t->getinput()[i]->getId().split("&")[1];
-//            if(cID==comID1)
+//            QString arc_cid=p->input[i]->getId().split("&")[0]+"&"+p->input[i]->getId().split("&")[1];
+//            if(arc_cid==p1->getComponentID()[0])
 //            {
-//                t1_in.push_back(t->getinput()[i]);
+//                p->input[i]->setTargetId(p1->getId());
+//                p->input[i]->setTargetItem(p1);
+//                p1->input.push_back(p->input[i]);
 //            }
-//            else if(cID==comID2)
+//            else if(arc_cid==p2->getComponentID()[0])
 //            {
-//                t2_in.push_back(t->getinput()[i]);
-//            }
-//        }
-//        for(int i=0;i<t->getoutput().size();i++)
-//        {
-//            QString cID=t->getoutput()[i]->getId().split("&")[0]+"&"+t->getoutput()[i]->getId().split("&")[1];
-//            if(cID==comID1)
-//            {
-//                t1_out.push_back(t->getoutput()[i]);
-//            }
-//            else if(cID==comID2)
-//            {
-//                t2_out.push_back(t->getoutput()[i]);
+//                p->input[i]->setTargetId(p2->getId());
+//                p->input[i]->setTargetItem(p2);
+//                p2->input.push_back(p->input[i]);
 //            }
 //        }
 
-//        for(int i=0;i<t1_in.size();i++)
+//        for(int i=0;i<p->output.size();i++)
 //        {
-//            t1->pushInput(t1_in[i]);
-//        }
-
-//        for(int i=0;i<t1_out.size();i++)
-//        {
-//            t1->pushOutput(t1_out[i]);
-//        }
-//        for(int i=0;i<t2_in.size();i++)
-//        {
-//            t2->pushInput(t2_in[i]);
-//        }
-
-//        for(int i=0;i<t2_out.size();i++)
-//        {
-//            t2->pushOutput(t2_out[i]);
-//        }
-
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
+//            QString arc_cid=p->output[i]->getId().split("&")[0]+"&"+p->output[i]->getId().split("&")[1];
+//            if(arc_cid==p1->getComponentID()[0])
 //            {
-//                com_list[i]->mynet->TransitionList.push_back(t1);
+//                p->output[i]->setsourceId(p1->getId());
+//                p->output[i]->setSourceItem(p1);
+//                p1->output.push_back(p->output[i]);
 //            }
-//            else if(com_list[i]->getID()==comID2)
+//            else if(arc_cid==p2->getComponentID()[0])
 //            {
-//                com_list[i]->mynet->TransitionList.push_back(t2);
+//                p->output[i]->setTargetId(p2->getId());
+//                p->output[i]->setTargetItem(p2);
+//                p2->output.push_back(p->output[i]);
 //            }
 //        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
-//            {
-//                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
-//                {
-//                    if(com_list[i]->getTransitionList()[y]->getId()==CompoundPortID)
-//                    {
-//                        com_list[i]->mynet->TransitionList.removeAt(y);
-//                    }
-//                }
-//            }
-//            else if(com_list[i]->getID()==comID2)
-//            {
-//                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
-//                {
-//                    if(com_list[i]->getTransitionList()[y]->getId()==CompoundPortID)
-//                    {
-//                        com_list[i]->mynet->TransitionList.removeAt(y);
-//                    }
-//                }
-//            }
-//        }
-
-//        this->Scene->addItem(t1);
-//        this->Scene->addItem(t2);
-//        this->Scene->removeItem(t);
-
+//        this->Scene->addItem(p1);
+//        this->Scene->addItem(p2);
+//        this->Scene->removeItem(p);
 //    }
-    QStringList ids=CompoundPortID.split("+");
-
-    if(ids[0].split("&")[2]=="p"&&ids[1].split("&")[2]=="p")
-    {
-        Place*p=getCertainPlace(CompoundPortID);
-        Place*p1=new Place();
-        p1->setPlaceID(ids[0]);
-        Place*p2=new Place();
-        p2->setPlaceID(ids[1]);
-        Component*com1=OriginComponent(p1->getFileName()[0]);
-        Component*com2=OriginComponent(p2->getFileName()[0]);
-
-        foreach(Place*p3,com1->mynet->PlaceList)
-        {
-            if(p3->getId().split("&")[2]==p1->getId().split("&")[2])
-            {
-                p1->setTokens(p3->getTokens());
-                p1->setCapacity(p3->getCapacity());
-                //bug 此处因为输出端口与输入端口的属性对于目前不重要，因此没有设置
-            }
-        }
-
-        foreach(Place*p3,com2->mynet->PlaceList)
-        {
-            if(p3->getId().split("&")[2]==p2->getId().split("&")[2])
-            {
-                p2->setTokens(p3->getTokens());
-                p2->setCapacity(p3->getCapacity());
-                //bug 此处因为输出端口与输入端口的属性对于目前不重要，因此没有设置
-            }
-        }
-
-        //bug,没有处理新增的arc
-        for(int i=0;i<p->input.size();i++)
-        {
-            QString arc_cid=p->input[i]->getId().split("&")[0]+"&"+p->input[i]->getId().split("&")[1];
-            if(arc_cid==p1->getComponentID()[0])
-            {
-                p->input[i]->setTargetId(p1->getId());
-                p->input[i]->setTargetItem(p1);
-                p1->input.push_back(p->input[i]);
-            }
-            else if(arc_cid==p2->getComponentID()[0])
-            {
-                p->input[i]->setTargetId(p2->getId());
-                p->input[i]->setTargetItem(p2);
-                p2->input.push_back(p->input[i]);
-            }
-        }
-
-        for(int i=0;i<p->output.size();i++)
-        {
-            QString arc_cid=p->output[i]->getId().split("&")[0]+"&"+p->output[i]->getId().split("&")[1];
-            if(arc_cid==p1->getComponentID()[0])
-            {
-                p->output[i]->setsourceId(p1->getId());
-                p->output[i]->setSourceItem(p1);
-                p1->output.push_back(p->output[i]);
-            }
-            else if(arc_cid==p2->getComponentID()[0])
-            {
-                p->output[i]->setTargetId(p2->getId());
-                p->output[i]->setTargetItem(p2);
-                p2->output.push_back(p->output[i]);
-            }
-        }
-        this->Scene->addItem(p1);
-        this->Scene->addItem(p2);
-        this->Scene->removeItem(p);
-
-    }
-    else if(ids[0].split("&")[2]=="t"&&ids[1].split("&")[2]=="t")
-    {
-        Transition*p=getcertainTransition(CompoundPortID);
-        Transition*p1=new Transition();
-        p1->setID(ids[0]);
-        Transition*p2=new Transition();
-        p2->setID(ids[1]);
-
-        //bug,没有处理新增的arc
-        for(int i=0;i<p->input.size();i++)
-        {
-            QString arc_cid=p->input[i]->getId().split("&")[0]+"&"+p->input[i]->getId().split("&")[1];
-            if(arc_cid==p1->getComponentID()[0])
-            {
-                p->input[i]->setTargetId(p1->getId());
-                p->input[i]->setTargetItem(p1);
-                p1->input.push_back(p->input[i]);
-            }
-            else if(arc_cid==p2->getComponentID()[0])
-            {
-                p->input[i]->setTargetId(p2->getId());
-                p->input[i]->setTargetItem(p2);
-                p2->input.push_back(p->input[i]);
-            }
-        }
-
-        for(int i=0;i<p->output.size();i++)
-        {
-            QString arc_cid=p->output[i]->getId().split("&")[0]+"&"+p->output[i]->getId().split("&")[1];
-            if(arc_cid==p1->getComponentID()[0])
-            {
-                p->output[i]->setsourceId(p1->getId());
-                p->output[i]->setSourceItem(p1);
-                p1->output.push_back(p->output[i]);
-            }
-            else if(arc_cid==p2->getComponentID()[0])
-            {
-                p->output[i]->setTargetId(p2->getId());
-                p->output[i]->setTargetItem(p2);
-                p2->output.push_back(p->output[i]);
-            }
-        }
-        this->Scene->addItem(p1);
-        this->Scene->addItem(p2);
-        this->Scene->removeItem(p);
-    }
-}
+//}
 
 //todo
 //对于新增的transition部分要进行处理。
@@ -1240,37 +1305,45 @@ void ComponentList::recoverComponent(QString ComponentID)
 
 //    }
 //    com_list.push_back(com);
-    QMapIterator<QString,PTNscene*>it(this->garbage);
-    while (it.hasNext()) {
-        it.next();
-        if(it.key()==ComponentID)
-        {
-            Component*com=OriginComponent(ComponentID.split("&")[0]);
-            com->setID(ComponentID);
-            foreach(Place*p,com->mynet->PlaceList)
-            {
-                this->Scene->addItem(p);
-            }
-            foreach(Transition*p,com->mynet->TransitionList)
-            {
-                this->Scene->addItem(p);
-            }
-            foreach(Arc*p,com->mynet->ArcList)
-            {
-                this->Scene->addItem(p);
-            }
+    //2
+//    QMapIterator<QString,PTNscene*>it(this->garbage);
+//    while (it.hasNext()) {
+//        it.next();
+//        if(it.key()==ComponentID)
+//        {
+//            Component*com=OriginComponent(ComponentID.split("&")[0]);
+//            com->setID(ComponentID);
+//            foreach(Place*p,com->mynet->PlaceList)
+//            {
+//                this->Scene->addItem(p);
+//            }
+//            foreach(Transition*p,com->mynet->TransitionList)
+//            {
+//                this->Scene->addItem(p);
+//            }
+//            foreach(Arc*p,com->mynet->ArcList)
+//            {
+//                this->Scene->addItem(p);
+//            }
 
-        }
-    }
-    QMap<QString,PTNscene*>::iterator iter;
-    for(iter=garbage.begin();iter!=garbage.end();iter++)
+//        }
+//    }
+//    QMap<QString,PTNscene*>::iterator iter;
+//    for(iter=garbage.begin();iter!=garbage.end();iter++)
+//    {
+//        if(iter.key()==ComponentID)
+//        {
+//            garbage.erase(iter);
+//            break;
+//        }
+//    }
+    for(int i=0;i<garbage2.size();i++)
     {
-        if(iter.key()==ComponentID)
+        if(garbage2[i]->getID()==ComponentID)
         {
-            garbage.erase(iter);
-            break;
+            com_list.push_back(garbage2[i]);
+            garbage2.removeAt(i);
         }
     }
-
 
 }
