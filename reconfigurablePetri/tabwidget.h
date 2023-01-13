@@ -40,8 +40,9 @@ public:
     bool openComponent (MessageHandler &messageHandler);
     //添加组件
     void addComponent (QString componentPath);
-    //解除组件
+    //解除组件，绑定组件
     void unbindComponent();
+    void bindComponent();
     //更新窗口名
     void updateTitle (bool changed);
 

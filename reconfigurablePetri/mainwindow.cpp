@@ -334,6 +334,7 @@ void MainWindow::createComponentDock()
     newComponent=new QToolButton();
     deleteComponent=new QToolButton();
     addComponent=new QToolButton();
+    bindComponent=new QToolButton();
     unbindComponent=new QToolButton();
     componentTree=new QTreeWidget();
 
@@ -366,7 +367,9 @@ void MainWindow::createComponentDock()
     addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);//bug
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
-
+    bindComponent->setText(tr("绑定组件"));
+    bindComponent->setToolTip(tr("Bbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
+    connect(bindComponent,&QToolButton::clicked,this,[=](){this->bindingComponent();});
     unbindComponent->setText(tr("解除绑定"));
     unbindComponent->setToolTip(tr("Unbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(unbindComponent,&QToolButton::clicked,this,[=](){this->unbindingComponent();});
@@ -376,7 +379,8 @@ void MainWindow::createComponentDock()
     componentBar->addWidget(newComponent);
     componentBar->addWidget(deleteComponent);
     componentBar->addWidget(addComponent);
-     componentBar->addWidget(unbindComponent);
+    componentBar->addWidget(bindComponent);
+    componentBar->addWidget(unbindComponent);
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
 
@@ -743,6 +747,10 @@ void MainWindow::unbindingComponent()
 {
     tabWidget->unbindComponent();
 }
+void MainWindow::bindingComponent()
+{
+    tabWidget->bindComponent();
+}
 
 void MainWindow::openComponentDock()
 {
@@ -815,6 +823,8 @@ MainWindow::~MainWindow()
     delete newComponent;
     delete addComponent;
     delete deleteComponent;
+    delete bindComponent;
+    delete unbindComponent;
     delete componentBar;
     //delete editcommenu;
 }

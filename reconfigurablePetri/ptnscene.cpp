@@ -213,7 +213,7 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
            selectionRect = new SceneSelectionRectangle;
            addItem(selectionRect);
         }
-        else  if(currentItem->type() == Place::Type||currentItem->type() == Transition::Type)
+        else
         {
             oldPos=currentItem->pos();
         }
@@ -295,7 +295,7 @@ void PTNscene::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     if(mode == normalMode)
             QGraphicsScene::mouseMoveEvent(event);
 
-    update(itemsBoundingRect() );
+    update(itemsBoundingRect());
 }
 
 /* mouse release event */
@@ -481,13 +481,16 @@ void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
 
     foreach (auto *item, selectedItems())
     {
-        pGroup->addToGroup(item);
         item->setSelected(0);
+        pGroup->addToGroup(item);
+
     }
      auto *pRect = new QGraphicsRectItem();
      pRect->setRect(pGroup->boundingRect());
      pGroup->addToGroup(pRect);
      addItem(pGroup);
+
+
 }
 //解除绑定组件
 void PTNscene::unbindComponent()
@@ -509,7 +512,49 @@ void PTNscene::unbindComponent()
         removeItem(group);
     }
 }
+void PTNscene::bindComponent()
+{
+    //特殊类型的复合 item
+    auto *pGroup = new QGraphicsItemGroup();
+    pGroup->setFlags( QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable| QGraphicsItem::ItemIsFocusable);
+    pGroup->setHandlesChildEvents(false);
+    pGroup->setZValue(1);
 
+    int placeItem=0;
+    int TransitionItem=0;
+    int ArcItem=0;
+
+          foreach (auto *item, selectedItems())
+          {
+              if(item->type() == Place::Type)
+              {
+                  placeItem++;
+              }
+              if(item->type() == Transition::Type )
+              {
+                   TransitionItem++;
+              }
+              if(item->type() == Arc::Type)
+              {
+                   ArcItem++;
+              }
+
+          }
+          if(ArcItem!=0&&TransitionItem!=0&&placeItem!=0)
+          {
+              foreach (auto *item, selectedItems())
+              {
+                  item->setSelected(0);
+                  pGroup->addToGroup(item);
+              }
+              auto *pRect = new QGraphicsRectItem();
+              pRect->setRect(pGroup->boundingRect());
+              pGroup->addToGroup(pRect);
+              addItem(pGroup);
+          }
+
+
+}
 void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
 {
     QStringList names;

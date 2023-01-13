@@ -33,8 +33,11 @@ public:
     void addXML_transitions (const QList <TRANSITION_ATTR> &transitions);
     void addXML_arcs (const QList <ARC_ATTR> &arcs);
 
+    //组件
     void from_Xml_Component (const QList<PAGE_ATTR> &pages);
     void unbindComponent();
+    void bindComponent();
+
 
 
 

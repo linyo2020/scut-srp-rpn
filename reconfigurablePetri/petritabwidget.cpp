@@ -67,7 +67,10 @@ void PetriTabWidget::unbindComponent()
 {
      scene->unbindComponent();
 }
-
+void PetriTabWidget::bindComponent()
+{
+     scene->bindComponent();
+}
 void PetriTabWidget::createTab ()
 {
     mode = normalMode;
@@ -303,7 +306,6 @@ PTNET_ATTR PetriTabWidget::componentToXml() const
             continue;
         }
     }
-
     net.pages << page;
     return net;
 }

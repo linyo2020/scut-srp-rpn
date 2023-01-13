@@ -752,7 +752,11 @@ void TabWidget::unbindComponent( )
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
     tab->unbindComponent();
 }
-
+void TabWidget::bindComponent( )
+{
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    tab->bindComponent();
+}
 
 bool TabWidget::validateXml(QFile& file, MessageHandler &messageHandler)
 {

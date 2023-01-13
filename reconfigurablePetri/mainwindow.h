@@ -55,6 +55,7 @@ public:
     void componentPopMenu();
     void Tex(QString tex);
     void openComponentDock();
+    void bindingComponent();
     void unbindingComponent();
 
 signals:
@@ -105,7 +106,9 @@ private:
     QToolButton* newComponent;
     QToolButton* addComponent;
     QToolButton* deleteComponent;
+    QToolButton* bindComponent;
     QToolButton* unbindComponent;
+
     QToolBar* componentBar;
     QTreeWidget* componentTree;
 

@@ -67,7 +67,9 @@ public:
     void PushBack(Component*com);
     QString getComponentType(int i);
     int getComponentSize();
+    //绑定组件
     void unbindComponent();
+    void bindComponent();
 signals:
 
     void canRedoChange (bool canRedo);
