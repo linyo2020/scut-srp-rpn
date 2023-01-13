@@ -61,6 +61,13 @@ typedef struct{
      QColor penColor;
 
    } ARC_ATTR;
+typedef struct{
+    QString id;
+    QString source;
+    QString target;
+
+    QList<QPointF> points;
+} CONNECTOR_ATTR;
 
 
 typedef struct{

@@ -104,7 +104,7 @@ void Connector::paint ( QPainter * painter,
     painter->drawPolygon(ArcHead);
 
     // drawing label
-    label->setText( QString("c%1").arg(id) );
+    label->setText( QString("%1").arg(id) );
     label->setPos(paintPath.pointAtPercent(0.5) + QPointF(-10,0));
     label->setBrush(color);
     setPath(paintPath);
@@ -258,4 +258,18 @@ Connector::~Connector()
 
     foreach(ArcEdgeSelectionRectangle * rect, rects)
         delete rect;
+}
+/* to XML */
+CONNECTOR_ATTR Connector::toXml() const
+{
+    CONNECTOR_ATTR connector;
+    connector.id = id;
+    connector.source = source_id;
+    connector.target = target_id;
+//	//this place update for weight from double to QString by syx 8.15
+
+    for(int i = 1; i < path().elementCount()-1; i++ )
+        connector.points << path().elementAt(i);
+
+    return connector;
 }

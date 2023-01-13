@@ -20,7 +20,7 @@ class Connector : public QGraphicsPathItem
     ~Connector();
 
     void createArc();
-   /* ARC_ATTR toXml() const;*/
+    CONNECTOR_ATTR toXml() const;
 
     void updatePosition();
     void showRects(bool show);
