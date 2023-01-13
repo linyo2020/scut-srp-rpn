@@ -671,6 +671,11 @@ bool TabWidget::open (MessageHandler &messageHandler)
 
     //![4] ok :)
     PTNET_ATTR net = parser.getXML_net ();
+    //set ID
+    //---------
+
+
+    //----------
     PetriTabWidget * tab = new PetriTabWidget(net, filename);
     addTab(tab,fi.fileName());
     connectSignalAndSlot(tab);
@@ -740,7 +745,7 @@ void TabWidget::addComponent(QString componentPath)
     PTNET_ATTR net = parser.getXML_net ();
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
     tab->setComponent(net, componentPath);
-    emit addComponentFinished();
+    //emit addComponentFinished();
 }
 void TabWidget::unbindComponent( )
 {

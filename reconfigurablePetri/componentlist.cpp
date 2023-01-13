@@ -51,6 +51,8 @@ Place *ComponentList::getCertainPlace(QString PlaceID)
             }
         }
     }
+
+    //遍历com_list
 }
 
 //todo
