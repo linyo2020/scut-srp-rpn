@@ -17,6 +17,17 @@ Connector::Connector(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem 
     id = ConnectorId;
     createArc();
 }
+Connector::Connector(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+                     QString TargetId, const QString &ConnectorId)
+{
+    sourceItem = SourceItem;
+    targetItem = TargetItem;
+    source_id = SourceId;
+    target_id = TargetId;
+    id = ConnectorId;
+
+    createArc();
+}
 
 void Connector::createArc()
 {

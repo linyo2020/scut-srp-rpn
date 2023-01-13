@@ -97,7 +97,7 @@ QList<PAGE_ATTR> componentController::getXMLpages(QString filename)
     }
     return page;
 }
-//不再使用复制的方法了
+
 Component * componentController::getComponent(QString filename)
 {
     QMapIterator<QString,QString>iterator(itemsFile);

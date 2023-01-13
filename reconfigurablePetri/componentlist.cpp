@@ -79,16 +79,20 @@ QList<Place *> ComponentList::getPortinComponent(QString ComponentID)
 //    return P;
 
     QList<Place*>l;
-    foreach(QGraphicsItem*item,this->Scene->items())
+    foreach(Component* com,this->com_list)
     {
-        if(item->type()==Place::Type)
+        if(com->getID()==ComponentID)
         {
-            Place*p=qgraphicsitem_cast<Place*>(item);
-            QStringList cID=p->getComponentID();
-            if(cID.size()==1&&cID[0]==ComponentID)
+            foreach(Place* pl,com->mynet->PlaceList)
             {
-                l.push_back(p);
+                Place*p=pl;
+                QStringList cID=p->getComponentID();
+                if(cID.size()==1&&cID[0]==ComponentID)
+                {
+                    l.push_back(p);
+                }
             }
+
         }
     }
     return l;
@@ -192,15 +196,13 @@ QList<QString> ComponentList::getCertainTransitionName(QString ComponentID)
 //    }
 //    return list;
     QList<QString>l;
-    foreach(QGraphicsItem*item,this->Scene->items())
+    for(int i=0;i<com_list.size();i++)
     {
-        if(item->type()==Transition::Type)
+        if(com_list[i]->getID()==ComponentID)
         {
-            Transition*p=qgraphicsitem_cast<Transition*>(item);
-            QStringList cID=p->getComponentID();
-            if(cID.contains(ComponentID))
+            for(int y=0;y<com_list[i]->getTransition_ATTRList().size();y++)
             {
-                l.push_back(p->getName(ComponentID));
+                l.push_back(com_list[i]->getTransition_ATTRList()[i].id);
             }
         }
     }
@@ -533,66 +535,89 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
 
     if(portID1.split("&")[2][0]=="p"&&portID2.split("&")[2][0]=="p")
     {
-        Place*p=new Place();
-        Place*p1=getCertainPlace(portID1);
-        Place*p2=getCertainPlace(portID2);
-        p->setTokens(p1->getTokens()+p2->getTokens());
-        p->setCapacity(p1->getCapacity()+p2->getCapacity());
-        p->setCompoundPort(true);
-        p->setPlaceID(p1->getId()+"+"+p2->getId());
-        p->input.append(p1->input);
-        p->input.append(p2->input);
-        p->output.append(p1->output);
-        p->output.append(p2->output);
-        this->Scene->removeItem(p1);
-        this->Scene->removeItem(p2);
-        this->Scene->addItem(p);
+        QGraphicsItem * sourceItem = 0;
+        QGraphicsItem * targetItem = 0;
+        foreach(Component* com,com_list)
+        {
+
+            foreach(Place * place,com->mynet->PlaceList)
+            {
+                if(place->getId() == portID1)
+                {
+                    sourceItem = place;
+                    continue;
+
+                }
+                if(place->getId() == portID2)
+                {
+                    targetItem = place;
+                    continue;
+                }
+            }
+
+        }
+        Connector* con=new Connector(sourceItem,portID1,targetItem,portID2,portID1+"+"+portID2);
+        con->setSourceItem(sourceItem);
+        qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(con);
+        qgraphicsitem_cast<Place*>(targetItem)->addInputArc(con);
+        connectList.append(con);
+//        p->setTokens(p1->getTokens()+p2->getTokens());
+//        p->setCapacity(p1->getCapacity()+p2->getCapacity());
+//        p->setCompoundPort(true);
+//        p->setPlaceID(p1->getId()+"+"+p2->getId());
+//        p->input.append(p1->input);
+//        p->input.append(p2->input);
+//        p->output.append(p1->output);
+//        p->output.append(p2->output);
+//        this->Scene->removeItem(p1);
+//        this->Scene->removeItem(p2);
+//        this->Scene->addItem(p);
 
     }
-    else if(portID1.split("&")[2][0]=="t"&&portID2.split("&")[2][0]=="t")
-    {
-        Transition*p=new Transition();
-        Transition*p1=getcertainTransition(portID1);
-        Transition*p2=getcertainTransition(portID2);
-        p->setCompoundPort(true);
-        p->setID(p1->getId()+"+"+p2->getId());
-        p->input.append(p1->input);
-        p->input.append(p2->input);
-        p->output.append(p1->output);
-        p->output.append(p2->output);
-        this->Scene->removeItem(p1);
-        this->Scene->removeItem(p2);
-        this->Scene->addItem(p);
-    }
+//    else if(portID1.split("&")[2][0]=="t"&&portID2.split("&")[2][0]=="t")
+//    {
+//        Transition*p=new Transition();
+//        Transition*p1=getcertainTransition(portID1);
+//        Transition*p2=getcertainTransition(portID2);
+//        p->setCompoundPort(true);
+//        p->setID(p1->getId()+"+"+p2->getId());
+//        p->input.append(p1->input);
+//        p->input.append(p2->input);
+//        p->output.append(p1->output);
+//        p->output.append(p2->output);
+//        this->Scene->removeItem(p1);
+//        this->Scene->removeItem(p2);
+//        this->Scene->addItem(p);
+//    }
 
-    else
-    {
-        Arc*a=new Arc();
-        if(portID1.split("&")[2][0]=="p")
-        {
-            Place*p=getCertainPlace(portID1);
-            Transition*t=getcertainTransition(portID2);
-            QString id="N+"+p->getId()+"+"+t->getId();
-            a->setID(id);
-            a->setsourceId(p->getId());
-            a->setSourceItem(p);
-            a->setTargetId(t->getId());
-            a->setTargetItem(t);
-            this->Scene->addItem(a);
-        }
-        else
-        {
-            Place*p=getCertainPlace(portID2);
-            Transition*t=getcertainTransition(portID1);
-            QString id="N+"+t->getId()+"+"+p->getId();
-            a->setID(id);
-            a->setsourceId(t->getId());
-            a->setSourceItem(t);
-            a->setTargetId(p->getId());
-            a->setTargetItem(p);
-            this->Scene->addItem(a);
-        }
-    }
+//    else
+//    {
+//        Arc*a=new Arc();
+//        if(portID1.split("&")[2][0]=="p")
+//        {
+//            Place*p=getCertainPlace(portID1);
+//            Transition*t=getcertainTransition(portID2);
+//            QString id="N+"+p->getId()+"+"+t->getId();
+//            a->setID(id);
+//            a->setsourceId(p->getId());
+//            a->setSourceItem(p);
+//            a->setTargetId(t->getId());
+//            a->setTargetItem(t);
+//            this->Scene->addItem(a);
+//        }
+//        else
+//        {
+//            Place*p=getCertainPlace(portID2);
+//            Transition*t=getcertainTransition(portID1);
+//            QString id="N+"+t->getId()+"+"+p->getId();
+//            a->setID(id);
+//            a->setsourceId(t->getId());
+//            a->setSourceItem(t);
+//            a->setTargetId(p->getId());
+//            a->setTargetItem(p);
+//            this->Scene->addItem(a);
+//        }
+//    }
 }
 
 //useless
@@ -700,8 +725,8 @@ void ComponentList::deleteArc(QString placeId, QString transitionID)
 Component *ComponentList::OriginComponent(QString Filename)
 {
 
-    PTNscene* sce=new PTNscene();
-    sce->from_Xml(comController->getXMLpages(Filename));
+    //PTNscene* sce=new PTNscene();
+    //sce->from_Xml(comController->getXMLpages(Filename));
     //Component *Com=new Component(comController->getPTnet(Filename),sce);
     Component *Com=this->comController->getComponent(Filename);
     return Com;
@@ -1123,6 +1148,15 @@ Component *ComponentList::OriginComponent(QString Filename)
 //对于新增的transition部分要进行处理。
 void ComponentList::deleteComponent(QString ComponentID)
 {
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==ComponentID)
+        {
+            garbage2.push_back(com_list[i]);
+            com_list.remove(i);
+
+        }
+    }
 //    QString Filename=ComponentID.split("&")[0];
 //    for(int z=0;z<com_list.size();z++)
 //    {
@@ -1192,78 +1226,79 @@ void ComponentList::deleteComponent(QString ComponentID)
     //遍历所有元素，判断该元素的组号与当前传入的组号是否相等，如果相等就把它移到垃圾站
     //特别注意，如果该元素为复合端口时（判断ID的格式），要先把它断开
     //还有对与弧的处理要注意，遍历所有弧，如果弧ID的第一位为N则直接删除
-    PTNscene*s=new PTNscene();
-    QList<Place*>pl;
-    QList<Transition*>tl;
-    QList<Arc*>al;
-    QList<Place*>compound_pl;
-    QList<Transition*>compound_tl;
-    //断开复合端口
-    //bug,一边遍历一边删除有可能会出现与QList.size()一样的错误
-    foreach(QGraphicsItem*item,this->Scene->items())
-    {
-        if(item->type()==Place::Type)
-        {
-            Place*p=qgraphicsitem_cast<Place*>(item);
-            if(p->getComponentID().size()==2&&p->getComponentID().contains(ComponentID))
-            {
-                this->seperateCompoundPort(p->getId());
-            }
-        }
-        else if(item->type()==Transition::Type)
-        {
-            Transition*t=qgraphicsitem_cast<Transition*>(item);
-            if(t->getComponentID().size()==2&&t->getComponentID().contains(ComponentID))
-            {
-                this->seperateCompoundPort(t->getId());
-            }
-        }
-        else if(item->type()==Arc::Type)
-        {
-            Arc*a=new Arc();
-            if(a->getId()[0]=="N"&&a->getId()[1]=="+")
-            {
-                if(a->getId().split("+")[1].split("&")[0]+"&"+a->getId().split("+")[1].split("&")[1]==ComponentID||a->getId().split("+")[2].split("&")[0]+"&"+a->getId().split("+")[2].split("&")[1]==ComponentID)
-                {
-                    this->Scene->removeItem(a);
-                }
-            }
-        }
+//    PTNscene*s=new PTNscene();
+//    QList<Place*>pl;
+//    QList<Transition*>tl;
+//    QList<Arc*>al;
+//    QList<Place*>compound_pl;
+//    QList<Transition*>compound_tl;
+//    //断开复合端口
+//    //bug,一边遍历一边删除有可能会出现与QList.size()一样的错误
+//    foreach(QGraphicsItem*item,this->Scene->items())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            Place*p=qgraphicsitem_cast<Place*>(item);
+//            if(p->getComponentID().size()==2&&p->getComponentID().contains(ComponentID))
+//            {
+//                this->seperateCompoundPort(p->getId());
+//            }
+//        }
+//        else if(item->type()==Transition::Type)
+//        {
+//            Transition*t=qgraphicsitem_cast<Transition*>(item);
+//            if(t->getComponentID().size()==2&&t->getComponentID().contains(ComponentID))
+//            {
+//                this->seperateCompoundPort(t->getId());
+//            }
+//        }
+//        else if(item->type()==Arc::Type)
+//        {
+//            Arc*a=new Arc();
+//            if(a->getId()[0]=="N"&&a->getId()[1]=="+")
+//            {
+//                if(a->getId().split("+")[1].split("&")[0]+"&"+a->getId().split("+")[1].split("&")[1]==ComponentID||a->getId().split("+")[2].split("&")[0]+"&"+a->getId().split("+")[2].split("&")[1]==ComponentID)
+//                {
+//                    this->Scene->removeItem(a);
+//                }
+//            }
+//        }
 
-    }
+//    }
 
-    //作出修改，不再将元素内的token恢复到初始值
-    foreach(QGraphicsItem*item,this->Scene->items())
-    {
-        if(item->type()==Place::Type)
-        {
-            Place*p=qgraphicsitem_cast<Place*>(item);
-            if(p->getComponentID().contains(ComponentID))
-            {
+//    //作出修改，不再将元素内的token恢复到初始值
+//    foreach(QGraphicsItem*item,this->Scene->items())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            Place*p=qgraphicsitem_cast<Place*>(item);
+//            if(p->getComponentID().contains(ComponentID))
+//            {
 
-                s->addItem(p);
-            }
-        }
-        else if(item->type()==Transition::Type)
-        {
-            Transition*t=qgraphicsitem_cast<Transition*>(item);
-            if(t->getComponentID().contains(ComponentID))
-            {
-                s->addItem(t);
-            }
-        }
-        else if(item->type()==Arc::Type)
-        {
-            Arc*a=new Arc();
-            if(a->getId().split("&")[0]+"&"+a->getId().split("&")[1]==ComponentID)
-            {
-                s->addItem(a);
-            }
-        }
+//                s->addItem(p);
+//            }
+//        }
+//        else if(item->type()==Transition::Type)
+//        {
+//            Transition*t=qgraphicsitem_cast<Transition*>(item);
+//            if(t->getComponentID().contains(ComponentID))
+//            {
+//                s->addItem(t);
+//            }
+//        }
+//        else if(item->type()==Arc::Type)
+//        {
+//            Arc*a=new Arc();
+//            if(a->getId().split("&")[0]+"&"+a->getId().split("&")[1]==ComponentID)
+//            {
+//                s->addItem(a);
+//            }
+//        }
 
-    }
+//    }
 
-    garbage.insert(ComponentID,s);
+//    garbage.insert(ComponentID,s);
+
 }
 
 void ComponentList::recoverComponent(QString ComponentID)

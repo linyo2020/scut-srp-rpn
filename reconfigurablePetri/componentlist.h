@@ -19,11 +19,11 @@ public:
 
 
     //获取指定组件的端口对象（仅返回普通端口）
-    QList<Place*> getPortinComponent(QString ComponentID);
+    QList<Place*> getPortinComponent(QString ComponentID);//完成
 
     //返回指定组件的Place与Transition的name（ID的第三部分)
     QList<QString> getCertainPlaceName(QString ComponentID);//田俊杰
-    QList<QString>getCertainTransitionName(QString ComponentID);
+    QList<QString>getCertainTransitionName(QString ComponentID);//完成
 
 
     //！
@@ -35,12 +35,12 @@ public:
 
     //！
     //从com_list里弹出,放到垃圾桶
-    void deleteComponent(QString ComponentID);
+    void deleteComponent(QString ComponentID);//完成
     //！
     //从垃圾桶里添加会com_list
     void recoverComponent(QString ComponentID);//田俊杰
     //给connector的sourceID、targetID赋值
-    void addComponentPort(QString portID1,QString portID2);
+    void addComponentPort(QString portID1,QString portID2);//完成
     //遍历文件树，添加到com_list里，记得设置id
     QString addNewComponent(QString Filename);//田俊杰
 
