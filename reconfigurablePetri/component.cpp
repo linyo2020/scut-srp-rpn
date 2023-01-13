@@ -453,6 +453,11 @@ bool Component::makeFunction()
     }
 }
 
+QList<PLACE_ATTR> *Component::getPList()
+{
+    return this->placeList;
+}
+
 
 
 

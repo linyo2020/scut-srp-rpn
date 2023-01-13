@@ -24,12 +24,17 @@ public:
     //The name displayed on the UI
     QString label;//该数据获取方式:用户在新建控件时输入\系统读取控件xml文件时读取
 
+    //不要
+    //------------------------
     //返回该组件中所有place
     QList<Place*> getPlaceList();
     //返回TransitionList
     QList<Transition*>getTransitionList();
     //返回ArcList
     QList<Arc*>getTArcList();
+    //-----------------------------
+
+
     //废弃属性
     QString Component_type;
 
@@ -75,6 +80,8 @@ public:
      */
     bool makeFunction();
 
+    QList<PLACE_ATTR>* getPList();
+
 private:
     /**
      * @brief m_step 仿真步长
@@ -92,6 +99,9 @@ private:
      */
     vector<FUNCTIONDEF> m_vFunDef;
 
+    QList<PLACE_ATTR> *placeList;
+    QList<TRANSITION_ATTR> *transitionList;
+    QList<ARC_ATTR> *arcList;
 
 
 };
