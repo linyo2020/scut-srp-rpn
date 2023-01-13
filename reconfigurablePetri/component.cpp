@@ -240,10 +240,20 @@ bool Component::makeFunction()
     QList<TRANSITION_ATTR>transitionNodes;
     QList<PLACE_ATTR>placeNodes;
     /***
-     * TODO:将PTNet *mynet转换成结构体数据
+     * 将PTNet *mynet转换成结构体数据
      */
-
-
+    foreach(Arc*l_arc,mynet->ArcList)
+    {
+        arcs<<l_arc->toXml();
+    }
+    foreach(Place* l_place , mynet->PlaceList)
+    {
+        placeNodes<<l_place->toXml();
+    }
+    foreach(Transition* l_transition , mynet->TransitionList)
+    {
+        transitionNodes<<l_transition->toXml();
+    }
     /*
     *输出每条边的来源和去向
     for(int i=0;i<arcs.size();i++)
@@ -435,6 +445,11 @@ bool Component::makeFunction()
         {
             m_vFunDef[recordpos]=l_FunDef;
         }
+    }
+    //测试生成的函数表达式
+    for(unsigned int i = 0; i<m_vFunDef.size();++i)
+    {
+        qDebug()<< QString::fromStdString(m_vFunDef[i].m_sDifferentialName)<<" = "<<QString::fromStdString(m_vFunDef[i].m_sFunctionExp);
     }
 }
 
