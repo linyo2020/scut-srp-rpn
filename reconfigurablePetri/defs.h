@@ -71,21 +71,6 @@ typedef struct{
 
 
 typedef struct{
-     QString id;
-     QString name;
-     QList <PLACE_ATTR> placeNodes;
-     QList <TRANSITION_ATTR> transitionNodes;
-     QList <ARC_ATTR> arcs;
-     QList <CONNECTOR_ATTR> connector;
-   } PAGE_ATTR;
-
-typedef struct{
-     QString id;
-     QString name;
-     QList <PAGE_ATTR> pages;
-   } PTNET_ATTR;
-
-typedef struct{
     QString id;
     QString name;
     QString type;
@@ -94,6 +79,24 @@ typedef struct{
     QList <ARC_ATTR> arcs;
 
 } COMPONENT_ATTR;
+
+
+typedef struct{
+     QString id;
+     QString name;
+     QList <PLACE_ATTR> placeNodes;
+     QList <TRANSITION_ATTR> transitionNodes;
+     QList <ARC_ATTR> arcs;
+     QList <CONNECTOR_ATTR> connector;
+     QList <COMPONENT_ATTR> componentList;
+   } PAGE_ATTR;
+
+typedef struct{
+     QString id;
+     QString name;
+     QList <PAGE_ATTR> pages;
+   } PTNET_ATTR;
+
 
 
 
