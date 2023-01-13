@@ -745,7 +745,7 @@ void TabWidget::addComponent(QString componentPath)
     PTNET_ATTR net = parser.getXML_net ();
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
     tab->setComponent(net, componentPath);
-    //emit addComponentFinished();
+    emit addComponentFinished();
 }
 void TabWidget::unbindComponent( )
 {

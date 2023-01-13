@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
       //不要调整顺序
-      //connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
+      connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
       connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
 }
 
