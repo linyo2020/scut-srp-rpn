@@ -74,6 +74,7 @@ typedef struct{
     QString id;
     QString name;
     QString type;
+    double step;//仿真步长
     QList <PLACE_ATTR> placeNodes;
     QList <TRANSITION_ATTR> transitionNodes;
     QList <ARC_ATTR> arcs;
