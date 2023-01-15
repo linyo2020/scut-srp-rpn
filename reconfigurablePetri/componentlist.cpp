@@ -7,6 +7,32 @@ ComponentList::ComponentList()
 
 }
 
+//double ComponentList::getCertainPlaceToken(QString PlaceID)
+//{
+//    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+//    if(com_list.size()==0)
+//    {
+//        qDebug()<<"use getCertainPlace,but com_list.size()==0";
+//        return 0;
+//    }
+//    else
+//    {
+//        for(int i=0;i<com_list.size();i++)
+//        {
+//            if(com_list[i]->getID()==comID)
+//            {
+//                for(int y=0;y<com_list[i]->getPlace_ATTRList().size();y++)
+//                {
+//                    if(com_list[i]->getPlace_ATTRList()[y].id==PlaceID)
+//                    {
+//                        return com_list[i]->getPlace_ATTRList()[y].initmark;
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
 
 
 //Component *ComponentList::getCertainComponent(QString ComID)
@@ -22,44 +48,51 @@ ComponentList::ComponentList()
 //}
 
 
-//修改，直接遍历scene
-//O(n)
 Place *ComponentList::getCertainPlace(QString PlaceID)
 {
+////    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+////    for(int i=0;i<com_list.size();i++)
+////    {
+////        if(com_list[i]->getID()==comID)
+////        {
+////            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
+////            {
+////                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
+////                {
+////                    return com_list[i]->getPlaceList()[i];
+////                }
+////            }
+////        }
+////    }
+//    //2
     QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
-    for(int i=0;i<com_list.size();i++)
+    if(com_list.size()==0)
     {
-        if(com_list[i]->getID()==comID)
+        qDebug()<<"use getCertainPlace,but com_list.size()==0";
+        return nullptr;
+    }
+    else
+    {
+        for(int i=0;i<com_list.size();i++)
         {
-            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
+            if(com_list[i]->getID()==comID)
             {
-                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
+                for(int y=0;y<com_list[i]->mynet->PlaceList.size();y++)
                 {
-                    return com_list[i]->getPlaceList()[i];
+                    if(com_list[i]->mynet->PlaceList[y]->getId()==PlaceID)
+                    {
+                        return com_list[i]->mynet->PlaceList[y];
+                    }
                 }
             }
         }
     }
-    //2
-    foreach(QGraphicsItem*item,this->Scene->items())
-    {
-        if(item->type()==Place::Type)
-        {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-            if(place->getId()==PlaceID)
-            {
-                return place;
-            }
-        }
-    }
+
 
 
 }
 
-//todo
-//修改，直接遍历scene
-//仅返回普通端口（不返回复合端口）
-//O(n)
+
 QList<Place *> ComponentList::getPortinComponent(QString ComponentID)
 {
 //    QList<Place*>P;
@@ -98,11 +131,7 @@ QList<Place *> ComponentList::getPortinComponent(QString ComponentID)
     return l;
 }
 
-//遍历scene
-//复合端口的name也要返回
-//直接获取该组件内所有place
-//对于复合端口返回传入组号这一侧的name
-//o(n)
+
 QList<QString> ComponentList::getCertainPlaceName(QString ComponentID)
 {
 //    QList<QString>list;
@@ -160,17 +189,13 @@ QList<QString> ComponentList::getCertainPlaceName(QString ComponentID)
         {
             for(int y=0;y<com_list[i]->getPlace_ATTRList().size();y++)
             {
-                l.push_back(com_list[i]->getPlace_ATTRList()[i].id);
+                l.push_back(com_list[i]->getPlace_ATTRList()[i].id.split("&")[2]);
             }
         }
     }
     return l;
 }
 
-//遍历scene
-//复合端口的name也要返回
-//直接获取该组件内所有transition
-//对于复合端口要求同上
 QList<QString> ComponentList::getCertainTransitionName(QString ComponentID)
 {
 //    QList<QString>list;
@@ -202,7 +227,7 @@ QList<QString> ComponentList::getCertainTransitionName(QString ComponentID)
         {
             for(int y=0;y<com_list[i]->getTransition_ATTRList().size();y++)
             {
-                l.push_back(com_list[i]->getTransition_ATTRList()[i].id);
+                l.push_back(com_list[i]->getTransition_ATTRList()[i].id.split("&")[2]);
             }
         }
     }
@@ -339,15 +364,6 @@ void ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 
 }
 
-//对象不存在则无法合并
-//todo（1.1号之后)
-//增加transition与transition直接的连接、transition与place的连接
-//已于规则库达成共识，规定前一个传参端口连接到后一个传参端口
-//transition与place的连接直接加弧
-
-//todo
-//对于place与place、transition与transition的连接，直接遍历scene进行操作
-//对place与transition的连接，新增的弧不要放进input与output中
 void ComponentList::addComponentPort(QString portID1, QString portID2)
 {
     //端口均为place
@@ -1144,8 +1160,7 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
 //    }
 }
 
-//todo
-//对于新增的transition部分要进行处理。
+
 void ComponentList::deleteComponent(QString ComponentID)
 {
     for(int i=0;i<com_list.size();i++)

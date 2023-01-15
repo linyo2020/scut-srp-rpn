@@ -18,7 +18,6 @@ public:
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
 
-
     //获取指定组件的端口对象（仅返回普通端口）
     QList<Place*> getPortinComponent(QString ComponentID);//完成
 
@@ -27,12 +26,8 @@ public:
     QList<QString>getCertainTransitionName(QString ComponentID);//完成
 
 
-    //！
-    void seperateCompoundPort(QString CompoundPortID);
-
     //遍历找到连接的connector，删除这个connector（从list里弹出）
     void deleteConnect(QString PlaceID1,QString PlaceID2);//田俊杰
-
 
     //！
     //从com_list里弹出,放到垃圾桶
@@ -40,7 +35,9 @@ public:
     //！
     //从垃圾桶里添加会com_list
     void recoverComponent(QString ComponentID);//田俊杰
+
     //给connector的sourceID、targetID赋值
+    //增加connector操作，sourceID为portID1
     void addComponentPort(QString portID1,QString portID2);//完成
     //遍历文件树，添加到com_list里，记得设置id
     QString addNewComponent(QString Filename);//田俊杰
@@ -58,6 +55,7 @@ private:
     //func
     //如果未找到返回nullptr
     //Component* getCertainComponent( QString ComID);
+
     Component* OriginComponent(QString Filename);//欣然
 
 
@@ -77,7 +75,8 @@ private:
     Transition*getcertainTransition(QString tranID);
 
 
-
+    //！废弃函数！！
+    void seperateCompoundPort(QString CompoundPortID);
 
     //没用了
     //-----------------------------
