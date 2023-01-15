@@ -8,11 +8,11 @@
 class SeperateOperation:public BaseOperation
 {
 public:
-    SeperateOperation(QString compoundPortId);
+    SeperateOperation(QString compoundPortId_1,QString compoundPortId_2);
     virtual ~SeperateOperation();
     virtual void execOperation(ComponentList*);
 private:
-    QString portToSeperate;
+    QString portToSeperate_1,portToSeperate_2;
 };
 
 #endif // SEPERATEOPERATION_H
