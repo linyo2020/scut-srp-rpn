@@ -15,7 +15,8 @@ public:
     //setID以及初始话 田俊杰
 
 
-
+    //根据传入ID获取Place，包括普通端口，复合端口，普通节点
+    Place* getCertainPlace(QString PlaceID);//田俊杰
 
 
     //获取指定组件的端口对象（仅返回普通端口）
@@ -27,7 +28,7 @@ public:
 
 
     //！
-    //void seperateCompoundPort(QString CompoundPortID);
+    void seperateCompoundPort(QString CompoundPortID);
 
     //遍历找到连接的connector，删除这个connector（从list里弹出）
     void deleteConnect(QString PlaceID1,QString PlaceID2);//田俊杰
@@ -74,8 +75,7 @@ private:
     //----------------------------------
     //void addNewComponent(Component*newCom);
     Transition*getcertainTransition(QString tranID);
-    //根据传入ID获取Place，包括普通端口，复合端口，普通节点
-    //Place* getCertainPlace(QString PlaceID);//田俊杰
+
 
 
 

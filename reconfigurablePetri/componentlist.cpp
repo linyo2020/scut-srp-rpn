@@ -24,37 +24,37 @@ ComponentList::ComponentList()
 
 //修改，直接遍历scene
 //O(n)
-//Place *ComponentList::getCertainPlace(QString PlaceID)
-//{
-////    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
-////    for(int i=0;i<com_list.size();i++)
-////    {
-////        if(com_list[i]->getID()==comID)
-////        {
-////            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
-////            {
-////                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
-////                {
-////                    return com_list[i]->getPlaceList()[i];
-////                }
-////            }
-////        }
-////    }
-//    //2
-//    foreach(QGraphicsItem*item,this->Scene->items())
-//    {
-//        if(item->type()==Place::Type)
-//        {
-//            Place * place = qgraphicsitem_cast<Place*>(item);
-//            if(place->getId()==PlaceID)
-//            {
-//                return place;
-//            }
-//        }
-//    }
+Place *ComponentList::getCertainPlace(QString PlaceID)
+{
+    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==comID)
+        {
+            for(int i=0;i<com_list[i]->getPlaceList().size();i++)
+            {
+                if(com_list[i]->getPlaceList()[i]->getId()==PlaceID)
+                {
+                    return com_list[i]->getPlaceList()[i];
+                }
+            }
+        }
+    }
+    //2
+    foreach(QGraphicsItem*item,this->Scene->items())
+    {
+        if(item->type()==Place::Type)
+        {
+            Place * place = qgraphicsitem_cast<Place*>(item);
+            if(place->getId()==PlaceID)
+            {
+                return place;
+            }
+        }
+    }
 
 
-//}
+}
 
 //todo
 //修改，直接遍历scene
@@ -737,8 +737,8 @@ Component *ComponentList::OriginComponent(QString Filename)
 //需要针对transition与transition、transition与place进行单独处理
 //transition与transition：删除复合transition，新建两个新的transition，把连接好的相关边进行分配
 //transition与place：直接删除相关边即可（判断两种情况——连接方向）
-//void ComponentList::seperateCompoundPort(QString CompoundPortID)
-//{
+void ComponentList::seperateCompoundPort(QString CompoundPortID)
+{
 
 ////    QStringList id=CompoundPortID.split("+");
 ////    //下面认为place作为端口时，input与output应该有一个为空
@@ -1142,7 +1142,7 @@ Component *ComponentList::OriginComponent(QString Filename)
 //        this->Scene->addItem(p2);
 //        this->Scene->removeItem(p);
 //    }
-//}
+}
 
 //todo
 //对于新增的transition部分要进行处理。
