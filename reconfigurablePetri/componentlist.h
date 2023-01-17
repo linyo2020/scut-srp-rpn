@@ -44,7 +44,7 @@ public:
 
     const QList<Connector*> getConnectorList();
     void push_back_connectorList(Connector*c);
-
+    QVector<Component*> getComponentList();
     void getComponent(ComponentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
