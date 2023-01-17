@@ -1397,3 +1397,7 @@ void ComponentList::recoverComponent(QString ComponentID)
     }
 
 }
+QVector<Component*> ComponentList::getComponentList()
+{
+    return com_list;
+}
