@@ -31,7 +31,7 @@ public:
     //返回TransitionList
     QList<Transition*>getTransitionList();
     //返回ArcList
-    QList<Arc*>getTArcList();
+    QList<Arcus*>getTArcList();
     //-----------------------------
 
 
@@ -83,7 +83,14 @@ public:
      * @author lwy
      * @return
      */
-    bool makeFunction();
+    void makeFunction();
+    /**
+     * @brief tick 组件单步仿真
+     * @author lwy
+     * @param l_start 仿真开始的时间戳
+     * @param state 是否检查负值
+     */
+    bool tick(double,bool);
 
     void transform();
 private:

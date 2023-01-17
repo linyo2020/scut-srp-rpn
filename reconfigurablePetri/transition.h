@@ -5,7 +5,7 @@
 #include <QPainterPath>
 #include <QGraphicsSimpleTextItem>
 #include<QPainter>
-#include"arc.h"
+#include"arcus.h"
 #include<QGraphicsScene>
 #include<place.h>
 #include"defs.h"
@@ -81,12 +81,12 @@ class Transition : public QGraphicsRectItem
     bool IsNormalPort();
     bool IsCompoundPort();
 
-    QList<Arc*>getinput();
+    QList<Arcus*>getinput();
 
-    QList<Arc*>getoutput();
+    QList<Arcus*>getoutput();
 
-    void pushInput(Arc*a);
-    void pushOutput(Arc*a);
+    void pushInput(Arcus*a);
+    void pushOutput(Arcus*a);
 
     void setNormalPort(bool flag);
     void setCompoundPort(bool flag);
@@ -94,8 +94,8 @@ class Transition : public QGraphicsRectItem
     QString getName(QString ComID);
     QStringList getFileName();
     QStringList getComponentID();
-    QList<Arc *> input;
-    QList<Arc *> output;
+    QList<Arcus *> input;
+    QList<Arcus *> output;
 
 
 

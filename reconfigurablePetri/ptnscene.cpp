@@ -103,7 +103,7 @@ void PTNscene::removeItems()
     /* remove arcs before */
     foreach(QGraphicsItem * item, selectedItems())
     {
-        if(item->type() == Arc::Type)
+        if(item->type() == Arcus::Type)
         {
             emit arcRemoved(item, this);
         }
@@ -207,7 +207,7 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 
         currentItem = itemAt(mouseEvent->scenePos(),transform);
 
-        if((currentItem == 0)||(currentItem->type() == Arc::Type))
+        if((currentItem == 0)||(currentItem->type() == Arcus::Type))
         {
            origin = mouseEvent->scenePos();
            selectionRect = new SceneSelectionRectangle;
@@ -500,7 +500,7 @@ void PTNscene::unbindComponent()
         QGraphicsItemGroup  *group;
         group=(QGraphicsItemGroup*)this->selectedItems().at(0);
         foreach (QGraphicsItem *item, group->childItems()){
-            if(item->type() == Place::Type||item->type() == Arc::Type||item->type() == Transition::Type)
+            if(item->type() == Place::Type||item->type() == Arcus::Type||item->type() == Transition::Type)
             {
                 group->removeFromGroup(item);
                 item->setSelected(0);
@@ -534,7 +534,7 @@ void PTNscene::bindComponent()
               {
                    TransitionItem++;
               }
-              if(item->type() == Arc::Type)
+              if(item->type() == Arcus::Type)
               {
                    ArcItem++;
               }
@@ -660,7 +660,7 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
 
       path.lineTo(targetItem->boundingRect ().center());
 
-      Arc * arc = new Arc(sourceItem, targetItem, path, xmlarc);
+      Arcus * arc = new Arcus(sourceItem, targetItem, path, xmlarc);
       addItem(arc);
 
 

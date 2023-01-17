@@ -267,9 +267,9 @@ PTNET_ATTR PetriTabWidget::toXml() const
             page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
             continue;
         }
-        if(item->type() == Arc::Type)
+        if(item->type() == Arcus::Type)
         {
-            page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
             continue;
         }
     }
@@ -300,9 +300,9 @@ PTNET_ATTR PetriTabWidget::componentToXml() const
             page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
             continue;
         }
-        if(item->type() == Arc::Type)
+        if(item->type() == Arcus::Type)
         {
-            page.arcs << qgraphicsitem_cast<Arc*>(item)->toXml();
+            page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
             continue;
         }
     }
@@ -483,7 +483,7 @@ void PetriTabWidget::itemDoubleClicked (QGraphicsItem* item)
     placeDoubleClicked (item);
     if(item->type() == Transition::Type)
     transitionDoubleClicked (item);
-    if(item->type() == Arc::Type)
+    if(item->type() == Arcus::Type)
     arcDoubleClicked (item);
 
     item = 0;
@@ -698,7 +698,7 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
 {
     undostack->arcClicked(item, scene);
     //arcnoclicked=false;
-    Arc* arc = qgraphicsitem_cast<Arc*>(item);
+    Arcus* arc = qgraphicsitem_cast<Arcus*>(item);
 //	/* set the SpinBox with the arc's current weight */
 //	//arcEditDialog->inputWeight->setText(QString::number(arc->getWeight(),'f',10));
     arcEditDialog->inputWeight->setText(QString("%1").arg(arc->getWeight()));
@@ -721,9 +721,9 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
     }//find transition
     foreach(QGraphicsItem * item, scene->items())
     {
-        if(item->type()==Arc::Type)
+        if(item->type()==Arcus::Type)
         {
-            Arc *l_arc=qgraphicsitem_cast<Arc*>(item);
+            Arcus *l_arc=qgraphicsitem_cast<Arcus*>(item);
             if(l_arc->getSourceItem()->type()==Transition::Type)
             {
                 if((qgraphicsitem_cast<Transition*>(l_arc->getSourceItem()))->getName()==l_transition->getName())

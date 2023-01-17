@@ -3,7 +3,7 @@
 
 #include <QGraphicsEllipseItem>
 
-#include "arc.h"
+#include "arcus.h"
 
 class Place : public QGraphicsEllipseItem
 {
@@ -47,7 +47,7 @@ class Place : public QGraphicsEllipseItem
     void drawCompoundport();
     void cancelSetPort();
 
-    bool reachCapacity(Arc* arc);
+    bool reachCapacity(Arcus* arc);
     bool hasRelations ();
 
     int type () const;
@@ -83,17 +83,17 @@ class Place : public QGraphicsEllipseItem
     void setCompoundPort(bool);
     void setcontain_portNum(int);
     int getcontain_portNum();
-    QList<Arc*> getinput();
-    QList<Arc*> getoutput();
-    void pushInput(Arc*a);
-    void pushOutput(Arc*a);
+    QList<Arcus*> getinput();
+    QList<Arcus*> getoutput();
+    void pushInput(Arcus*a);
+    void pushOutput(Arcus*a);
 
     //传入组号，获取改组号的name
     QString getName(QString singleComID);
     QStringList getFileName();
     QStringList getComponentID();
-    QList<Arc*> input;
-    QList<Arc*> output;
+    QList<Arcus*> input;
+    QList<Arcus*> output;
 
 
  protected:

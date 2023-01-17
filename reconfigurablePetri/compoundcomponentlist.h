@@ -4,7 +4,7 @@
 #include <QObject>
 #include"compoundcomponent.h"
 #include"componentcontroller.h"
-class componentController;
+class ComponentController;
 class CompoundComponentList : public QObject
 {
     Q_OBJECT
@@ -56,10 +56,10 @@ public:
 
 private:
     QList<CompoundComponent*>CompoundComponent_List;
-    componentController* component_Controller;
+    ComponentController* component_Controller;
     QList<Component*>garbage;
 public slots:
-    void getComponent(componentController *comController){component_Controller=comController;}
+    void getComponent(ComponentController *comController){component_Controller=comController;}
     void getCompoundComponentList(QList<CompoundComponent*>Compound_Component_List){CompoundComponent_List=Compound_Component_List;}
 signals:
 

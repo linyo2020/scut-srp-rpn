@@ -3,7 +3,7 @@
 ComponentList::ComponentList()
 {
     Scene=new PTNscene();
-    comController=new componentController();
+    comController=new ComponentController();
 
 }
 
@@ -726,9 +726,9 @@ void ComponentList::deleteArc(QString placeId, QString transitionID)
 {
     foreach(QGraphicsItem*item,this->Scene->items())
     {
-        if(item->type()==Arc::Type)
+        if(item->type()==Arcus::Type)
         {
-            Arc*a=new Arc();
+            Arcus*a=new Arcus();
             if((a->getSourceId()==placeId&&a->getTargetId()==transitionID)||(a->getSourceId()==transitionID&&a->getTargetId()==placeId))
             {
                 this->Scene->removeItem(a);

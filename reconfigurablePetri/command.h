@@ -79,7 +79,7 @@ public:
     void redo ();
 
 private:
-    Arc * arc;
+    Arcus * arc;
     PTNscene * graphicsscene;
     QGraphicsItem * sourceItem;
     QGraphicsItem * targetItem;
@@ -100,7 +100,7 @@ public:
     void redo ();
 
 private:
-    Arc * arc;
+    Arcus * arc;
     PTNscene * graphicsscene;
     QGraphicsItem * sourceItem;
     QGraphicsItem * targetItem;

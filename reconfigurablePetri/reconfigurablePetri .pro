@@ -28,7 +28,6 @@ SOURCES += \
     ODESolver/fparser.cc \
     ODESolver/fpoptimizer.cc \
     ODESolver/ODEsolver.cpp \
-    arc.cpp \
     arcedgeselectionrectangle.cpp \
     arceditdialog.cpp \
     command.cpp \
@@ -81,7 +80,9 @@ SOURCES += \
     operation/replacewithnewoperation.cpp \
     operation/replacewithexistinstanceoperation.cpp \
     rule/eventrule.cpp \
-    connector.cpp
+    connector.cpp \
+    simulation/simulationcontroller.cpp \
+    arcus.cpp
 
 
 HEADERS += \
@@ -92,7 +93,6 @@ HEADERS += \
     ODESolver/fpconfig.hh \
     ODESolver/ODEsolver.h \
     ODESolver/fptypes.hh \
-    arc.h \
     arcedgeselectionrectangle.h \
     arceditdialog.h \
     command.h \
@@ -146,7 +146,9 @@ HEADERS += \
     operation/replacewithnewoperation.h \
     operation/replacewithexistinstanceoperation.h \
     rule/eventrule.h \
-    connector.h
+    connector.h \
+    simulation/simulationcontroller.h \
+    arcus.h
 
 
 # Default rules for deployment.

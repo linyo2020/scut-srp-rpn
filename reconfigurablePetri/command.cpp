@@ -80,7 +80,7 @@ AddArcCommand::AddArcCommand(QGraphicsItem * item1, QGraphicsItem * item2,
     else if(targetItem->type() == Transition::Type)
         tid = qgraphicsitem_cast<Transition*>(targetItem)->getId();
 
-    arc = new Arc(sourceItem, sid, targetItem, tid, arc_path, aid, ArcWeight);
+    arc = new Arcus(sourceItem, sid, targetItem, tid, arc_path, aid, ArcWeight);
 
     graphicsscene = scene;
 }
@@ -137,7 +137,7 @@ AddArcCommand::~AddArcCommand()
 RemoveArcCommand::RemoveArcCommand(QGraphicsItem * item,
                               PTNscene * scene)
 {
-    arc = qgraphicsitem_cast<Arc*>(item);
+    arc = qgraphicsitem_cast<Arcus*>(item);
     graphicsscene = scene;
     sourceItem = arc->getSourceItem();
     targetItem = arc->getTargetItem();

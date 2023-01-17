@@ -1,7 +1,7 @@
 #ifndef PTNET_H
 #define PTNET_H
 #include"place.h"
-#include"arc.h"
+#include"arcus.h"
 #include"transition.h"
 
 class PTNet: public QObject
@@ -12,7 +12,7 @@ public:
     QList<Place*>PlaceList;
     QList<Transition*>TransitionList;
     //contained in place and transition
-    QList<Arc*>ArcList;
+    QList<Arcus*>ArcList;
 
     //componentToXml()不太清楚如何处理，需不要需要把add函数放进这里面
 
@@ -35,7 +35,7 @@ public:
 
     void AddPlace(Place *myplace);
     void AddTransition(Transition *mytrans);
-    void AddArc(Arc *myarc);
+    void AddArc(Arcus *myarc);
     void deletePlace(Place *myplace);
     void deleteTransition(Transition *mytrans);
 

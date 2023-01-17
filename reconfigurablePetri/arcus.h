@@ -1,5 +1,5 @@
-#ifndef ARC_H
-#define ARC_H
+#ifndef ARCUS_H
+#define ARCUS_H
 
 #include <QGraphicsPathItem>
 #include <QPainterPath>
@@ -11,25 +11,25 @@
 
 //#include "FIS/pn_defines.h"
 
-class Arc : public QGraphicsPathItem
+class Arcus : public QGraphicsPathItem
 {
  public:
 
     enum { Type = UserType + 3 };
 
-    Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+    Arcus(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
         QString TargetId, QPainterPath arc_path, const QString &ArcId,double ArcWeight);
 
-    Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+    Arcus(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
         QString TargetId, const QString &ArcId,double ArcWeight);//计算用，不能用于画图
 
 
-    Arc(QGraphicsItem * item1, QGraphicsItem * item2,
+    Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
         QPainterPath paintpath, const ARC_ATTR &arc);
 
-    Arc();
+    Arcus();
 
-    ~Arc();
+    ~Arcus();
 
     void createArc();
     ARC_ATTR toXml() const;
@@ -130,4 +130,4 @@ public:
 //  void createRuleSet();
 };
 
-#endif // ARC_H
+#endif // ARCUS_H

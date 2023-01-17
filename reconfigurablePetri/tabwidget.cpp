@@ -277,10 +277,10 @@ QList<Connector *> TabWidget::init_cl()
              Transition*trans=qgraphicsitem_cast<Transition*>(item);
              trans->setID(name+"&"+num+"&"+trans->getId());
          }
-         else if(item->type()==Arc::Type)
+         else if(item->type()==Arcus::Type)
          {
              QString num=QString::number(componentTypeNum,10);
-             Arc*arc=qgraphicsitem_cast<Arc*>(item);
+             Arcus*arc=qgraphicsitem_cast<Arcus*>(item);
              arc->setsourceId(name+"&"+num+"&"+arc->getSourceId());
              arc->setTargetId(name+"&"+num+"&"+arc->getTargetId());
              arc->setID(name+"&"+num+"&"+arc->getId());
@@ -525,9 +525,9 @@ QList<Connector *> TabWidget::init_cl()
 
                  }
              }
-             else if(i->type() == Arc::Type)
+             else if(i->type() == Arcus::Type)
              {
-                 Arc * arc = qgraphicsitem_cast<Arc*>(i);
+                 Arcus * arc = qgraphicsitem_cast<Arcus*>(i);
                  QStringList list=arc->getId().split("&");
                  qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
                  qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();

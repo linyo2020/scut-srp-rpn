@@ -150,19 +150,19 @@ void CompoundComponentList::addComponentPort(QString portID1,QString portID2)
     P->setOutputPort(true);
     P->setCompoundPort(true);
     P->setcontain_portNum(P->getcontain_portNum()+1);
-    foreach(Arc* a,getCertainPlace(portID1)->getinput())
+    foreach(Arcus* a,getCertainPlace(portID1)->getinput())
     {
         a->setTargetId(portID1);
     }
-    foreach(Arc* a,getCertainPlace(portID1)->getoutput())
+    foreach(Arcus* a,getCertainPlace(portID1)->getoutput())
     {
         a->setsourceId(portID1);
     }
-    foreach(Arc* a,getCertainPlace(portID2)->getinput())
+    foreach(Arcus* a,getCertainPlace(portID2)->getinput())
     {
         a->setTargetId(portID2);
     }
-    foreach(Arc* a,getCertainPlace(portID2)->getoutput())
+    foreach(Arcus* a,getCertainPlace(portID2)->getoutput())
     {
         a->setsourceId(portID2);
     }

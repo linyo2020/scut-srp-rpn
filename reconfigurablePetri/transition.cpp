@@ -94,22 +94,22 @@ bool Transition::IsCompoundPort()
     return this->isCompoundPort;
 }
 
-QList<Arc *> Transition::getinput()
+QList<Arcus *> Transition::getinput()
 {
     return this->input;
 }
 
-QList<Arc *> Transition::getoutput()
+QList<Arcus *> Transition::getoutput()
 {
     return  this->output;
 }
 
-void Transition::pushInput(Arc *a)
+void Transition::pushInput(Arcus *a)
 {
     this->input.push_back(a);
 }
 
-void Transition::pushOutput(Arc *a)
+void Transition::pushOutput(Arcus *a)
 {
     this->output.push_back(a);
 }
@@ -308,7 +308,7 @@ bool Transition::isFirable()
     double toks;
 
     // check input
-    foreach(Arc * arc, input)
+    foreach(Arcus * arc, input)
     {
         double w = arc->getWeight();
         QGraphicsItem * sourceItem = arc->getSourceItem();
@@ -322,7 +322,7 @@ bool Transition::isFirable()
     }
 
     // check output
-    foreach(Arc * arc, output)
+    foreach(Arcus * arc, output)
     {
         QGraphicsItem * targetItem = arc->getTargetItem();
         if(targetItem->type() == Place::Type)
@@ -343,7 +343,7 @@ void Transition::fire()
 {
 
   // update input places
-  foreach(Arc * arc, input)
+  foreach(Arcus * arc, input)
   {
       double w = arc->getWeight();
       QGraphicsItem * sourceItem = arc->getSourceItem ();
@@ -353,7 +353,7 @@ void Transition::fire()
   }
 
   // update output places
-  foreach(Arc * arc, output)
+  foreach(Arcus * arc, output)
   {
       double w = arc->getWeight();
       QGraphicsItem * targetItem = arc->getTargetItem();
@@ -386,13 +386,13 @@ void Transition::setLabel_2()
 /* add input arc */
 void Transition::addInputArc(QGraphicsItem * arc)
 {
-   input << qgraphicsitem_cast<Arc*>(arc);
+   input << qgraphicsitem_cast<Arcus*>(arc);
 }
 
 /* add output arc */
 void Transition::addOutputArc(QGraphicsItem * arc)
 {
-   output << qgraphicsitem_cast<Arc*>(arc);
+   output << qgraphicsitem_cast<Arcus*>(arc);
 }
 
 /* delete Arc */
@@ -486,10 +486,10 @@ QVariant Transition::itemChange(GraphicsItemChange change, const QVariant &value
          (change == QGraphicsItem::ItemTransformChange) ||
      (change == QGraphicsItem::ItemTransformHasChanged))
     {
-        foreach (Arc *inarc, input)
+        foreach (Arcus *inarc, input)
             inarc->updatePosition();
 
-        foreach (Arc *outarc, output)
+        foreach (Arcus *outarc, output)
             outarc->updatePosition();
 
         scene()->update();
@@ -519,9 +519,9 @@ void Transition::paint ( QPainter * painter,
         {
           color = QColor(0, 0, 150);
 
-          foreach(Arc * arc, input)
+          foreach(Arcus * arc, input)
              arc->setSelected(true);
-          foreach(Arc * arc, output)
+          foreach(Arcus * arc, output)
              arc->setSelected(true);
         }
        //如果未点击该变迁，该变迁的颜色为m_penColor

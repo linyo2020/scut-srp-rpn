@@ -16,7 +16,7 @@ void PTNet::AddTransition(Transition *mytrans)
     this->TransitionList.push_back(mytrans);
 }
 
-void PTNet::AddArc(Arc *myarc)
+void PTNet::AddArc(Arcus *myarc)
 {
     this->ArcList.push_back(myarc);
 }

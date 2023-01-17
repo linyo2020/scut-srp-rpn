@@ -2,7 +2,7 @@
 #define OUTLINEWIDTH 20
 #endif
 
-#include "arc.h"
+#include "arcus.h"
 
 #include <qmath.h>
 #include <QMessageBox>
@@ -12,10 +12,10 @@ static double TwoPi = 2.0 * Pi;
 static double ArcSize = 10.0;
 static double ArcAngle = 1.18;//Pi/3;
 
-const QColor Arc::defalut_brushColor=Qt::white;
-const QColor Arc::defalut_penColor=Qt::black;
+const QColor Arcus::defalut_brushColor=Qt::white;
+const QColor Arcus::defalut_penColor=Qt::black;
 
-Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+Arcus::Arcus(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
          QString TargetId, QPainterPath arc_path, const QString &ArcId,double ArcWeight)
 {
     sourceItem = SourceItem;
@@ -30,7 +30,7 @@ Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem
     createArc();
 }
 
-Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
+Arcus::Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
      QPainterPath paintpath, const ARC_ATTR &arc)
     : QGraphicsPathItem()
 {
@@ -48,12 +48,12 @@ Arc::Arc(QGraphicsItem * item1, QGraphicsItem * item2,
     updatePosition();
 }
 
-Arc::Arc()
+Arcus::Arcus()
 {
     label=new QGraphicsSimpleTextItem();
 }
 
-Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
+Arcus::Arcus(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
          QString TargetId, const QString &ArcId,double ArcWeight)
 {
     sourceItem = SourceItem;
@@ -66,7 +66,7 @@ Arc::Arc(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem
     createArc();
 }
 
-void Arc::createArc()
+void Arcus::createArc()
 {
     setZValue(-1000.0);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -84,7 +84,7 @@ void Arc::createArc()
 }
 
 /* to XML */
-ARC_ATTR Arc::toXml() const
+ARC_ATTR Arcus::toXml() const
 {
     ARC_ATTR arc;
     arc.id = id;
@@ -101,7 +101,7 @@ ARC_ATTR Arc::toXml() const
     return arc;
 }
 
-Arc::~Arc()
+Arcus::~Arcus()
 {
     delete label;
 
@@ -110,73 +110,73 @@ Arc::~Arc()
 }
 
 /* get Id */
-QString Arc::getId()
+QString Arcus::getId()
 {
     return id;
 }
 
-void Arc::setID(QString id)
+void Arcus::setID(QString id)
 {
     this->id=id;
 }
 
-void Arc::setsourceId(QString id)
+void Arcus::setsourceId(QString id)
 {
     this->source_id=id;
 }
 
-void Arc::setTargetId(QString id)
+void Arcus::setTargetId(QString id)
 {
     this->target_id=id;
 }
 
-QString Arc::getSourceId()
+QString Arcus::getSourceId()
 {
     return this->source_id;
 }
 
-QString Arc::getTargetId()
+QString Arcus::getTargetId()
 {
     return this->target_id;
 }
 
 /* get weight */
-double Arc::getWeight() const
+double Arcus::getWeight() const
 {
     return weight;
 }
 
-void Arc::setWeight(double ArcWeight)
+void Arcus::setWeight(double ArcWeight)
 {
     weight=ArcWeight;
 }
 
-void Arc::setLabel()
+void Arcus::setLabel()
 {
     QVariant value(weight);
     label->setText( QString("%1").arg(value.toString()) );
 }
 /* source item */
-QGraphicsItem * Arc::getSourceItem() const
+QGraphicsItem * Arcus::getSourceItem() const
 {
     return sourceItem;
 }
 
 /* target item */
-QGraphicsItem * Arc::getTargetItem() const
+QGraphicsItem * Arcus::getTargetItem() const
 {
     return targetItem;
 }
 
 /* show rects */
-void Arc::showRects(bool show)
+void Arcus::showRects(bool show)
 {
     foreach(ArcEdgeSelectionRectangle * rec, rects)
         rec->setVisible(show);
 }
 
 /* update position */
-void Arc::updatePosition()
+void Arcus::updatePosition()
 {
     QPointF sourcePoint = mapFromItem(sourceItem, sourceItem->boundingRect().center());
     QPointF targetPoint = mapFromItem(targetItem, targetItem->boundingRect().center());
@@ -191,12 +191,12 @@ void Arc::updatePosition()
 /* @@@@@@ reimplemented functions @@@@@@ */
 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-int Arc::type () const
+int Arcus::type () const
 {
     return Type;
 }
 
-QPainterPath Arc::shape() const
+QPainterPath Arcus::shape() const
 {
     QPainterPath arcShapeOutput = path();
     arcShapeOutput.addPolygon(ArcHead);
@@ -206,7 +206,7 @@ QPainterPath Arc::shape() const
     return arcShapeOutput;
 }
 
-QRectF Arc::boundingRect() const
+QRectF Arcus::boundingRect() const
 {
     qreal a = (pen().width())/2 + ArcSize/2;
     return QRectF( path().controlPointRect() )
@@ -214,49 +214,49 @@ QRectF Arc::boundingRect() const
             .adjusted(-a, -a, a, a);
 }
 
-bool Arc::isInComponent()
+bool Arcus::isInComponent()
 {
     return this->InComponent;
 }
 
-void Arc::setIncomponent(bool isInComponent)
+void Arcus::setIncomponent(bool isInComponent)
 {
     this->InComponent=isInComponent;
 }
 
-void Arc::setSourceItem(QGraphicsItem *it)
+void Arcus::setSourceItem(QGraphicsItem *it)
 {
     this->sourceItem=it;
 }
 
-void Arc::setTargetItem(QGraphicsItem *it)
+void Arcus::setTargetItem(QGraphicsItem *it)
 {
     this->targetItem=it;
 }
 
-QColor Arc::getBrushColor() const
+QColor Arcus::getBrushColor() const
 {
     return m_brushColor;
 }
 
-QColor Arc::getPenColor() const
+QColor Arcus::getPenColor() const
 {
     return m_penColor;
 }
 
-void Arc::setBrushColor(QColor color)
+void Arcus::setBrushColor(QColor color)
 {
     m_brushColor = color;
     update();
 }
 
-void Arc::setPenColor(QColor color)
+void Arcus::setPenColor(QColor color)
 {
     m_penColor = color;
     update();
 }
 
-void Arc::paint ( QPainter * painter,
+void Arcus::paint ( QPainter * painter,
     const QStyleOptionGraphicsItem * option,
         QWidget * widget=Q_NULLPTR )
 {
@@ -343,7 +343,7 @@ void Arc::paint ( QPainter * painter,
 }
 
 /* intersection Arc-circle */
-QPointF Arc::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) const
+QPointF Arcus::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) const
 {
     qreal R = 15;
 
@@ -396,7 +396,7 @@ QPointF Arc::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) const
 }
 
 /* intersection Arc-Transition */
-QPointF Arc::intersectionWithTransition(QGraphicsItem * rectangle, QLineF * line) const
+QPointF Arcus::intersectionWithTransition(QGraphicsItem * rectangle, QLineF * line) const
 {
     QPointF point, intersectPoint;
     QList<QLineF> list;

@@ -139,21 +139,21 @@ bool Place::isNormalPort()
     }
     return false;
 }
-QList<Arc*> Place::getinput()
+QList<Arcus*> Place::getinput()
 {
     return input;
 }
-QList<Arc*> Place::getoutput()
+QList<Arcus*> Place::getoutput()
 {
     return output;
 }
 
-void Place::pushInput(Arc *a)
+void Place::pushInput(Arcus *a)
 {
     this->input.push_back(a);
 }
 
-void Place::pushOutput(Arc *a)
+void Place::pushOutput(Arcus *a)
 {
     this->output.push_back(a);
 }
@@ -274,13 +274,13 @@ void Place::createPlace()
 /* add input arc */
 void Place::addInputArc(QGraphicsItem * arc)
 {
-   input << qgraphicsitem_cast<Arc*>(arc);
+   input << qgraphicsitem_cast<Arcus*>(arc);
 }
 
 /* add output arc */
 void Place::addOutputArc(QGraphicsItem * arc)
 {
-   output << qgraphicsitem_cast<Arc*>(arc);
+   output << qgraphicsitem_cast<Arcus*>(arc);
 }
 
 /* delete Arc */
@@ -426,7 +426,7 @@ QString Place::f_getComment() const
 }
 
 /* Check if the place reach capacity with connection "arc" */
-bool Place::reachCapacity(Arc * arc)
+bool Place::reachCapacity(Arcus * arc)
 {
 
   if(capacity == 0.0)
@@ -472,10 +472,10 @@ QVariant Place::itemChange (GraphicsItemChange change, const QVariant &value)
     if ((change == QGraphicsItem::ItemPositionChange)
     ||(change == QGraphicsItem::ItemPositionHasChanged))
     {
-        foreach (Arc * inarc, input)
+        foreach (Arcus * inarc, input)
             inarc->updatePosition();
 
-        foreach (Arc * outarc, output)
+        foreach (Arcus * outarc, output)
             outarc->updatePosition();
     }
 
@@ -498,9 +498,9 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     }
     else if(isSelected())
     {
-        foreach(Arc * arc, input)
+        foreach(Arcus * arc, input)
             arc->setSelected(true);
-        foreach(Arc * arc, output)
+        foreach(Arcus * arc, output)
             arc->setSelected(true);
 
         PenColor = Qt::blue;

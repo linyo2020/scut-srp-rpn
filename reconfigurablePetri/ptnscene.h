@@ -7,7 +7,7 @@
 
 #include "place.h"
 #include "transition.h"
-#include "arc.h"
+#include "arcus.h"
 #include "connector.h"
 #include "sceneselectionrectangle.h"
 

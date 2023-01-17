@@ -3,6 +3,7 @@
 #include<iostream>
 #include <QThread>
 #include "calculate.h"
+#include "simulationcontroller.h"
 using namespace std;
 
 map<QString,QVector<QString>> namevector;
@@ -186,9 +187,14 @@ void Plot::startSimulation()
     }
     //启动子线程
     g_run = 1;
-    Calculate *p = new Calculate(this);
-    p->start();
-    bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked);
+//    Calculate *p = new Calculate(this);
+//    p->start();
+//    bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked);
+      SimulationController*p = new SimulationController(com_list);
+      p->start();
+      bool suc;
+      p->run(suc);
+
     if(suc==true)
     {
         ui->customPlot->rescaleAxes(true);
@@ -206,6 +212,7 @@ void Plot::startSimulation()
     {
         QMessageBox::about(this,tr("Compile Error"),tr("Please check the input"));
     }
+//    p->destroyed();
     p->destroyed();
 }
 void Plot::initialVector()
@@ -1295,4 +1302,9 @@ void Plot::initialLineWidth()
     {
         lineWidth.push_back(2);
     }
+}
+
+void Plot::setComList(ComponentList*list)
+{
+    com_list=list;
 }
