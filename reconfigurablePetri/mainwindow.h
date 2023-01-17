@@ -60,7 +60,7 @@ public:
 
 signals:
     void addComponentController(QString componentPath);
-    void passComponnetController(componentController *componentController);
+    void passComponnetController(ComponentController *componentController);
     void passCom_arry(QVector<Component*>com_arry);
 private:
 
@@ -144,7 +144,7 @@ private:
 
     //可拖拉界面的部件
     DockWidget * buttomDock;
-    componentController *component_controller;
+    ComponentController *component_controller;
 
     //用于缩放的滑动条
     QSlider  * slider;
