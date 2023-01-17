@@ -1,12 +1,12 @@
 #include "componentcontroller.h"
 
-ComponentController::ComponentController()
+componentController::componentController()
 {
 
 
 }
 
-void ComponentController::componentTreeInitial(QTreeWidget *newTree)
+void componentController::componentTreeInitial(QTreeWidget *newTree)
 {
     newTree->clear();
     newTree->headerItem()->setText(0,QString());	//设置表头为空
@@ -16,7 +16,7 @@ void ComponentController::componentTreeInitial(QTreeWidget *newTree)
 
 }
 
-void ComponentController::addComponentTreeNode(QTreeWidget *newTree,QString component_name,QString component_path)
+void componentController::addComponentTreeNode(QTreeWidget *newTree,QString component_name,QString component_path)
 {
     bool flag=1;
     //遍历treeWidget
@@ -40,13 +40,13 @@ void ComponentController::addComponentTreeNode(QTreeWidget *newTree,QString comp
     }
 }
 
-void ComponentController::removeComponentTreeNode(QTreeWidgetItem *item)
+void componentController::removeComponentTreeNode(QTreeWidgetItem *item)
 {
     //if(item->checkState(0)==Qt::Checked)
     delete item;
 
 }
-PTNET_ATTR ComponentController::getPTnet(QString filename)
+PTNET_ATTR componentController::getPTnet(QString filename)
 {
     QMapIterator<QString,QString>iterator(itemsFile);
     PTNET_ATTR net;
@@ -71,7 +71,7 @@ PTNET_ATTR ComponentController::getPTnet(QString filename)
     }
     return net;
 }
-QList<PAGE_ATTR> ComponentController::getXMLpages(QString filename)
+QList<PAGE_ATTR> componentController::getXMLpages(QString filename)
 {
     QMapIterator<QString,QString>iterator(itemsFile);
     QList<PAGE_ATTR> page;
@@ -98,7 +98,7 @@ QList<PAGE_ATTR> ComponentController::getXMLpages(QString filename)
     return page;
 }
 
-Component * ComponentController::getComponent(QString filename)
+Component * componentController::getComponent(QString filename)
 {
     QMapIterator<QString,QString>iterator(itemsFile);
     Component*com=new Component();
@@ -187,7 +187,7 @@ Component * ComponentController::getComponent(QString filename)
     return com;
 }
 
-double ComponentController::getToken(QString filename,QString ID)
+double componentController::getToken(QString filename,QString ID)
 {
     QMapIterator<QString,QString>iterator(itemsFile);
     double tokenNum;
@@ -229,7 +229,7 @@ double ComponentController::getToken(QString filename,QString ID)
 }
 
 
-void ComponentController::ReadListFile(QString str)
+void componentController::ReadListFile(QString str)
 {
     QFile file(str);
     QMapIterator<QString,int>iter(type_list);
@@ -251,7 +251,7 @@ void ComponentController::ReadListFile(QString str)
     }
 }
 
-void ComponentController::WriteListFile(QString str)
+void componentController::WriteListFile(QString str)
 {
     //    this->type_list.insert("AB",3);
     //    this->type_list.insert("BH",4);
@@ -305,7 +305,7 @@ void ComponentController::WriteListFile(QString str)
 }
 
 
-void ComponentController::on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item)//勾选复选框
+void componentController::on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item)//勾选复选框
 {
     if(Qt::Checked==item->checkState(0)) //应为复选框设置在序号0的位置
     {

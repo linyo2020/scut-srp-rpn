@@ -56,10 +56,10 @@ public:
 
 private:
     QList<CompoundComponent*>CompoundComponent_List;
-    ComponentController* component_Controller;
+    componentController* component_Controller;
     QList<Component*>garbage;
 public slots:
-    void getComponent(ComponentController *comController){component_Controller=comController;}
+    void getComponent(componentController *comController){component_Controller=comController;}
     void getCompoundComponentList(QList<CompoundComponent*>Compound_Component_List){CompoundComponent_List=Compound_Component_List;}
 signals:
 

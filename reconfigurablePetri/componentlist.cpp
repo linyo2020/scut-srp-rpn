@@ -3,7 +3,7 @@
 ComponentList::ComponentList()
 {
     Scene=new PTNscene();
-    comController=new ComponentController();
+    comController=new componentController();
 
 }
 

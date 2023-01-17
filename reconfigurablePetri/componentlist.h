@@ -47,11 +47,10 @@ public:
 
 
     //lwy:set函数是设置属性，get函数是返回属性，以下函数应该是set函数才对吧？
-    void getComponent(ComponentController *comController){this->comController=comController;}
+    void getComponent(componentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
     void initConnector_list(QList<Connector*>l){connectList=l;};
-
 private:
     //func
     //如果未找到返回nullptr
@@ -65,7 +64,7 @@ private:
     void setnewComponentIDinSimulation(Component *newComponent);
     QList<Connector*> connectList;
     QVector<Component*>com_list;//存储的每一个组件信息，里面存放attr
-    ComponentController*comController;//要
+    componentController*comController;//要
     QVector<Component*>garbage2;
 
 

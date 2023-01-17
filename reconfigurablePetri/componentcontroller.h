@@ -9,10 +9,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include"component.h"
 #include "xmlparser.h"
-class ComponentController
+class componentController
 {
 public:
-    ComponentController();
+    componentController();
     void componentTreeInitial(QTreeWidget *newTree);
     void addComponentTreeNode(QTreeWidget *newTree,QString component_name,QString component_path);
     void removeComponentTreeNode(QTreeWidgetItem *item);

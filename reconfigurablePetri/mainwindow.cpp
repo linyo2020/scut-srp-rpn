@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
       createDocks ();
       createStatusBar ();
       createComponentDock();
-      component_controller=new ComponentController();
+      component_controller=new componentController();
       //test
       //component_controller->WriteListFile();
       //component_controller->ReadListFile();
@@ -388,7 +388,7 @@ void MainWindow::createComponentDock()
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
 
-    component_controller=new ComponentController();
+    component_controller=new componentController();
     component_controller->componentTreeInitial(componentTree);
     componentTree->expandAll();
     componentEditMenu=new QMenu();
