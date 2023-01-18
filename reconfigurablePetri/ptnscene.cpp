@@ -711,12 +711,12 @@ void PTNscene::addXML_connectors (const QList <CONNECTOR_ATTR> &connectors)
                         {targetItem = place;continue;}
             }
         }
-        QPointF po=sourceItem->boundingRect().center();
+        QPointF po=sourceItem->mapToScene(sourceItem->boundingRect().center());
       QPainterPath path(po);
 
       foreach(QPointF p, xmlconnector.points)
           path.lineTo(p);
-      po=targetItem->boundingRect ().center();
+      po=targetItem->mapToScene(targetItem->boundingRect().center());;
       path.lineTo(po);
 
       Connector * connector = new Connector(sourceItem, targetItem, path, xmlconnector);

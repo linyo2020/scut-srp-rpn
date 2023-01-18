@@ -63,7 +63,7 @@ void Connector::paint ( QPainter * painter,
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-
+    updatePosition();
     if(sourceItem->collidesWithItem(targetItem, Qt::IntersectsItemShape))
         return;
 
