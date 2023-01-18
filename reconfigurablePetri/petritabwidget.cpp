@@ -272,6 +272,11 @@ PTNET_ATTR PetriTabWidget::toXml() const
             page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
             continue;
         }
+        if(item->type()==Connector::Type)
+        {
+            page.connector << qgraphicsitem_cast<Connector*>(item)->toXml();
+            continue;
+        }
     }
 
     net.pages << page;

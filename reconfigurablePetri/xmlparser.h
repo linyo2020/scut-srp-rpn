@@ -28,6 +28,7 @@ private:
     bool parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page);
     bool parseXML_Transition(QXmlStreamReader &xml, PAGE_ATTR &page);
     bool parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page);
+    bool parseXML_Connector(QXmlStreamReader &xml, PAGE_ATTR &page);
     bool parseXML_Name(QXmlStreamReader &xml);
     bool parseXML_Graphics(QXmlStreamReader &xml);
     bool parseXML_Offset(QXmlStreamReader &xml);

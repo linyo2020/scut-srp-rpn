@@ -165,6 +165,22 @@ bool XmlParser::parseXML_Page(QXmlStreamReader &xml, PAGE_ATTR &page)
                      continue;
                  }
             }
+            if (xml.name() == "connector")
+            {
+                if (xml.attributes().hasAttribute("id")
+                    && xml.attributes().hasAttribute("source")
+                    && xml.attributes().hasAttribute("target"))
+                 {
+                    id = xml.attributes().value("id").toString();
+                    source = xml.attributes().value("source").toString();
+                    target = xml.attributes().value("target").toString();
+
+                    if (!parseXML_Connector(xml, page))
+                        return false;
+
+                     continue;
+                 }
+            }
             continue;
         }
     }
@@ -377,7 +393,42 @@ bool XmlParser::parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page)
     return true;
 
 }
+bool XmlParser::parseXML_Connector(QXmlStreamReader &xml, PAGE_ATTR &page)
+{
+    while (!xml.atEnd() && !xml.hasError())
+    {
+        QXmlStreamReader::TokenType token = xml.readNext();
 
+        if (token == QXmlStreamReader::EndElement && xml.name() == "connector")
+        {
+            CONNECTOR_ATTR connector;
+
+            connector.id = id;
+            connector.source = source;
+            connector.target = target;
+            connector.points << points;
+            points.clear();
+
+            page.connector << connector;
+            break;
+        }
+
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xml.name() == "graphics")
+            {
+                if (!parseXML_Positions(xml))
+                    return false;
+
+                continue;
+
+            }
+        }
+    }
+
+    return true;
+
+}
 bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<double> &vec, std::string eleName)
 {
     while(!xml.atEnd() && !xml.hasError())

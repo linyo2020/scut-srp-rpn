@@ -459,6 +459,7 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         addXML_places (page.placeNodes);
         addXML_transitions (page.transitionNodes);
         addXML_arcs (page.arcs);
+        addXML_connectors(page.connector);
     }
 
 }
@@ -684,6 +685,53 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
      {
        qSort(indexes.begin(), indexes.end());
        arcs_indexs = indexes.last() + 1;
+     }
+
+  }
+void PTNscene::addXML_connectors (const QList <CONNECTOR_ATTR> &connectors)
+{
+    QList<int> indexes;
+    QRegExp rx("^c[0-9]+$");
+
+    QList<QGraphicsItem *> nodes = items ();
+    QGraphicsItem * sourceItem = 0;
+    QGraphicsItem * targetItem = 0;
+
+    foreach(CONNECTOR_ATTR xmlconnector, connectors)
+     {
+        foreach(QGraphicsItem * node, nodes)
+        {
+            if(node->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(node);
+
+                    if(place->getId() == xmlconnector.source)
+                        {sourceItem = place;continue;}
+                    if(place->getId() == xmlconnector.target)
+                        {targetItem = place;continue;}
+            }
+        }
+        QPointF po=sourceItem->boundingRect().center();
+      QPainterPath path(po);
+
+      foreach(QPointF p, xmlconnector.points)
+          path.lineTo(p);
+      po=targetItem->boundingRect ().center();
+      path.lineTo(po);
+
+      Connector * connector = new Connector(sourceItem, targetItem, path, xmlconnector);
+      addItem(connector);
+          if(xmlconnector.id.contains(rx))
+          {
+            QString str = xmlconnector.id.remove(0,1);
+            indexes << str.toInt();
+          }
+     }
+
+    if(!indexes.isEmpty())
+     {
+       qSort(indexes.begin(), indexes.end());
+       connector_indexs = indexes.last() + 1;
      }
 
   }

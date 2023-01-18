@@ -18,6 +18,8 @@ class Connector : public QGraphicsPathItem
         QString TargetId, QPainterPath arc_path, const QString &ConnectorId);
     Connector(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem * TargetItem,
               QString TargetId, const QString &ConnectorId);//计算用，不能用于画图
+    Connector(QGraphicsItem * item1, QGraphicsItem * item2,
+        QPainterPath paintpath, const CONNECTOR_ATTR &arc);
     ~Connector();
 
     void createArc();

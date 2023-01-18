@@ -77,6 +77,11 @@ bool XmlWriter::writePage(QXmlStreamWriter &xml, PAGE_ATTR page)
              if(!writeArc(xml, arc))
                 qDebug()<<"Error ...";
         }
+        foreach(CONNECTOR_ATTR conn, page.connector)
+        {
+             if(!writeConnnector(xml, conn))
+                qDebug()<<"Error ...";
+        }
 
     xml.writeEndElement();
     /* </page>*/
@@ -345,6 +350,44 @@ bool XmlWriter::writeArc(QXmlStreamWriter &xml, ARC_ATTR arc)
 
     xml.writeEndElement();
     /* </arc> */
+
+    if (xml.hasError ())
+        return false;
+
+    return true;
+}
+/* write arc */
+bool XmlWriter::writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector)
+{
+    QVariant v;
+    xml.writeStartElement("connector");
+    xml.writeAttribute("id", connector.id);
+    xml.writeAttribute("source", connector.source);
+    xml.writeAttribute("target", connector.target);
+
+
+    /* <graphics>*/
+    if(!connector.points.isEmpty())
+    {
+        /* <graphics> */
+        xml.writeStartElement("graphics");
+
+        foreach(QPointF p, connector.points)
+        {
+            xml.writeEmptyElement("position");
+                v.setValue(p.x());
+            xml.writeAttribute("x", v.toString());
+                v.setValue(p.y());
+            xml.writeAttribute("y", v.toString());
+        }
+
+        xml.writeEndElement();
+        /* </graphics> */
+    }
+
+
+    xml.writeEndElement();
+    /* </connector> */
 
     if (xml.hasError ())
         return false;

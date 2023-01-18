@@ -28,7 +28,19 @@ Connector::Connector(QGraphicsItem * SourceItem, QString SourceId,QGraphicsItem 
 
     createArc();
 }
+Connector::Connector(QGraphicsItem * item1, QGraphicsItem * item2,
+     QPainterPath paintpath, const CONNECTOR_ATTR &connector)
+{
+    sourceItem = item1;
+    targetItem = item2;
+    setPath(paintpath);
+    source_id = connector.source;
+    target_id = connector.target;
+    id = connector.id;
 
+    createArc();
+    updatePosition();
+}
 void Connector::createArc()
 {
     setZValue(-1000.0);
