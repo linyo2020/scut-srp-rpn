@@ -122,66 +122,71 @@ Component * ComponentController::getComponent(QString filename)
             QList<PAGE_ATTR> page=net.pages;
             foreach(PAGE_ATTR p,page)
             {
-
-                foreach(PLACE_ATTR pl,p.placeNodes)
+                foreach(COMPONENT_ATTR c,p.componentList)
                 {
-                    Place * place=new Place(pl);
-                    com->mynet->AddPlace(place);
-                }
-                foreach(TRANSITION_ATTR tr,p.transitionNodes)
-                {
-                    Transition *trans=new Transition(tr);
-                    com->mynet->AddTransition(trans);
-                }
-                foreach(ARC_ATTR a,p.arcs)
-                {
-                    QGraphicsItem * sourceItem = 0;
-                    QGraphicsItem * targetItem = 0;
-                    foreach(Place * place,com->mynet->PlaceList)
+                    com->setStep(c.step);
+                    com->setID(c.id);
+                    foreach(PLACE_ATTR pl,c.placeNodes)
                     {
-                        if(place->getId() == a.source)
-                        {
-                            sourceItem = place;
-                            continue;
-
-                        }
-                        if(place->getId() == a.target)
-                        {
-                            targetItem = place;
-                            continue;
-                        }
+                        Place * place=new Place(pl);
+                        com->mynet->AddPlace(place);
                     }
-                    foreach(Transition * transition,com->mynet->TransitionList)
+                    foreach(TRANSITION_ATTR tr,c.transitionNodes)
                     {
-                        if(transition->getId() == a.source)
-                        {
-                            sourceItem = transition;
-                            continue;}
-                        if(transition->getId() == a.target)
-                        {
-                            targetItem = transition;
-                            continue;
-                        }
+                        Transition *trans=new Transition(tr);
+                        com->mynet->AddTransition(trans);
                     }
-                    QPainterPath path(sourceItem->boundingRect().center());
+                    foreach(ARC_ATTR a,c.arcs)
+                    {
+                        QGraphicsItem * sourceItem = 0;
+                        QGraphicsItem * targetItem = 0;
+                        foreach(Place * place,com->mynet->PlaceList)
+                        {
+                            if(place->getId() == a.source)
+                            {
+                                sourceItem = place;
+                                continue;
 
-                    foreach(QPointF p, a.points)
-                        path.lineTo(p);
+                            }
+                            if(place->getId() == a.target)
+                            {
+                                targetItem = place;
+                                continue;
+                            }
+                        }
+                        foreach(Transition * transition,com->mynet->TransitionList)
+                        {
+                            if(transition->getId() == a.source)
+                            {
+                                sourceItem = transition;
+                                continue;}
+                            if(transition->getId() == a.target)
+                            {
+                                targetItem = transition;
+                                continue;
+                            }
+                        }
+                        QPainterPath path(sourceItem->boundingRect().center());
 
-                    path.lineTo(targetItem->boundingRect ().center());
-                    Arcus * arc = new Arcus(sourceItem, targetItem, path, a);
-                    if(sourceItem->type() == Place::Type)
-                        qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
-                    else if(sourceItem->type() == Transition::Type)
-                        qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
-                    if(targetItem->type() == Place::Type)
-                        qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
-                    else if(targetItem->type() == Transition::Type)
-                        qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
-                    com->mynet->AddArc(arc);
+                        foreach(QPointF p, a.points)
+                            path.lineTo(p);
+
+                        path.lineTo(targetItem->boundingRect ().center());
+                        Arcus * arc = new Arcus(sourceItem, targetItem, path, a);
+                        if(sourceItem->type() == Place::Type)
+                            qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
+                        else if(sourceItem->type() == Transition::Type)
+                            qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
+                        if(targetItem->type() == Place::Type)
+                            qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
+                        else if(targetItem->type() == Transition::Type)
+                            qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
+                        com->mynet->AddArc(arc);
+
+                    }
 
                 }
-            }
+                            }
         }
     }
     return com;

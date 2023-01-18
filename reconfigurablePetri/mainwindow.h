@@ -21,6 +21,7 @@
 #include "dockwidget.h"
 #include "componentcontroller.h"
 #include "componentlist.h"
+#include "component.h"
 #include "editcomponent.h"
 #include"neweditcom.h"
 
@@ -166,6 +167,7 @@ private:
 
     //组件库信息
     void editComponentInfo(QString componentName);
+    void editComponentStep(QString componentName,double componentStep);
 
 
 

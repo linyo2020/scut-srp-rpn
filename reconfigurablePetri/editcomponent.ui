@@ -29,11 +29,11 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>70</y>
+     <x>31</x>
+     <y>100</y>
      <width>200</width>
      <height>52</height>
     </rect>
@@ -48,6 +48,16 @@
     </item>
     <item row="0" column="1">
      <widget class="QLineEdit" name="ComponentName"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Component step</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="ComponentStep"/>
     </item>
    </layout>
   </widget>
