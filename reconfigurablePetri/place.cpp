@@ -1,5 +1,6 @@
 #include "place.h"
 #include<QtGlobal>
+#include<qdebug.h>
 const QColor Place::defalut_brushColor = Qt::white;
 const QColor Place::defalut_penColor = Qt::black;
 
@@ -242,8 +243,9 @@ PLACE_ATTR Place::toXml() const
   place.name = name;
   place.initmark = tokens;
   place.capacity = capacity;
-  place.x = pos().x();
-  place.y = pos().y();
+  pos();
+  place.x = mapToScene(QPointF(0,0)).x();
+  place.y = mapToScene(QPointF(0,0)).y();
   place.offsetx = label->x();
   place.offsety = label->y();
   place.comment = m_comment;

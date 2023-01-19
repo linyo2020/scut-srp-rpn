@@ -196,8 +196,8 @@ TRANSITION_ATTR Transition::toXml() const
 
   transition.id = id;
   transition.name = name;
-  transition.x = pos().x();
-  transition.y = pos().y();
+  transition.x = mapToScene(QPointF(0,0)).x();
+  transition.y = mapToScene(QPointF(0,0)).y();
   transition.rotation = rotation;
   transition.offsetx = label->x();
   transition.offsety = label->y();

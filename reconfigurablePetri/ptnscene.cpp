@@ -189,7 +189,7 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 
         type = currentItem->type();
 
-        if( type == Place::Type)
+        if( type == Place::Type&&dynamic_cast<Place*>(currentItem)->isOutputPort())
         {
           if(pathitem == 0)
            {
@@ -410,10 +410,7 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
                 {
                     int source_type = sourceItem->type();
                     int target_type = targetItem->type();
-
-            // ** Petri Net rule: no relation allowed between nodes
-            //(place or transition) of the same type!
-                    if(source_type==Place::Type && target_type==Place::Type)
+                    if(source_type==Place::Type && target_type==Place::Type&&dynamic_cast<Place*>(targetItem)->isInputPort())
                     {
                         QVariant v(connector_indexs);
                         emit connectorInserted(sourceItem, targetItem, path, QString("c%1").arg(v.toString()), this);
