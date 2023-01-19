@@ -128,6 +128,7 @@ class Place : public QGraphicsEllipseItem
 
     //是否为复合端口
     bool isCompoundPort=false;
+
     //该端口复合了几个端口（当且仅当isCompoundPort值为true时生效)
     int contain_portNum=1;
 

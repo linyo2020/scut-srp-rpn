@@ -116,7 +116,7 @@ void Place::setOutputPort(bool flag)
 
 bool Place::isACompoundPort()
 {
-    return this->isCompoundPort;
+    return isCompoundPort;
 }
 
 bool Place::isInComponent()
@@ -527,7 +527,8 @@ void Place::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     {
         painter->drawEllipse (3, 3, place_diameter-6, place_diameter-6);
     }
-    if (isOutputPort()) {
+    if (isOutputPort())
+    {
         //用drawConvexPolygon画三角形
             static const QPointF points[3] = {
                   QPointF(place_diameter/2-place_diameter*0.866/2, place_diameter*1.5/2),

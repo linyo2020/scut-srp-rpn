@@ -34,9 +34,10 @@ class PlaceEditDialog : public QDialog
     //int getTokens() const;
     //int getCapacity() const;
     //bool showAttributes();
+    void inputStateChanged(int state);
+    void outputStateChanged(int state);
+    void notStateChanged(int state);
 
- public slots:
- signals:
  private:
      GraphicsEditTab *m_graphicsEditTab;
     QTabWidget  * m_tabwidget;//tabwidget,make dialog tidy
