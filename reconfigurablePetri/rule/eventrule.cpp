@@ -21,37 +21,6 @@ bool EventRule::isSatisfy(ComponentList* componentList)
         for(CONDITION andCompute:orCompute)
         {
             switch (andCompute.conditionOption) {
-            case TOKEN_COMPARE:
-                switch (andCompute.symbol) {
-                case EQUAL:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()!=andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                case NOT_EQUAL:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()==andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                case GREATER:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()<=andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                case LESS:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()>=andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                case GREATER_EQUAL:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()<andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                case LESS_EQUAL:
-                    if(componentList->getCertainPlace(andCompute.monitorFactor)->getTokens()>andCompute.value.toDouble())
-                        andComputeResult&=false;
-                    break;
-                default:
-                    andComputeResult&=false;
-                    break;
-                }
-            break;
             default:
                 andComputeResult&=false;
                 break;
@@ -63,10 +32,12 @@ bool EventRule::isSatisfy(ComponentList* componentList)
         if(true==computeResult)
             break;
     }
-
-    for(BaseOperation* eachOperation:operationList)
-        eachOperation->execOperation(componentList);
-
+    //执行操作
+    if(computeResult)
+    {
+        for(BaseOperation* eachOperation:operationList)
+            eachOperation->execOperation(componentList);
+    }
     return computeResult;
 }
 

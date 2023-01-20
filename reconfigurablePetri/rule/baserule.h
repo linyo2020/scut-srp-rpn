@@ -24,6 +24,19 @@ protected:
     QString name,comment;
     QList<QList<CONDITION> >conditionList;
     QList<BaseOperation*>operationList;
+
+    //浮点数比较
+private:
+    constexpr static double EPSINON=1e-8;
+    bool doubleEqual(double,double);
+    bool doubleNotEqual(double,double);
+    bool doubleGreater(double,double);
+    bool doubleLess(double,double);
+    bool doubleGreaterEqual(double,double);
+    bool doubleLessEqual(double,double);
+
+protected:
+    bool doubleCompare(double,double,ComparisonSymbol);
 };
 
 

@@ -114,25 +114,37 @@ typedef struct{
 } COLOR;
 
 //[规则库相关定义]
+//比较的符号
 enum ComparisonSymbol{EQUAL=1,NOT_EQUAL,GREATER,LESS,GREATER_EQUAL,LESS_EQUAL};
-/*
- * 比较类型选项
- */
-//时间相关条件
+
+//比较的类型，每种规则只处理对应的类型，如时间规则只处理时间规则相关类型
 enum ComparisionType{
     /*时间规则相关类型*/
-    REACH_TIME_POINT=1,//到达某个时间点
-    FIRE_REACH_TIME_DURATION=2,//持续触发达到某个时长
+    TIME_POINT_COMPARE=1,//当前总仿真时间和某个时间点比较。比较类型为此项时，监控因素将忽略，可填空字符串。比较形式如下：<当前时间点><比较符号><被比较的数值>
+    FIRE_REACH_TIME_DURATION=2,//持续触发达到某个时长   **！次要需求，暂无实现！**
+    CERTAIN_TOKEN_DURATION,//对token的比较满足，并维持一定的时间。前部CONDITION为token比较，后部为时间比较（监控因素将忽略），即：token比较→时间比较
+    TIME_TO_REACH_CERTAIN_TOKEN,//令token满足比较,所需的时间。token比较→时间比较（后部的监控因素将忽略）
+
     /*事件规则相关类型*/
+
+    /*状态规则相关类型*/
     TOKEN_COMPARE//比较token是否符合范围
 };
 //<监控的因素（token等)><比较符号（大于/小于等）><要比较的数值>
-typedef struct
+typedef struct _CONDITION
 {
-    ComparisionType conditionOption;//比较的类型，如库所token的比较，时间的比较
+    ComparisionType conditionOption;//比较的类型，如库所token的比较，仿真总时间的比较
     QString monitorFactor;//监控的因素
     ComparisonSymbol symbol;//比较的符号
-    QVariant value;//比较的数值
+    QVariant value;//被比较的数值
+    _CONDITION* rearPart;//蕴含式的后半部，即离散数学中的“→”，拥有此指针的结构体为前半部，用于“位置的token值在一个数值范围的维持时间”这种前一个条件满足后才监测后一个因素的规则类型
+
+    _CONDITION(ComparisionType option,QString factor,ComparisonSymbol symbol,QVariant value)
+        :conditionOption(option),monitorFactor(factor),symbol(symbol),value(value),rearPart(nullptr)
+    {}
+    _CONDITION(ComparisionType option,QString factor,ComparisonSymbol symbol,QVariant value,_CONDITION* rp)
+        :conditionOption(option),monitorFactor(factor),symbol(symbol),value(value),rearPart(rp)
+    {}
 } CONDITION,* pCONDITION;
 
 //仿真前，提供给规则的仿真信息

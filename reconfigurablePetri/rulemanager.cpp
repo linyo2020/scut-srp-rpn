@@ -5,7 +5,7 @@ RuleManager::RuleManager()
 
 }
 
-void RuleManager::addRule(BaseRule* rule)
+void RuleManager::appendRule(BaseRule* rule)
 {
     ruleList.append(rule);
 }
@@ -18,9 +18,25 @@ bool RuleManager::deleteRule(int index)
     return true;
 }
 
-QList<BaseRule*> RuleManager::getRuleList()
+bool RuleManager::swapRule(int a, int b)
 {
-    return ruleList;
+    if(!(a>=0&&b>=0&&a<ruleList.size()&&b<ruleList.size()))
+        return false;
+    ruleList.swap(a,b);
+    return true;
+}
+
+bool RuleManager::moveRule(int from, int to)
+{
+    if(!(from>=0&&to>=0&&from<ruleList.size()&&to<ruleList.size()))
+        return false;
+    ruleList.move(from,to);
+    return true;
+}
+
+const QList<BaseRule *> *RuleManager::getRuleList()
+{
+    return &ruleList;
 }
 
 bool RuleManager::applyRule()
