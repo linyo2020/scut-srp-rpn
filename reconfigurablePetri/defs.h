@@ -51,14 +51,14 @@ typedef struct{
    } TRANSITION_ATTR;
 
 typedef struct{
-     QString id;
-     QString source;
-     QString target;
-     double weight;
+     QString id;/*可导入导出*/
+     QString source;/*可导入导出*/
+     QString target;/*可导入导出*/
+     double weight;/*可导入导出*/
 
-     QList<QPointF> points;
-     QColor brushColor;
-     QColor penColor;
+     QList<QPointF> points;/*可导入导出*/
+     QColor brushColor;/*可导入导出*/
+     QColor penColor;/*可导入导出*/
 
    } ARC_ATTR;
 typedef struct{
@@ -83,8 +83,8 @@ typedef struct{
 
 
 typedef struct{
-     QString id;
-     QString name;
+     QString id;/*可导入导出*/
+     QString name;/*可导入导出*/
      QList <PLACE_ATTR> placeNodes;
      QList <TRANSITION_ATTR> transitionNodes;
      QList <ARC_ATTR> arcs;
@@ -93,8 +93,8 @@ typedef struct{
    } PAGE_ATTR;
 
 typedef struct{
-     QString id;
-     QString name;
+     QString id;/*可导入导出*/
+     QString name;/*可导入导出*/
      QList <PAGE_ATTR> pages;
    } PTNET_ATTR;
 
