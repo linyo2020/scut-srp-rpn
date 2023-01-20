@@ -18,36 +18,36 @@ enum{normalMode=0, animationMode=1, addPlaceMode=2, \
             addTransMode=3,drawArcMode=4, drawConnectorMode=5,addToken=6, subToken=7};
 
 typedef struct{
-     QString id, name;
+     QString id, name;/*可导入导出*/
      /* coordinates */
-     int x, y;
-     double initmark;
-     double capacity;
+     int x, y;/*可导入导出*/
+     double initmark;/*可导入导出*/
+     double capacity;/*可导入导出*/
      /* label offset */
-     int offsetx, offsety;
+     int offsetx, offsety;/*可导入导出*/
      /* new addition */
-      QString comment;
-      bool show;
-      QColor brushColor;
-      QColor penColor;
-      QString componet_id;//[new]属于哪个组件
+      QString comment;/*可导入导出*/
+      bool show;/*可导入导出*/
+      QColor brushColor;/*可导入导出*/
+      QColor penColor;/*可导入导出*/
+      QString component_id;//[new]属于哪个组件/*可导入导出*/
    } PLACE_ATTR;
 
 typedef struct{
-     QString id, name;
+     QString id, name;/*可导入导出*/
      /* coordinate */
-     int x;
-     int y;
-     int rotation;
+     int x;/*可导入导出*/
+     int y;/*可导入导出*/
+     int rotation;/*可导入导出*/
      /* label coordinate */
-     int offsetx;
-     int offsety;
-     QString self_function;
+     int offsetx;/*可导入导出*/
+     int offsety;/*可导入导出*/
+     QString self_function;/*可导入导出*/
      //QString MassAction;
-     QString comment;
-     bool show;
-     QColor brushColor;
-     QColor penColor;
+     QString comment;/*可导入导出*/
+     bool show;/*可导入导出*/
+     QColor brushColor;/*可导入导出*/
+     QColor penColor;/*可导入导出*/
    } TRANSITION_ATTR;
 
 typedef struct{
@@ -62,11 +62,11 @@ typedef struct{
 
    } ARC_ATTR;
 typedef struct{
-    QString id;
-    QString source;
-    QString target;
+    QString id;/*可导入导出*/
+    QString source;/*可导入导出*/
+    QString target;/*可导入导出*/
 
-    QList<QPointF> points;
+    QList<QPointF> points;/*可导入导出*/
 } CONNECTOR_ATTR;
 
 

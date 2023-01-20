@@ -39,6 +39,7 @@ private:
     bool parseXML_Positions(QXmlStreamReader &xml);
     bool parseXML_ToolSpecific(QXmlStreamReader &xml);
     bool parseXML_Comment(QXmlStreamReader &xml);
+    bool parseXML_ComponentId(QXmlStreamReader &xml);
     bool parseXML_Function(QXmlStreamReader &xml);
     bool parseXML_Action(QXmlStreamReader &xml);
     bool parseXML_Vector(QXmlStreamReader &xml, std::vector<double> &vec, std::string eleName);
@@ -50,7 +51,7 @@ private:
     QString getElementData(QXmlStreamReader& xml) const;
 
     QVariant v;
-    QString id, name, source, target, ref, self_function, comment, show;//MassAction;
+    QString id, name, source, target, ref, self_function, comment, show,place_component_id;//MassAction;
     int offsetx, offsety, capacity, rotation, weight;
     qreal x,y;
     COLOR pen,brush;

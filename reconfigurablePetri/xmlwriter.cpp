@@ -129,6 +129,11 @@ bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place)
    xml.writeStartElement("place");
    xml.writeAttribute("id", place.id);
 
+   /* <component_id> */
+   xml.writeStartElement("component_id");
+        xml.writeTextElement("id",place.component_id);
+   xml.writeEndElement();
+
     /*<name>*/
     xml.writeStartElement("name");
         xml.writeTextElement("text", place.name);

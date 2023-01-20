@@ -219,12 +219,19 @@ bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page)
             QColor penColor(pen.red,pen.green,pen.blue);
             place.brushColor = brushColor;
             place.penColor = penColor;
+            place.component_id=place_component_id;
             page.placeNodes << place;
 
             break;
         }
         if (token == QXmlStreamReader::StartElement)
         {
+            if(xml.name()=="component_id")
+            {
+                if(!parseXML_ComponentId(xml))
+                    return false;
+                continue;
+            }
             if (xml.name() == "name")
             {
                 if (!parseXML_Name(xml))
@@ -767,6 +774,28 @@ bool XmlParser::parseXML_Comment(QXmlStreamReader &xml)
             }else if(xml.name() == "show")
             {
                 show = getElementData(xml);
+                continue;
+            }
+        }
+    }
+    return true;
+}
+
+bool XmlParser::parseXML_ComponentId(QXmlStreamReader &xml)
+{
+    while (!xml.atEnd()&&!xml.hasError())
+    {
+        QXmlStreamReader::TokenType token = xml.readNext();
+
+        if (token == QXmlStreamReader::EndElement && xml.name() == "component_id")
+        {
+            break;
+        }
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xml.name() == "id")
+            {
+                place_component_id = getElementData(xml);
                 continue;
             }
         }
