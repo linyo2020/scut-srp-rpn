@@ -82,7 +82,8 @@ SOURCES += \
     rule/eventrule.cpp \
     connector.cpp \
     simulation/simulationcontroller.cpp \
-    arcus.cpp
+    arcus.cpp\
+    rule/staterule.cpp
 
 
 HEADERS += \
@@ -148,7 +149,8 @@ HEADERS += \
     rule/eventrule.h \
     connector.h \
     simulation/simulationcontroller.h \
-    arcus.h
+    arcus.h\
+    rule/staterule.h
 
 
 # Default rules for deployment.
