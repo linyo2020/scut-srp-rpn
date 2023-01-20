@@ -272,6 +272,11 @@ PTNET_ATTR PetriTabWidget::toXml() const
             page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
             continue;
         }
+        if(item->type()==Connector::Type)
+        {
+            page.connector << qgraphicsitem_cast<Connector*>(item)->toXml();
+            continue;
+        }
     }
 
     net.pages << page;
@@ -562,24 +567,26 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
         place->setLabel_2();
     }
     //端口识别和判断选择
-    if(placeEditDialog->m_inputPort->isChecked())
+    if(placeEditDialog->m_inputPort->isChecked()&&!placeEditDialog->m_outputPort->isChecked())
     {
-        if(place->isOutputPort())
         place->setOutputPort(false);
         place->setInputPort(true);
     }
-    else if(placeEditDialog->m_outputPort->isChecked())
+    else if(placeEditDialog->m_outputPort->isChecked()&&!placeEditDialog->m_inputPort->isChecked())
     {
-        if(place->isInputPort())
         place->setInputPort(false);
         place->setOutputPort(true);
 
     }
+    if(placeEditDialog->m_inputPort->isChecked()&&placeEditDialog->m_outputPort->isChecked())
+    {
+        place->setOutputPort(true);
+        place->setInputPort(true);
+        place->setCompoundPort(true);
+    }
     else if(placeEditDialog->m_notPort->isChecked())
     {
-        if(place->isInputPort())
             place->setInputPort(false);
-        else if(place->isOutputPort())
             place->setOutputPort(false);
     }
 }

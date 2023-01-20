@@ -33,11 +33,12 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     m_outputPort=new QCheckBox("Output port");
     m_notPort=new QCheckBox("Non port");
 
-    //设置互斥勾选框
-    m_inputPort->setAutoExclusive(true);
-    m_outputPort->setAutoExclusive(true);
-    m_notPort->setAutoExclusive(true);
 
+
+    //设置互斥勾选框
+    connect(m_inputPort, &QCheckBox::stateChanged,this,&PlaceEditDialog::inputStateChanged);
+    connect(m_outputPort, &QCheckBox::stateChanged,this,&PlaceEditDialog::outputStateChanged);
+    connect(m_notPort, &QCheckBox::stateChanged,this,&PlaceEditDialog::notStateChanged);
 
     inputLabel = new QLineEdit(tr("labeltext"), 0);
     inputLabel->setFixedSize(150, 25);
@@ -100,6 +101,37 @@ PlaceEditDialog::PlaceEditDialog (QWidget * parent):
     connect (cancelButton, &QPushButton::clicked, this,  &PlaceEditDialog::reject);
 }
 
+
+void PlaceEditDialog::inputStateChanged(int state)
+{
+    if(state==Qt::CheckState::Checked)
+        {
+            m_notPort->blockSignals(true);
+            m_notPort->setCheckState(Qt::CheckState::Unchecked);
+            m_notPort->blockSignals(false);
+        }
+}
+void PlaceEditDialog::outputStateChanged(int state)
+{
+    if(state==Qt::CheckState::Checked)
+        {
+            m_notPort->blockSignals(true);
+            m_notPort->setCheckState(Qt::CheckState::Unchecked);
+            m_notPort->blockSignals(false);
+        }
+}
+void PlaceEditDialog::notStateChanged(int state)
+{
+    if(state==Qt::CheckState::Checked)
+        {
+            m_inputPort->blockSignals(true);
+            m_inputPort->setCheckState(Qt::CheckState::Unchecked);
+            m_inputPort->blockSignals(false);
+            m_outputPort->blockSignals(true);
+            m_outputPort->setCheckState(Qt::CheckState::Unchecked);
+            m_outputPort->blockSignals(false);
+        }
+}
 /*
 void PlaceEditDialog::show (const QString& nm, int t, int c)
 {

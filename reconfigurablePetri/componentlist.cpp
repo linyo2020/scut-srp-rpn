@@ -1397,7 +1397,19 @@ void ComponentList::recoverComponent(QString ComponentID)
     }
 
 }
+
 QVector<Component*> ComponentList::getComponentList()
 {
     return com_list;
+}
+
+void ComponentList::setComponentStep(QString ComponentID,double step)
+{
+    for(int i=0;i<com_list.size();i++)
+    {
+        if(com_list[i]->getID()==ComponentID)
+        {
+            com_list[i]->setStep(step);
+        }
+    }
 }

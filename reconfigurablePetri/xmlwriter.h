@@ -24,6 +24,7 @@ class XmlWriter
     bool writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place);
     bool writeTransitionNode(QXmlStreamWriter &xml, TRANSITION_ATTR transition);
     bool writeArc(QXmlStreamWriter &xml, ARC_ATTR arc);
+    bool writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector);
     PTNET_ATTR ptnet;
 };
 

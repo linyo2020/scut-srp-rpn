@@ -42,9 +42,13 @@ public:
     //遍历文件树，添加到com_list里，记得设置id
     QString addNewComponent(QString Filename);//田俊杰
 
+    QVector<Component*> getComponentList();
+
     const QList<Connector*> getConnectorList();
     void push_back_connectorList(Connector*c);
-    QVector<Component*> getComponentList();
+    //修改组件步长
+    void setComponentStep(QString ComponentID,double step);
+
     void getComponent(ComponentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}

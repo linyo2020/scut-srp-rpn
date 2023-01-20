@@ -589,6 +589,7 @@ void MainWindow::openEditComponent()
     editComponent* editComponentDialog=new editComponent(this);
     editComponentDialog->show();
     connect(editComponentDialog,&editComponent::editComponentInfo,this,&MainWindow::editComponentInfo);
+    connect(editComponentDialog,&editComponent::editComponentStep,this,&MainWindow::editComponentStep);
 }
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
@@ -601,6 +602,16 @@ void MainWindow::editComponentInfo(QString componentName)
 {
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     currentItem->setText(0,componentName);
+}
+void MainWindow::editComponentStep(QString componentName,double componentStep)
+{
+     foreach(Component* com,this->tabWidget->getcom_arry())
+    {
+        if(com->getComponentFileName()==componentName)
+         {
+             com->setStep(componentStep);
+         }
+    }
 }
 
 MainWindow::~MainWindow()

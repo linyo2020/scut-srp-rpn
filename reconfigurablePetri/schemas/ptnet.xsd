@@ -324,7 +324,22 @@
 		<xs:attribute name="target" type="xs:string"/>
 	</xs:complexType>
 </xs:element>
-
+<xs:element name="connector">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="graphics" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="position" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="source" type="xs:string"/>
+		<xs:attribute name="target" type="xs:string"/>
+	</xs:complexType>
+</xs:element>
 <xs:element name="pnml">
 	<xs:complexType>
 		<xs:sequence>
@@ -351,6 +366,7 @@
 									<xs:element ref="place" minOccurs="0" maxOccurs="unbounded"/>
 									<xs:element ref="transition" minOccurs="0" maxOccurs="unbounded"/>
 									<xs:element ref="arc" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element ref="connector" minOccurs="0" maxOccurs="unbounded"/>
 								</xs:sequence>
 								<xs:attribute name="id" type="xs:string"/>
 							</xs:complexType>

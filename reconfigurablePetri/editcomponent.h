@@ -19,6 +19,7 @@ public:
     Ui::editComponent *ui;
 signals:
     void editComponentInfo(QString componentName);
+    void editComponentStep(QString componentName,double componentStep);
 
 private slots:
     void on_buttonBox_accepted();
