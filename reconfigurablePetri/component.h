@@ -63,10 +63,16 @@ public:
 
     Place* getCertainPlace(QString PlaceID);
 
+    //返回特定place的token值
+    double getCertainPlaceToken(QString PlaceID);
+
     QList<PLACE_ATTR>getPlace_ATTRList();
     QList<TRANSITION_ATTR>getTransition_ATTRList();
     QList<ARC_ATTR>getArc_ATTRList();
 
+    void setPlace_ATTRList( QList<PLACE_ATTR>);
+    void setTransition_ATTRList(QList<TRANSITION_ATTR>);
+    void setArc_ATTRList(QList<ARC_ATTR>);
     /**
      * @brief setStep 设置仿真步长
      * @author lwy

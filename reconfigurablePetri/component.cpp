@@ -232,6 +232,18 @@ Place *Component::getCertainPlace(QString PlaceID)
     }
 }
 
+double Component::getCertainPlaceToken(QString PlaceID)
+{
+    for(int i=0;i<mynet->PlaceList.size();i++)
+    {
+        if(mynet->PlaceList[i]->getId()==PlaceID)
+        {
+            return mynet->PlaceList[i]->getTokens();
+        }
+    }
+    return -1.0;
+}
+
 QList<PLACE_ATTR> Component::getPlace_ATTRList()
 {
     return this->placeList;
@@ -618,7 +630,18 @@ bool Component::tick(double l_start,bool state = true)
 
 }
 
-
+void Component::setPlace_ATTRList(QList<PLACE_ATTR> p)
+{
+    this->placeList=p;
+}
+void Component::setTransition_ATTRList(QList<TRANSITION_ATTR> t)
+{
+    this->transitionList=t;
+}
+void Component::setArc_ATTRList(QList<ARC_ATTR> a)
+{
+    this->arcList=a;
+}
 
 
 

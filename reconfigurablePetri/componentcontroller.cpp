@@ -126,6 +126,9 @@ Component * ComponentController::getComponent(QString filename)
                 {
                     com->setStep(c.step);
                     com->setID(c.id);
+                    com->setPlace_ATTRList(c.placeNodes);
+                    com->setTransition_ATTRList(c.transitionNodes);
+                    com->setArc_ATTRList(c.arcs);
                     foreach(PLACE_ATTR pl,c.placeNodes)
                     {
                         Place * place=new Place(pl);
