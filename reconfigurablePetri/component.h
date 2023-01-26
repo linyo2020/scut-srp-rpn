@@ -17,6 +17,11 @@ public:
     Component(const PTNET_ATTR& PTnet,PTNscene*scene);//对应着读取xml文件时的构造函数
     Component(QString type,QString label);//对应着用户在ui上创建控件时的构造函数,一开始无法直接将数据导入到PTNet类中
     Component(QString PTnet_ID,PTNscene*scene);
+    /**
+     * @brief 仿真时对组件的属性结构体（不含指针）进行默认的浅拷贝等
+     * @author lwy
+     */
+    Component(Component*);
     //The unique identity of the component unit
 
     QString Component_id;//该数据的获取方式:type+唯一编号\系统读取控件xml文件时读取

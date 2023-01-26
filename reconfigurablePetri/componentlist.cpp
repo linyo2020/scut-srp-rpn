@@ -1471,3 +1471,21 @@ void ComponentList::setComponentStep(QString ComponentID,double step)
         }
     }
 }
+
+ComponentList::ComponentList(ComponentList* source)
+{
+    Scene=source->Scene;
+    comController=source->comController;
+    m_vConnector=source->m_vConnector;
+    Component*p;
+    for(unsigned int i = 0; i < source->com_list.size();i++)
+    {
+        p=new Component(source->com_list[i]);
+        com_list.push_back(p);
+    }
+}
+
+QVector<CONNECTOR_ATTR> ComponentList::getConnectorAttrVector()
+{
+    return m_vConnector;
+}

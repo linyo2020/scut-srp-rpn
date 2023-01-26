@@ -13,7 +13,11 @@ public:
     //端口的定义，只有入或者仅有出
     ComponentList();
     //setID以及初始话 田俊杰
-
+    /**
+     * @brief ComponentList 仿真前对信息进行拷贝
+     * @author lwy
+     */
+    ComponentList(ComponentList*);
 
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
@@ -53,6 +57,12 @@ public:
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
     void initConnector_list(QList<Connector*>l){connectList=l;};
+    /**
+     * @brief getConnectorAttrVector返回lconnector的属性结构体
+     * @author lwy
+     * @return
+     */
+    QVector<CONNECTOR_ATTR> getConnectorAttrVector();
 private:
     //func
     //如果未找到返回nullptr
@@ -85,7 +95,11 @@ private:
     QMap<QString,PTNscene*>garbage;//要
     PTNscene*Scene;//要
 
-
+    /**
+     * @brief m_vConnector
+     * @author lwy
+     */
+    QVector<CONNECTOR_ATTR>m_vConnector;
 
 };
 

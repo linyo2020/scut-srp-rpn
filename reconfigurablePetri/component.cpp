@@ -1,5 +1,6 @@
 #include "component.h"
 #include"QDebug"
+#include<QThread>
 Component::Component()
 {
     this->mynet=new PTNet();
@@ -11,7 +12,7 @@ Component::Component(const PTNET_ATTR& PTnet,PTNscene*scene)
 {
     if(PTnet.id[0].isLetter())
     {
-        this->Component_type=PTnet.id[0];
+        Component_type=PTnet.id[0];
         this->Component_id=Component_type+PTnet.id;
 
         if(scene!=NULL)
@@ -102,6 +103,8 @@ QList<Arcus*>Component::getTArcList()
 {
     return this->mynet->ArcList;
 }
+
+
 QString Component::getComponentFileName()
 {
     return (this->getID().split("&")[0]);
@@ -256,7 +259,7 @@ QList<TRANSITION_ATTR> Component::getTransition_ATTRList()
 
 QList<ARC_ATTR> Component::getArc_ATTRList()
 {
-    return this->getArc_ATTRList();
+    return this->arcList;
 }
 
 
@@ -508,6 +511,7 @@ void Component::transform()
 
 bool Component::tick(double l_start,bool state = true)
 {
+            qDebug()<<"tick() is in thread: "<<QThread::currentThreadId();
             //ode计算器初始化
             ODEsolver l_solver;
             l_solver.setMap(m_mInputVaraible2Value);
@@ -516,6 +520,7 @@ bool Component::tick(double l_start,bool state = true)
             bool l_check=l_solver.parser();
             if(l_check==false)
             {
+                qDebug()<<"check result: false";
                 return false;
             }
             else
@@ -619,8 +624,15 @@ bool Component::tick(double l_start,bool state = true)
                     receiver=l_solver.evaluate(l_start,m_step,false);
                  }
                  /***
-                  * TODO:将receiver中的数值更新到placeList和m_mInputVaraible2Value中
+                  *将receiver中的数值更新到placeList和m_mInputVaraible2Value中
+                  * receiver的数据顺序和m_vFunDef和placeList顺序一致
                   */
+                 for(unsigned int i = 0; i < receiver.size();i++)
+                 {
+                     qDebug()<<receiver[i];
+                     m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]=receiver[i];
+                     placeList[i].initmark=receiver[i];
+                 }
 
 
 
@@ -660,6 +672,16 @@ bool Component::changeTokens(QString placeID,double tokens)
         }
     }
     return found;
+}
+
+Component::Component(Component*source)
+{
+    placeList=source->getPlace_ATTRList();
+    transitionList=source->getTransition_ATTRList();
+    arcList=source->getArc_ATTRList();
+    m_step=source->getStep();
+    Component_id=source->Component_id;
+    label=source->label;
 }
 
 
