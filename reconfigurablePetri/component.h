@@ -73,6 +73,15 @@ public:
     void setPlace_ATTRList( QList<PLACE_ATTR>);
     void setTransition_ATTRList(QList<TRANSITION_ATTR>);
     void setArc_ATTRList(QList<ARC_ATTR>);
+
+    /**
+        * @brief changeTokens 修改组件的库所的token值
+        * @author lwy
+        * @param placeID
+        * @param tokens
+        * @return
+        */
+       bool changeTokens(QString placeID,double tokens);
     /**
      * @brief setStep 设置仿真步长
      * @author lwy

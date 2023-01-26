@@ -290,6 +290,10 @@ void Component::makeFunction()
         qDebug()<<"ARC "<<arcs[i].id<<" FROM "<<arcs[i].source<<" TO "<<arcs[i].target<<endl;
     }*/
 
+    //清空原有的初始数据和方程信息
+    m_mInputVaraible2Value.clear();
+    m_vFunDef.clear();
+
     //用l_mtemp记录弧和其来源(包含权重信息，完整为(来源库所名字+"^"+权重))
     map<QString,QString>l_mtemp;
     for(int i=0;i<arcList.size();i++)
@@ -615,7 +619,7 @@ bool Component::tick(double l_start,bool state = true)
                     receiver=l_solver.evaluate(l_start,m_step,false);
                  }
                  /***
-                  * TODO:将receiver中的数值更新到placeList中
+                  * TODO:将receiver中的数值更新到placeList和m_mInputVaraible2Value中
                   */
 
 
@@ -641,6 +645,21 @@ void Component::setTransition_ATTRList(QList<TRANSITION_ATTR> t)
 void Component::setArc_ATTRList(QList<ARC_ATTR> a)
 {
     this->arcList=a;
+}
+
+bool Component::changeTokens(QString placeID,double tokens)
+{
+    bool found = false;
+    for(unsigned int i = 0; i<placeList.size();i++)
+    {
+        if(placeID == placeList[i].id)
+        {
+            placeList[i].initmark=tokens;
+            found = true;
+            break;
+        }
+    }
+    return found;
 }
 
 
