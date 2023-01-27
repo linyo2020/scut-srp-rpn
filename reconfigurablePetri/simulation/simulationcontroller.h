@@ -8,8 +8,27 @@ class SimulationController: public QThread
     Q_OBJECT
 
 public:
+    /**
+     * @brief SimulationController
+     * @param m_gui
+     * @param start
+     * @param end
+     * @param step
+     */
     SimulationController(ComponentList*,Plot *m_gui,double start,double end,double step);
+    /**
+     * @brief run 重写虚函数，在线程内进行仿真操作
+     */
     void  run();
+    /**
+     * @brief sort 对组件进行优先级排序，主要使用Trajan算法和拓扑排序
+     * @return bool true为没有代数环
+     */
+    bool sort();
+    /**
+     * @brief tarjan 使用tarjan方法求解组件拓扑图中的强连通分量
+     */
+    void tarjan(int);
 signals:
     /**
      * @brief updateui 更新仿真进度条

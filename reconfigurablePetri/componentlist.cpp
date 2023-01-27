@@ -1476,16 +1476,20 @@ ComponentList::ComponentList(ComponentList* source)
 {
     Scene=source->Scene;
     comController=source->comController;
-    m_vConnector=source->m_vConnector;
+    m_lConnector=source->m_lConnector;
     Component*p;
     for(unsigned int i = 0; i < source->com_list.size();i++)
     {
         p=new Component(source->com_list[i]);
         com_list.push_back(p);
     }
+    for(unsigned int i = 0; i< source->connectList.size();i++)
+    {
+        m_lConnector.push_back(source->connectList[i]->toXml());
+    }
 }
 
-QVector<CONNECTOR_ATTR> ComponentList::getConnectorAttrVector()
+QList<CONNECTOR_ATTR> ComponentList::getConnectorAttrList()
 {
-    return m_vConnector;
+    return m_lConnector;
 }

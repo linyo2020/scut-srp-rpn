@@ -58,11 +58,11 @@ public:
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
     void initConnector_list(QList<Connector*>l){connectList=l;};
     /**
-     * @brief getConnectorAttrVector返回lconnector的属性结构体
+     * @brief getConnectorAttrList返回lconnector的属性结构体
      * @author lwy
      * @return
      */
-    QVector<CONNECTOR_ATTR> getConnectorAttrVector();
+    QList<CONNECTOR_ATTR> getConnectorAttrList();
 private:
     //func
     //如果未找到返回nullptr
@@ -99,7 +99,7 @@ private:
      * @brief m_vConnector
      * @author lwy
      */
-    QVector<CONNECTOR_ATTR>m_vConnector;
+    QList<CONNECTOR_ATTR>m_lConnector;
 
 };
 
