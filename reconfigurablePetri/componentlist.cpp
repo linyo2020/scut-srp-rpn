@@ -92,6 +92,32 @@ Place *ComponentList::getCertainPlace(QString PlaceID)
 
 }
 
+double ComponentList::getCertainPlaceToken(QString PlaceID)
+{
+    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+    if(com_list.size()==0)
+    {
+        qDebug()<<"use getCertainPlace,but com_list.size()==0";
+        return -1.0;
+    }
+    else
+    {
+        for(int i=0;i<com_list.size();i++)
+        {
+            if(com_list[i]->getID()==comID)
+            {
+                for(int y=0;y<com_list[i]->mynet->PlaceList.size();y++)
+                {
+                    if(com_list[i]->mynet->PlaceList[y]->getId()==PlaceID)
+                    {
+                        return com_list[i]->mynet->PlaceList[y]->getTokens();
+                    }
+                }
+            }
+        }
+        return -1.0;
+    }
+}
 
 QList<Place *> ComponentList::getPortinComponent(QString ComponentID)
 {

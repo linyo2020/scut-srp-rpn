@@ -21,7 +21,8 @@ public:
 
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
-
+    //返回库所token值
+    double getCertainPlaceToken(QString PlaceID);
     //获取指定组件的端口对象（仅返回普通端口）
     QList<Place*> getPortinComponent(QString ComponentID);//完成
 
