@@ -83,7 +83,9 @@ SOURCES += \
     connector.cpp \
     simulation/simulationcontroller.cpp \
     arcus.cpp\
-    rule/staterule.cpp
+    rule/staterule.cpp \
+    simulation/event.cpp \
+    simulation/mineventheap.cpp
 
 
 HEADERS += \
@@ -150,7 +152,9 @@ HEADERS += \
     connector.h \
     simulation/simulationcontroller.h \
     arcus.h\
-    rule/staterule.h
+    rule/staterule.h \
+    simulation/event.h \
+    simulation/mineventheap.h
 
 
 # Default rules for deployment.

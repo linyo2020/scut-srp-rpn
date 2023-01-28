@@ -114,7 +114,7 @@ void SimulationController::slotUpdateUi(double x,QString y)
     m_gui->updateUi(x,y);
 }
 
-//------用于tarjan算法-------
+
 static int DFN[COMP_NUM_MAX];
 static int low[COMP_NUM_MAX];
 static int counts=1;
@@ -125,7 +125,8 @@ static int number=0;
 static int j;
 static int matrix[COMP_NUM_MAX][COMP_NUM_MAX];
 static int length;
-//--------------------------
+static QMap<QString,int>s_mCompId2Order;
+static QList<int>s_priorList;
 
 void SimulationController::tarjan(int u)
 {
@@ -155,7 +156,8 @@ void SimulationController::tarjan(int u)
         number++;
         do{
             j=stack[top--];
-            qDebug()<<j<<" ";
+            s_priorList.push_back(j);
+//            qDebug()<<j;
             flag[j]=0;
         }while(j!=u);
     }
@@ -178,6 +180,7 @@ bool SimulationController::sort()
     memset(DFN,0,sizeof (DFN));
     memset(low,0,sizeof (low));
     memset(flag,0,sizeof (flag));
+    s_priorList.clear();
     for(int i =0;i<length;i++)
     {
         for(int j =0;j<length;j++)
@@ -205,7 +208,12 @@ bool SimulationController::sort()
         qDebug()<<"the "<<i<<" connector is from "<<source<<" to "<<target;
         matrix[l_mCompId2Order[source]][l_mCompId2Order[target]]=1;
     }
+    //tarjan算法排序
     tarjan(0);
+    for(int i = 0; i<s_priorList.size();i++)
+    {
+        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
+    }
     return true;
 }
 
