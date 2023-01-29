@@ -4,8 +4,9 @@ MinEventHeap::MinEventHeap()
 {
 
 }
-MinEventHeap::MinEventHeap(QVector<Event*>vEvent,int number)
+void MinEventHeap::update(QVector<Event*>vEvent,int number)
 {
+    m_vEvent.clear();
     for(int i =0;i<number;i++)
     {
         m_vEvent.push_back(vEvent[i]);
@@ -33,14 +34,24 @@ void MinEventHeap::down(int i)
     int l_sonIndex = 2*i + 1;
     if (l_sonIndex < m_vEvent.size())
     {
-        if (l_sonIndex + 1 < m_vEvent.size() && m_vEvent[l_sonIndex] > m_vEvent[l_sonIndex + 1])
-        {
-            l_sonIndex++; //取值两个子节点 值更小的节点下标
+        if (l_sonIndex + 1 < m_vEvent.size())
+        { if(m_vEvent[l_sonIndex]->getTime() > m_vEvent[l_sonIndex + 1]->getTime())
+            l_sonIndex++; //取值两个子节点之中值更小的节点下标
+          else if(abs(m_vEvent[l_sonIndex]->getTime() - m_vEvent[l_sonIndex + 1]->getTime())<0.00000000001)
+            {
+                if(m_vEvent[l_sonIndex]->getPrior()>m_vEvent[l_sonIndex+1]->getPrior())
+                    l_sonIndex++;
+            }
         }
         //若子节点小，交换
-        if (m_vEvent[i] > m_vEvent[l_sonIndex])
+        if (m_vEvent[i]->getTime() > m_vEvent[l_sonIndex]->getTime())
         {
             swap(i, l_sonIndex);
+        }
+        else if(abs(m_vEvent[l_sonIndex]->getTime() - m_vEvent[i]->getTime())<0.00000000001)
+        {
+            if(m_vEvent[i]->getPrior()>m_vEvent[l_sonIndex]->getPrior())
+                swap(i, l_sonIndex);
         }
         down(l_sonIndex);
     }
@@ -54,9 +65,40 @@ void MinEventHeap::swap(int i,int j)
 void MinEventHeap::up(int i)
 {
     int l_fatherIndex = (i - 1) / 2;
-            if (i > 0 && m_vEvent[i] < m_vEvent[l_fatherIndex])
-            {
-                swap(i, l_fatherIndex);
-                up(l_fatherIndex);
-            }
+     if(i>0)
+     {
+         if(m_vEvent[i]->getTime()<m_vEvent[l_fatherIndex]->getTime())
+         {
+             swap(i, l_fatherIndex);
+             up(l_fatherIndex);
+         }
+        else if(abs(m_vEvent[i]->getTime()-m_vEvent[l_fatherIndex]->getTime())<0.00000000001)
+         {
+             if(m_vEvent[i]->getPrior()<m_vEvent[l_fatherIndex]->getPrior())
+             {
+                 swap(i, l_fatherIndex);
+                 up(l_fatherIndex);
+             }
+
+         }
+     }
+}
+
+void MinEventHeap::show()
+{
+    qDebug()<<"in MinHeap: ";
+    for(int i=0;i<m_vEvent.size();i++)
+    {
+        qDebug()<<m_vEvent[i]->showCompId()<<" 's priority is"<<m_vEvent[i]->getPrior()<<" and time "<<m_vEvent[i]->getTime();
+    }
+}
+
+void MinEventHeap::clear()
+{
+    m_vEvent.clear();
+}
+
+bool MinEventHeap::empty()
+{
+    return m_vEvent.empty();
 }

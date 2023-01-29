@@ -6,13 +6,15 @@ class MinEventHeap
 {
 public:
     MinEventHeap();
-    MinEventHeap(QVector<Event*>m_vEvent,int number);
+    void update(QVector<Event*>m_vEvent,int number);
     void push(Event*);
     Event* pop();
     void down(int i);
     void swap(int i,int j);
     void up(int i);
-
+    void show();
+    void clear();
+    bool empty();
 private:
 QVector<Event*>m_vEvent;
 };

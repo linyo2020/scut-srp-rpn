@@ -2,6 +2,18 @@
 //允许的组件最大数量
 #define COMP_NUM_MAX 100
 
+static int DFN[COMP_NUM_MAX];
+static int low[COMP_NUM_MAX];
+static int counts=1;
+static int stack[COMP_NUM_MAX];
+static int top=1;
+static int flag[COMP_NUM_MAX];
+static int number=0;
+static int j;
+static int matrix[COMP_NUM_MAX][COMP_NUM_MAX];
+static int length;
+static QList<int>s_priorList;//下标表示优先级大小，数值越小优先级越小；数组内容为组件的标号
+
 QString findCompId(QString const s)
 {
     QStringList l_stringList=s.split("&");
@@ -18,6 +30,10 @@ SimulationController::SimulationController(ComponentList*list,Plot*gui,double st
     m_step = step;
     m_start = start;
     m_end = end;
+    //test
+    qDebug()<<"the step from plot is :"<<m_step;
+    qDebug()<<"the start from plot is :"<<m_start;
+    qDebug()<<"the end from plot is :"<<m_end;
     connect(this, &SimulationController::updateui, this, &SimulationController::slotUpdateUi);
     connect(this, &SimulationController::addgraph,this,&SimulationController::slotAddGraph);
     connect(this, &SimulationController::adddata,this,&SimulationController::slotAddData);
@@ -89,12 +105,53 @@ void SimulationController::run()
 //        emit adddata(1,temp1,temp3);
 //    }
 
+    //仿真数据模拟
+    QVector<Component*> l_vComponent=m_compList->getComponentList();
+    int l_length=l_vComponent.size();
+    qDebug()<<"仿真步长模拟";
+    for(int i = 0;i<l_length;i++)
+    {
+        l_vComponent[i]->setStep(0.5*i+0.5);
+        //qDebug()<<l_vComponent[i]->getID()<<" : "<<l_vComponent[i]->getStep();
+    }
+
     //1.对组件进行优先级排序
-    if(!sort())
+    if(sort())
         qDebug()<<"components have been sorted";
     //2.生成事件树
+    Event*l_EventPtr;
+    if(s_priorList.size()!=l_length)
+        qDebug()<<"warning: the size of priorList is not the same as compVector's !";
+    MinEventHeap*l_MinHeap=new MinEventHeap();
+    for(int i = 0; i<length;i++)
+    {
+//        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
+        l_EventPtr=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
+        l_MinHeap->push(l_EventPtr);
+        /***
+         * todo:初始化曲线
+         */
+
+    }
     //3.规则库初始化
+    //3.1初始化规则库控制器
+    //3.2初始化规则判断事件
+    l_EventPtr=new Event(m_step,m_start);
+    l_MinHeap->push(l_EventPtr);
+    l_EventPtr=nullptr;
+    l_MinHeap->show();
     //4.进行仿真
+    while(!l_MinHeap->empty())
+    {
+        l_EventPtr=l_MinHeap->pop();
+        if(l_EventPtr->getTime()>m_end)
+            break;
+        if(l_EventPtr->occur())
+        {
+            //如果发生重构
+        }
+        l_MinHeap->push(l_EventPtr);
+    }
     //5.仿真调度
     //6.连接器数据处理
     //7.数据导出
@@ -115,18 +172,7 @@ void SimulationController::slotUpdateUi(double x,QString y)
 }
 
 
-static int DFN[COMP_NUM_MAX];
-static int low[COMP_NUM_MAX];
-static int counts=1;
-static int stack[COMP_NUM_MAX];
-static int top=1;
-static int flag[COMP_NUM_MAX];
-static int number=0;
-static int j;
-static int matrix[COMP_NUM_MAX][COMP_NUM_MAX];
-static int length;
-static QMap<QString,int>s_mCompId2Order;
-static QList<int>s_priorList;
+
 
 void SimulationController::tarjan(int u)
 {
@@ -208,8 +254,14 @@ bool SimulationController::sort()
         qDebug()<<"the "<<i<<" connector is from "<<source<<" to "<<target;
         matrix[l_mCompId2Order[source]][l_mCompId2Order[target]]=1;
     }
-    //tarjan算法排序
-    tarjan(0);
+    //tarjan算法排序(！！！注意：targan一遍可能不能搜完所有点，因为可能存在孤立点或者其它)
+    for(int i = 0;i < length;i++)
+    {
+        if(!DFN[i])
+        {
+            tarjan(i);
+        }
+    }
     for(int i = 0; i<s_priorList.size();i++)
     {
         qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;

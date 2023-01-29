@@ -213,22 +213,22 @@ void Plot::startSimulation()
     }
 //    p->destroyed();
     p->destroyed();
-    Component*l_Component=nullptr;
-    QList<PLACE_ATTR> l_placeList;
-    QVector<Component*>l_vComponent = com_list->getComponentList();
-    for( int i = 0; i<l_vComponent.size();i++)
-    {
-        qDebug()<<"this is thread :"<<QThread::currentThreadId();
-        l_Component=l_vComponent[i];
-        ///目前无法获得步长数据！！！
-        l_vComponent[i]->setStep(0.5);
-        qDebug()<<"this is the "<<i<<"component :"<<l_vComponent[i]->getID()<<", and step is "<<l_vComponent[i]->getStep();
-        l_placeList=l_vComponent[i]->getPlace_ATTRList();
-        for( int i = 0; i<l_placeList.size();i++)
-        {
-             qDebug()<<"place name: "<<l_placeList[i].name<<"and token : "<<l_placeList[i].initmark;
-        }
-    }
+//    Component*l_Component=nullptr;
+//    QList<PLACE_ATTR> l_placeList;
+//    QVector<Component*>l_vComponent = com_list->getComponentList();
+//    for( int i = 0; i<l_vComponent.size();i++)
+//    {
+//        qDebug()<<"this is thread :"<<QThread::currentThreadId();
+//        l_Component=l_vComponent[i];
+//        ///目前无法获得步长数据！！！
+//        l_vComponent[i]->setStep(0.5);
+//        qDebug()<<"this is the "<<i<<"component :"<<l_vComponent[i]->getID()<<", and step is "<<l_vComponent[i]->getStep();
+//        l_placeList=l_vComponent[i]->getPlace_ATTRList();
+//        for( int i = 0; i<l_placeList.size();i++)
+//        {
+//             qDebug()<<"place name: "<<l_placeList[i].name<<"and token : "<<l_placeList[i].initmark;
+//        }
+//    }
 }
 void Plot::initialVector()
 {

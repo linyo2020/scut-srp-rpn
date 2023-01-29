@@ -2,7 +2,8 @@
 #define SIMULATIONCONTROLLER_H
 #include <QThread>
 #include "plot.h"
-
+#include"event.h"
+#include"mineventheap.h"
 class SimulationController: public QThread
 {
     Q_OBJECT
