@@ -2,6 +2,8 @@
 //允许的组件最大数量
 #define COMP_NUM_MAX 100
 
+//用于组件优先级排序的一些结构和变量
+//---------------------------------------------------------------------------------
 static int DFN[COMP_NUM_MAX];
 static int low[COMP_NUM_MAX];
 static int counts=1;
@@ -13,6 +15,7 @@ static int j;
 static int matrix[COMP_NUM_MAX][COMP_NUM_MAX];
 static int length;
 static QList<int>s_priorList;//下标表示优先级大小，数值越小优先级越小；数组内容为组件的标号
+//---------------------------------------------------------------------------------
 
 QString findCompId(QString const s)
 {
@@ -119,15 +122,19 @@ void SimulationController::run()
     if(sort())
         qDebug()<<"components have been sorted";
     //2.生成事件树
-    Event*l_EventPtr;
+    QVector<Event*>l_vEvent;
+    QMap<QString,int>l_compId2Index;
+    Event*l_EventPtr1;
+    Event*l_EventPtr2;
     if(s_priorList.size()!=l_length)
         qDebug()<<"warning: the size of priorList is not the same as compVector's !";
     MinEventHeap*l_MinHeap=new MinEventHeap();
+    //遍历s_priorList
     for(int i = 0; i<length;i++)
     {
 //        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
-        l_EventPtr=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
-        l_MinHeap->push(l_EventPtr);
+        l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
+        l_MinHeap->push(l_EventPtr1);
         /***
          * todo:初始化曲线
          */
@@ -136,25 +143,56 @@ void SimulationController::run()
     //3.规则库初始化
     //3.1初始化规则库控制器
     //3.2初始化规则判断事件
-    l_EventPtr=new Event(m_step,m_start);
-    l_MinHeap->push(l_EventPtr);
-    l_EventPtr=nullptr;
+    l_EventPtr1=new Event(m_step,m_start);
+    l_MinHeap->push(l_EventPtr1);
+    l_EventPtr1=nullptr;
     l_MinHeap->show();
     //4.进行仿真
     while(!l_MinHeap->empty())
     {
-        l_EventPtr=l_MinHeap->pop();
-        if(l_EventPtr->getTime()>m_end)
+        l_EventPtr1=l_MinHeap->pop();
+        if(l_EventPtr1->getTime()>m_end)
             break;
-        if(l_EventPtr->occur())
+        //如果发生重构,需要重新分析组件拓扑图和修改事件堆
+        if(l_EventPtr1->occur()&&l_EventPtr1->getPrior()==0)
         {
-            //如果发生重构
+            //记录时间戳
+            double l_tempTime = l_EventPtr1->getTime();
+
+            //模拟规则在第四次判断时触发重构（rule事件的occur()在第四次运行时返回true）
+            if(m_compList->simulateStructChanged())
+               m_compList->show();
+
+
+
+            //计算组件优先级
+            if(sort())
+                qDebug()<<"components have been sorted";
+            l_vComponent=m_compList->getComponentList();
+            l_length=l_vComponent.size();
+            l_vEvent=l_MinHeap->getVector();
+            l_MinHeap->clear();
+            for(int i =0;i<l_vEvent.size();i++)
+            {
+                l_compId2Index[l_vEvent[i]->showCompId()]=i;
+            }
+            for(int i =0;i<length;i++)
+            {
+                QString l_tempId=l_vComponent[s_priorList[i]]->getID();
+                //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
+                if(l_compId2Index.contains( l_tempId))
+                {
+                    l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
+                    l_EventPtr2->setPrior(length+1-i);
+                }
+                else l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,length+1-i);
+
+                l_MinHeap->push(l_EventPtr2);
+            }
+            l_MinHeap->show();
         }
-        l_MinHeap->push(l_EventPtr);
+        l_MinHeap->push(l_EventPtr1);
     }
-    //5.仿真调度
-    //6.连接器数据处理
-    //7.数据导出
 
 }
 

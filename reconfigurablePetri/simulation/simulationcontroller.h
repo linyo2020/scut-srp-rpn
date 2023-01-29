@@ -4,13 +4,14 @@
 #include "plot.h"
 #include"event.h"
 #include"mineventheap.h"
+#include"rulemanager.h"
 class SimulationController: public QThread
 {
     Q_OBJECT
 
 public:
     /**
-     * @brief SimulationController
+     * @brief SimulationController 构造函数
      * @param m_gui
      * @param start
      * @param end
@@ -19,6 +20,7 @@ public:
     SimulationController(ComponentList*,Plot *m_gui,double start,double end,double step);
     /**
      * @brief run 重写虚函数，在线程内进行仿真操作
+     * 主要行为包括：组件优先级排序，构造最小事件堆，仿真计算与调度，数据可视化
      */
     void  run();
     /**
@@ -69,11 +71,12 @@ public slots:
      */
     void slotAddData(unsigned,QVector<double>,QVector<double>);
 private:
-    Plot *m_gui;/** 主线程对象指针*/
-    ComponentList*m_compList;
-    double m_start;
-    double m_end;
-    double m_step;
+    Plot *m_gui;               /** 主线程对象指针*/
+    ComponentList*m_compList;  /** 组件管理*/
+    RuleManager*m_ruleManager; /** 规则管理*/
+    double m_start;            /** 仿真开始时间*/
+    double m_end;              /** 仿真结束时间*/
+    double m_step;             /** 规则判断间隔*/
 };
 
 #endif // SIMULATIONCONTROLLER_H
