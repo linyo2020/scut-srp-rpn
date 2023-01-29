@@ -1519,3 +1519,34 @@ QList<CONNECTOR_ATTR> ComponentList::getConnectorAttrList()
 {
     return m_lConnector;
 }
+
+bool ComponentList::simulateStructChanged()
+{
+    int l_length=com_list.size();
+    if(l_length>=2)
+    {
+        Component*l_compPtr=com_list[l_length-1];
+        QString l_compId=l_compPtr->getID();
+        com_list.pop_back();
+        QList<CONNECTOR_ATTR>l_lConnectorTemp;
+        for(int i = 0;i<m_lConnector.size();i++)
+        {
+            if(!(m_lConnector[i].source.contains(l_compId,Qt::CaseSensitive))
+                    &&!(m_lConnector[i].target.contains( l_compId,Qt::CaseSensitive)))
+               l_lConnectorTemp.push_back(m_lConnector[i]);
+        }
+        m_lConnector=l_lConnectorTemp;
+        return true;
+    }
+    return false;
+}
+
+void ComponentList::show()
+{
+    for(int i =0;i<com_list.size();i++)
+    {
+        qDebug()<<"the "<<i<<" component's id is"<<com_list[i]->getID();
+    }
+    for(int i = 0;i<connectList.size();i++)
+        qDebug()<<"the "<<i<<" connector is from "<<connectList[i]->getSourceId()<<" to "<<connectList[i]->getTargetId();
+}

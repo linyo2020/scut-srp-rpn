@@ -102,3 +102,8 @@ bool MinEventHeap::empty()
 {
     return m_vEvent.empty();
 }
+
+QVector<Event*>MinEventHeap::getVector()
+{
+    return m_vEvent;
+}

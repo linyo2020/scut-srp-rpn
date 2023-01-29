@@ -52,6 +52,9 @@ bool Event::occur()
           * 规则判断
           */
          qDebug()<<"rule has one check at time "<<m_time;
+         //模拟0时刻开始，第四次规则判断时触发规则
+         if(abs(m_time-4*m_step)<0.00000000001)
+             strutChanged=true;
      }
      //更新下一次仿真时间
      update();
@@ -66,4 +69,9 @@ int Event::getPrior()
 double Event::getTime()
 {
     return m_time;
+}
+
+double Event::getStep()
+{
+    return m_step;
 }

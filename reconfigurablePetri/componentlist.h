@@ -64,6 +64,16 @@ public:
      * @return
      */
     QList<CONNECTOR_ATTR> getConnectorAttrList();
+    /**
+     * @brief simulateStructChanged 模拟网结构变化（用于测试）：删除vector中最后一个组件以及相关连接
+     * @author lwy
+     * @return 变化是否成功
+     */
+    bool simulateStructChanged();
+    /**
+     * @brief show 打印组件信息和连接器信息
+     */
+    void show();
 private:
     //func
     //如果未找到返回nullptr
