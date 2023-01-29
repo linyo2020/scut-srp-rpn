@@ -19,6 +19,20 @@
      <item>
       <widget class="QFrame" name="rulesGridFrame">
        <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="1">
+         <widget class="QPushButton" name="addRulesPushButton">
+          <property name="text">
+           <string>Add</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="moveUpPushButton">
+          <property name="text">
+           <string>Up</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="2">
          <widget class="QPushButton" name="deleteRulePushButton">
           <property name="text">
@@ -39,7 +53,14 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="0" colspan="3">
+        <item row="0" column="4">
+         <widget class="QPushButton" name="moveDownPushButton">
+          <property name="text">
+           <string>Down</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="5">
          <widget class="QScrollArea" name="rulesScrollArea">
           <property name="widgetResizable">
            <bool>true</bool>
@@ -55,23 +76,10 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QTreeWidget" name="treeWidget">
-              <column>
-               <property name="text">
-                <string notr="true">1</string>
-               </property>
-              </column>
-             </widget>
+             <widget class="QListWidget" name="listWidget"/>
             </item>
            </layout>
           </widget>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QPushButton" name="addRulesPushButton">
-          <property name="text">
-           <string>Add</string>
-          </property>
          </widget>
         </item>
        </layout>
@@ -86,7 +94,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-20</y>
+          <y>-14</y>
           <width>552</width>
           <height>534</height>
          </rect>
@@ -141,124 +149,10 @@
          <item>
           <widget class="QFrame" name="triggerGridFrame">
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="3" column="2">
-             <widget class="QLineEdit" name="conditionValue1LineEdit"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="conditionTypeComboBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text">
-                <string>time</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>state</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>event</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="timeValueLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="conditionTypeLabel">
-              <property name="text">
-               <string>Condition type</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="3">
-             <widget class="QLabel" name="conditionAndLabel">
-              <property name="text">
-               <string>and</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="monitiorObjectLabel">
               <property name="text">
                <string>Monitor object</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="conditionLabel">
-              <property name="text">
-               <string>Condition</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QComboBox" name="timeUnitComboBox">
-              <item>
-               <property name="text">
-                <string>ms</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>s</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>min</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>h</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QComboBox" name="timeComboBox">
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <item>
-               <property name="text">
-                <string>Duration</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Latency</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="TriggerLabel">
-              <property name="font">
-               <font>
-                <pointsize>13</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Trigger</string>
               </property>
              </widget>
             </item>
@@ -270,11 +164,6 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <item>
-               <property name="text">
-                <string>between</string>
-               </property>
-              </item>
               <item>
                <property name="text">
                 <string>&gt;</string>
@@ -307,18 +196,147 @@
               </item>
              </widget>
             </item>
-            <item row="3" column="5">
+            <item row="1" column="2" colspan="2">
+             <widget class="QComboBox" name="subtypeComboBox">
+              <item>
+               <property name="text">
+                <string>Duration</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Time to reach</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Global time</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="4">
+             <widget class="QLineEdit" name="monitorObjectLineEdit"/>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="subtypeLabel">
+              <property name="text">
+               <string>Duration</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="conditionValue1LineEdit"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="conditionLabel">
+              <property name="text">
+               <string>Condition</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="conditionTypeLabel">
+              <property name="text">
+               <string>Condition type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="conditionTypeComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>time</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>state</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>event</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="TriggerLabel">
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Trigger</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
              <widget class="QLabel" name="conditionUnitLabel">
               <property name="text">
                <string>token(s)</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="4">
-             <widget class="QLineEdit" name="conditionValue2LineEdit"/>
+            <item row="4" column="1">
+             <widget class="QComboBox" name="TimeOperatorComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>&gt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>&lt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>=</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≥</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≤</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>≠</string>
+               </property>
+              </item>
+             </widget>
             </item>
-            <item row="2" column="1" colspan="4">
-             <widget class="QComboBox" name="monitorObjectComboBox"/>
+            <item row="4" column="2">
+             <widget class="QLineEdit" name="timeValueLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -367,9 +385,6 @@
               </property>
              </spacer>
             </item>
-            <item row="3" column="1" colspan="2">
-             <widget class="QComboBox" name="Target2ComboBox"/>
-            </item>
             <item row="3" column="0">
              <widget class="QLabel" name="target2Label">
               <property name="text">
@@ -404,7 +419,10 @@
              </widget>
             </item>
             <item row="2" column="1" colspan="2">
-             <widget class="QComboBox" name="Target1ComboBox"/>
+             <widget class="QLineEdit" name="target1LineEdit"/>
+            </item>
+            <item row="3" column="1" colspan="2">
+             <widget class="QLineEdit" name="target2LineEdit"/>
             </item>
            </layout>
           </widget>

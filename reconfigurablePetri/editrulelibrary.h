@@ -2,6 +2,7 @@
 #define EDITRULELIBRARY_H
 
 #include <QDialog>
+#include"rulemanager.h"
 
 namespace Ui {
 class editRuleLibrary;
@@ -25,8 +26,21 @@ private slots:
 
     void on_addConnectionPushButton_clicked();
 
+    void on_subtypeComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_addRulesPushButton_clicked();
+
+    void on_deleteRulePushButton_clicked();
+
+    void on_moveUpPushButton_clicked();
+
+    void on_moveDownPushButton_clicked();
+
+    void on_listWidget_currentRowChanged(int currentRow);
+
 private:
     Ui::editRuleLibrary *ui;
+    QList<BaseRule*>ruleList;
 };
 
 #endif // EDITRULELIBRARY_H
