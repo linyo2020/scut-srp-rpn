@@ -1,7 +1,7 @@
 #include "eventrule.h"
 
 
-EventRule::EventRule(QString name, QString comment, QList<QList<CONDITION> > conditionList, QList<BaseOperation *> operationList)
+EventRule::EventRule(const QString& name, const QString& comment, const QList<QList<CONDITION> >& conditionList, const QList<BaseOperation *>& operationList)
     :BaseRule (name,comment,conditionList,operationList)
 {
 
@@ -12,13 +12,13 @@ EventRule::~EventRule()
 
 }
 
-bool EventRule::isSatisfy(ComponentList* componentList)
+bool EventRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
     bool computeResult=false;
-    for(QList<CONDITION>orCompute:conditionList)
+    for(const QList<CONDITION>&orCompute:conditionList)
     {
         bool andComputeResult=true;
-        for(CONDITION andCompute:orCompute)
+        for(const CONDITION& andCompute:orCompute)
         {
             switch (andCompute.conditionOption) {
             default:
@@ -41,7 +41,26 @@ bool EventRule::isSatisfy(ComponentList* componentList)
     return computeResult;
 }
 
-void EventRule::simulationInit(RULE_INITIALIZE_INFOMATION initInfo)
+void EventRule::initRule()
 {
 
+}
+
+EventRule *EventRule::clone() const
+{
+    QList<QList<CONDITION> > newConditionListQList;
+    QList<BaseOperation*> newOperationList;
+    int currentRow=0;
+    for(const auto& andCondition:conditionList)
+    {
+        newConditionListQList.push_back(QList<CONDITION>());
+        for(const auto& orCondition:andCondition)
+        {
+            newConditionListQList[currentRow].push_back(CONDITION(orCondition));
+        }
+        currentRow++;
+    }
+    for(const auto operation:operationList)
+        newOperationList.push_back(operation->clone());
+    return new EventRule(name,comment,newConditionListQList,newOperationList);
 }

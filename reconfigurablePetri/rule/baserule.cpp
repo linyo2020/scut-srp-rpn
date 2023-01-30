@@ -1,12 +1,15 @@
 #include "rule/baserule.h"
 #include<QString>
-BaseRule::BaseRule(QString name,QString comment,QList<QList<CONDITION> >conditionList,QList<BaseOperation*>operationList)
+BaseRule::BaseRule(const QString& name,const QString& comment,const QList<QList<CONDITION> >&conditionList,const QList<BaseOperation* >&operationList)
     :name(name),comment(comment),conditionList(conditionList),operationList(operationList)
 {
+
 }
 
 BaseRule::~BaseRule()
 {
+    for(auto operation:operationList)
+        delete operation;
 }
 
 bool BaseRule::doubleEqual(double a, double b)

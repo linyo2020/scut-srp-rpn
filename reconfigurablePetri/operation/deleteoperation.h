@@ -8,9 +8,12 @@
 class DeleteOperation:public BaseOperation
 {
 public:
-    DeleteOperation(QString componentId);
+    DeleteOperation(const QString& componentId);
+    DeleteOperation(const DeleteOperation&)=delete;
+    DeleteOperation& operator=(const DeleteOperation&)=delete;
     virtual ~DeleteOperation();
-    virtual void execOperation(ComponentList*);
+    virtual void execOperation(ComponentList*) const override;
+    virtual DeleteOperation* clone() const override;
 private:
     QString ComponentInstanceToDelete;
 };

@@ -1,6 +1,6 @@
 #include "replacewithnewoperation.h"
 
-ReplaceWithNewOperation::ReplaceWithNewOperation(QString componentIdToReplace, QString componentNameToAdd, QList<QPair<QString, QString> > mergePortList)
+ReplaceWithNewOperation::ReplaceWithNewOperation(const QString& componentIdToReplace,const QString& componentNameToAdd,const QList<QPair<QString, QString> >& mergePortList)
     :oldComponentId(componentIdToReplace),newComponentName(componentNameToAdd),mergePortList(mergePortList)
 {
 
@@ -11,7 +11,7 @@ ReplaceWithNewOperation::~ReplaceWithNewOperation()
 
 }
 
-void ReplaceWithNewOperation::execOperation(ComponentList* componentList)
+void ReplaceWithNewOperation::execOperation(ComponentList* componentList) const
 {
     componentList->deleteComponent(oldComponentId);
     QString newComponentId=componentList->addNewComponent(newComponentName);
@@ -23,6 +23,11 @@ void ReplaceWithNewOperation::execOperation(ComponentList* componentList)
             ports.second=newComponentId+ports.second.mid(NEW_COMPONENT_ID.size());
         componentList->addComponentPort(ports.first,ports.second);
     }
+}
+
+ReplaceWithNewOperation *ReplaceWithNewOperation::clone() const
+{
+    return new ReplaceWithNewOperation(oldComponentId,newComponentName,mergePortList);
 }
 
 const QString ReplaceWithNewOperation::NEW_COMPONENT_ID=QString("&&&&");

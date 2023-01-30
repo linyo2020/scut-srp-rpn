@@ -1,7 +1,7 @@
 #include "timerule.h"
 #include "place.h"
 
-TimeRule::TimeRule(QString name,QString comment,QList<QList<CONDITION> >conditionList,QList<BaseOperation*>operationList)
+TimeRule::TimeRule(const QString &name, const QString &comment, const QList<QList<CONDITION> > &conditionList, const QList<BaseOperation *> &operationList)
     :BaseRule(name,comment,conditionList,operationList),step(0.0),totalSimuTime(0.0),durationCounter(0.0)
 {
 
@@ -12,14 +12,15 @@ TimeRule::~TimeRule()
 
 }
 
-bool TimeRule::isSatisfy(ComponentList* componentList)
+bool TimeRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
-    totalSimuTime+=step;
+    step=runtimeInfo.totalTime-totalSimuTime;
+    totalSimuTime=runtimeInfo.totalTime;
     bool computeResult=false;
-    for(QList<CONDITION>orCompute:conditionList)
+    for(const QList<CONDITION>&orCompute:conditionList)
     {
         bool andComputeResult=true;
-        for(CONDITION andCompute:orCompute)
+        for(const CONDITION& andCompute:orCompute)
         {
             switch (andCompute.conditionOption) {
             case TIME_POINT_COMPARE://当前总仿真时间和某个时间点比较
@@ -29,13 +30,13 @@ bool TimeRule::isSatisfy(ComponentList* componentList)
             case CERTAIN_TOKEN_DURATION://对token的比较满足，并维持一定的时间。
             {
                 static bool isLastStepFrontPartSatisfy=false;
-                Place* p=componentList->getCertainPlace(andCompute.monitorFactor);
-                if(p==nullptr)
+                double token=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                if(doubleCompare(-1.0,token,EQUAL))
                 {
                     andComputeResult&=false;
                     break;
                 }
-                if(false==doubleCompare(p->getTokens(),
+                if(false==doubleCompare(token,
                                         andCompute.value.toDouble(),
                                         andCompute.symbol))
                 {
@@ -63,15 +64,15 @@ bool TimeRule::isSatisfy(ComponentList* componentList)
                 break;
             case TIME_TO_REACH_CERTAIN_TOKEN://令token满足比较,所需的时间
             {
-                Place* p=componentList->getCertainPlace(andCompute.monitorFactor);
-                if(p==nullptr)
+                double token=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                if(doubleCompare(-1.0,token,EQUAL))
                 {
                     andComputeResult&=false;
                     durationCounter=0.0;
                     break;
                 }
                 durationCounter+=step;
-                if(false==doubleCompare(p->getTokens(),
+                if(false==doubleCompare(token,
                                         andCompute.value.toDouble(),
                                         andCompute.symbol))
                     andComputeResult&=false;
@@ -113,9 +114,29 @@ bool TimeRule::isSatisfy(ComponentList* componentList)
     return computeResult;
 }
 
-void TimeRule::simulationInit(RULE_INITIALIZE_INFOMATION initInfo)
+void TimeRule::initRule()
 {
-    step=initInfo.step;
+    step=0.0;
     totalSimuTime=0.0;
+    durationCounter=0.0;
+}
+
+TimeRule *TimeRule::clone() const
+{
+    QList<QList<CONDITION> > newConditionListQList;
+    QList<BaseOperation*> newOperationList;
+    int currentRow=0;
+    for(const auto& andCondition:conditionList)
+    {
+        newConditionListQList.push_back(QList<CONDITION>());
+        for(const auto& orCondition:andCondition)
+        {
+            newConditionListQList[currentRow].push_back(CONDITION(orCondition));
+        }
+        currentRow++;
+    }
+    for(const auto operation:operationList)
+        newOperationList.push_back(operation->clone());
+    return new TimeRule(name,comment,newConditionListQList,newOperationList);
 }
 

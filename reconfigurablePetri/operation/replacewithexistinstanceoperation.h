@@ -13,9 +13,12 @@ public:
      * @param componentIdToAdd 要加入的已有实例id
      * @param mergePortList 一系列要合并的端口
      */
-    ReplaceWithExistInstanceOperation(QString componentIdToReplace,QString componentIdToAdd,QList<QPair<QString,QString> >mergePortList);
+    ReplaceWithExistInstanceOperation(const QString& componentIdToReplace,const QString& componentIdToAdd,const QList<QPair<QString,QString> >&mergePortList);
+    ReplaceWithExistInstanceOperation(const ReplaceWithExistInstanceOperation&)=delete;
+    ReplaceWithExistInstanceOperation& operator=(const ReplaceWithExistInstanceOperation&)=delete;
     virtual ~ReplaceWithExistInstanceOperation();
-    virtual void execOperation(ComponentList*);
+    virtual void execOperation(ComponentList*) const override;
+    virtual ReplaceWithExistInstanceOperation* clone() const override;
 private:
     QString oldComponentId,newComponentId;
     QList<QPair<QString,QString> >mergePortList;

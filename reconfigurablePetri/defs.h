@@ -131,6 +131,8 @@ enum ComparisionType{
     TOKEN_COMPARE//比较token是否符合范围
 };
 //<监控的因素（token等)><比较符号（大于/小于等）><要比较的数值>
+#pragma pack(push)
+#pragma pack(1)
 typedef struct _CONDITION
 {
     ComparisionType conditionOption;//比较的类型，如库所token的比较，仿真总时间的比较
@@ -145,13 +147,61 @@ typedef struct _CONDITION
     _CONDITION(ComparisionType option,QString factor,ComparisonSymbol symbol,QVariant value,_CONDITION* rp)
         :conditionOption(option),monitorFactor(factor),symbol(symbol),value(value),rearPart(rp)
     {}
+    _CONDITION(const _CONDITION& other)
+    {
+        conditionOption=other.conditionOption;
+        monitorFactor=other.monitorFactor;
+        symbol=other.symbol;
+        value=other.value;
+        rearPart=(nullptr==other.rearPart)?
+                    nullptr:
+                    new _CONDITION(other.rearPart->conditionOption,other.rearPart->monitorFactor,other.rearPart->symbol,other.rearPart->value);
+    }
+    _CONDITION &operator=(const _CONDITION& other)
+    {
+        conditionOption=other.conditionOption;
+        monitorFactor=other.monitorFactor;
+        symbol=other.symbol;
+        value=other.value;
+        rearPart=(nullptr==other.rearPart)?
+                    nullptr:
+                    new _CONDITION(other.rearPart->conditionOption,other.rearPart->monitorFactor,other.rearPart->symbol,other.rearPart->value);
+        return *this;
+    }
+
+    _CONDITION(_CONDITION&& other)
+    {
+        conditionOption=other.conditionOption;
+        monitorFactor=other.monitorFactor;
+        symbol=other.symbol;
+        value=other.value;
+        rearPart=other.rearPart;
+        other.rearPart=nullptr;
+    }
+    _CONDITION &operator=(_CONDITION&& other)
+    {
+        conditionOption=other.conditionOption;
+        monitorFactor=other.monitorFactor;
+        symbol=other.symbol;
+        value=other.value;
+        rearPart=other.rearPart;
+        other.rearPart=nullptr;
+        return *this;
+    }
+
+    ~_CONDITION()
+    {
+        if(rearPart!=nullptr)
+            delete rearPart;
+    }
 } CONDITION,* pCONDITION;
+#pragma pack(pop)
 
 //仿真前，提供给规则的仿真信息
 typedef struct
 {
-    double step;//仿真步长
-}RULE_INITIALIZE_INFOMATION;
+    double totalTime;//总仿真时间、仿真全局时钟
+}RULE_RUNTIME_INFOMATION;
 
 //[/规则库相关定义]
 

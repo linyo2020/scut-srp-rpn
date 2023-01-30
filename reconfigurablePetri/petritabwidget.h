@@ -14,6 +14,7 @@
 #include "arceditdialog.h"
 #include <vector>
 #include"ptnet.h"
+#include"rulemanager.h"
 
 class PetriTabWidget : public QWidget
 {
@@ -53,6 +54,7 @@ public:
     void checkNodesNames();
     PTNscene* getSCene();
     QString getName();
+    RuleManager &getRuleManager();
 
 //    GraphVisualizer * createGraphVis ();
 //    GraphVisualizer * getGraphVis ();
@@ -114,6 +116,8 @@ private:
 
 
     PTNet *mynet;//赋值给undostack
+
+    RuleManager ruleManager;
 };
 
 #endif // PETRITABWIDGET_H

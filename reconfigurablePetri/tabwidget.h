@@ -16,6 +16,7 @@
 #include"component.h"
 #include"compoundcomponentlist.h"
 #include"QVector"
+#include"rulemanager.h"
 
 class TabWidget : public QTabWidget
 {
@@ -74,6 +75,7 @@ public:
     bool componentIdEdited(QString ori_ID);
     void setImportComponentId_AND_classsifyComponenet();
     QString getComponenttype(QString id);
+    RuleManager &getRuleManager();
 
     void saveModel();
 

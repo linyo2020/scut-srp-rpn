@@ -6,10 +6,13 @@
 class EventRule:public BaseRule
 {
 public:
-    EventRule(QString name,QString comment,QList<QList<CONDITION> >conditionList,QList<BaseOperation*>operationList);
+    EventRule(const QString& name,const QString& comment,const QList<QList<CONDITION> >& conditionList,const QList<BaseOperation*>& operationList);
+    EventRule(const EventRule&)=delete;
+    EventRule& operator=(const EventRule&)=delete;
     virtual ~EventRule();
-    virtual bool isSatisfy(ComponentList*);
-    virtual void simulationInit(RULE_INITIALIZE_INFOMATION initInfo);
+    virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
+    virtual void initRule()override;
+    virtual EventRule *clone() const override;
 };
 
 #endif // EVENTRULE_H

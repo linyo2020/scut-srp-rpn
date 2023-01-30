@@ -6,7 +6,8 @@ class BaseOperation{
 public:
     BaseOperation();
     virtual ~BaseOperation();
-    virtual void execOperation(ComponentList*)=0;
+    virtual void execOperation(ComponentList*) const=0;
+    virtual BaseOperation* clone() const=0;//拷贝并返回类指针，建议用基类指针接收
 };
 
 #endif // BASEOPERATION_H

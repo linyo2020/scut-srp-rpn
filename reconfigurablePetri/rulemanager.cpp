@@ -5,6 +5,44 @@ RuleManager::RuleManager()
 
 }
 
+RuleManager::RuleManager(const RuleManager &other)
+{
+    for(const auto& eachRule:other.ruleList)
+        ruleList.push_back(eachRule->clone());
+    m_componentList=other.m_componentList;//仅持有指针，不管理对象内存
+}
+
+RuleManager &RuleManager::operator=(const RuleManager &other)
+{
+    ruleList.clear();
+    for(const auto& eachRule:other.ruleList)
+        ruleList.push_back(eachRule->clone());
+    m_componentList=other.m_componentList;//仅持有指针，不管理对象内存
+    return *this;
+}
+
+RuleManager::RuleManager(RuleManager &&other)
+{
+    ruleList=std::forward<QList<BaseRule*>&&>(other.ruleList);
+    m_componentList=other.m_componentList;
+    other.m_componentList=nullptr;
+}
+
+RuleManager &RuleManager::operator=(RuleManager &&other)
+{
+    ruleList=std::forward<QList<BaseRule*>&&>(other.ruleList);
+    m_componentList=other.m_componentList;
+    other.m_componentList=nullptr;
+    return *this;
+}
+
+RuleManager::~RuleManager()
+{
+    m_componentList=nullptr;
+    for(auto eachRule:ruleList)
+        delete eachRule;
+}
+
 void RuleManager::appendRule(BaseRule* rule)
 {
     ruleList.append(rule);
@@ -34,27 +72,41 @@ bool RuleManager::moveRule(int from, int to)
     return true;
 }
 
-const QList<BaseRule *> *RuleManager::getRuleList()
+const QList<BaseRule *> *RuleManager::getRuleList()  const
 {
     return &ruleList;
 }
 
-bool RuleManager::applyRule()
+bool RuleManager::replaceRule(int index, BaseRule *newRule)
+{
+    if(nullptr==newRule)
+        return false;
+    if(index>=ruleList.size()||index<0)
+    {
+        delete newRule;
+        return false;
+    }
+    delete ruleList[index];
+    ruleList.replace(index,newRule);
+    return true;
+}
+
+bool RuleManager::applyRule(const RULE_RUNTIME_INFOMATION &runtimeInfo) const
 {
     if(m_componentList==nullptr)
         return false;
     bool isReconfig=false;
     for(BaseRule* eachRule:ruleList)
     {
-        if(true==eachRule->isSatisfy(m_componentList))
+        if(true==eachRule->isSatisfy(m_componentList,runtimeInfo))
             isReconfig=true;
     }
     return isReconfig;
 }
 
-void RuleManager::initRule(ComponentList*componentList,RULE_INITIALIZE_INFOMATION initInfo)
+void RuleManager::initRule(ComponentList*componentList)
 {
     m_componentList=componentList;
-    for(BaseRule* eachRule:ruleList)
-        eachRule->simulationInit(initInfo);
+    for(auto eachRule:ruleList)
+        eachRule->initRule();
 }

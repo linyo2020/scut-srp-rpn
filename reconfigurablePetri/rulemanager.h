@@ -11,10 +11,22 @@
 class RuleManager
 {
 public:
-    RuleManager();
+    explicit RuleManager();
+    RuleManager(const RuleManager&);
+    RuleManager &operator=(const RuleManager&);
+    RuleManager(RuleManager&&);
+    RuleManager &operator=(RuleManager&&);
+    ~RuleManager();
     //仿真前使用
     void appendRule(BaseRule*);
-    const QList<BaseRule*>* getRuleList();
+    const QList<BaseRule*>* getRuleList() const;
+    /**
+     * @brief 替换某位置上的规则，并确保对有需要的指针进行析构。
+     * @param index 要被替换的规则的索引
+     * @param newRule 用以替换的新规则指针
+     * @return 成功返回true，找不到对应索引或其他失败情况返回false
+     */
+    bool replaceRule(int index,BaseRule *newRule);
     /**
      * @param index 规则的索引
      * @return 成功返回true，其他情况如未找到规则返回false
@@ -38,14 +50,14 @@ public:
     /**
      * @brief 仿真前提供初始化信息
      * @param componentList 提供网络信息，从tabWidget中获取此指针
-     * @param initInfo 初始化信息
      */
-    void initRule(ComponentList*componentList,RULE_INITIALIZE_INFOMATION initInfo);
+    void initRule(ComponentList*componentList);
     /**
      * @brief （仿真阶段使用）判断规则是否满足，并进行规则对应的操作，需先使用initRule提供仿真相关信息
+     * @param runtimeInfo 当前仿真信息
      * @return 若发生重构，则返回true，否则返回false
      */
-    bool applyRule();
+    bool applyRule(const RULE_RUNTIME_INFOMATION &runtimeInfo) const;
 
 private:
     QList<BaseRule*>ruleList;

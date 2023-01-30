@@ -2,7 +2,7 @@
 //#include "xmlwriter.h"
 
 PetriTabWidget::PetriTabWidget(const QString &id, QWidget * parent)
-    : QWidget(parent)
+    : QWidget(parent),ruleManager(RuleManager())
 {
     this->id = id;
     name = id;
@@ -434,6 +434,11 @@ PTNscene* PetriTabWidget::getSCene()
 QString PetriTabWidget::getName()
 {
     return this->name;
+}
+
+RuleManager &PetriTabWidget::getRuleManager()
+{
+    return ruleManager;
 }
 
 /* error message */

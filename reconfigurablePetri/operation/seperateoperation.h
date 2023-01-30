@@ -8,9 +8,12 @@
 class SeperateOperation:public BaseOperation
 {
 public:
-    SeperateOperation(QString compoundPortId_1,QString compoundPortId_2);
+    SeperateOperation(const QString& compoundPortId_1,const QString& compoundPortId_2);
+    SeperateOperation(const SeperateOperation&)=delete;
+    SeperateOperation& operator=(const SeperateOperation&)=delete;
     virtual ~SeperateOperation();
-    virtual void execOperation(ComponentList*);
+    virtual void execOperation(ComponentList*) const override;
+    virtual SeperateOperation *clone() const override;
 private:
     QString portToSeperate_1,portToSeperate_2;
 };

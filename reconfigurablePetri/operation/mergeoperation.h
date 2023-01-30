@@ -7,9 +7,12 @@
 class MergeOperation:public BaseOperation
 {
 public:
-    MergeOperation(QString portId_1,QString portId_2);
+    MergeOperation(const QString& portId_1,const QString& portId_2);
+    MergeOperation(const MergeOperation&)=delete;
+    MergeOperation& operator=(const MergeOperation&)=delete;
     virtual ~MergeOperation();
-    virtual void execOperation(ComponentList*);
+    virtual void execOperation(ComponentList*) const override;
+    virtual MergeOperation* clone() const override;
 private:
     QString portId1,portId2;
 };

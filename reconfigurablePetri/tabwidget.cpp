@@ -572,6 +572,12 @@ QList<Connector *> TabWidget::init_cl()
      return list[0];
  }
 
+ RuleManager &TabWidget::getRuleManager()
+ {
+     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+     return tab->getRuleManager();
+ }
+
  void TabWidget::saveModel()
  {
      tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
