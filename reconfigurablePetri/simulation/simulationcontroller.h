@@ -17,7 +17,7 @@ public:
      * @param end
      * @param step
      */
-    SimulationController(ComponentList*,Plot *m_gui,double start,double end,double step);
+    SimulationController(ComponentList*,RuleManager&, Plot *m_gui,double start,double end,double step);
     /**
      * @brief run 重写虚函数，在线程内进行仿真操作
      * 主要行为包括：组件优先级排序，构造最小事件堆，仿真计算与调度，数据可视化
@@ -32,6 +32,18 @@ public:
      * @brief tarjan 使用tarjan方法求解组件拓扑图中的强连通分量
      */
     void tarjan(int);
+    /**
+     * @brief drawCompData 将组件的数据发送到ui上
+     * @param Component* component组件
+     * @param double time 对应的时间戳
+     */
+    bool drawCompData(Component*,double);
+    /**
+     * @brief initCompGraph 初始化组件的曲线：生成曲线和初始点
+     * @param component
+     * @param double
+     */
+    void initCompGraph(Component*,double);
 signals:
     /**
      * @brief updateui 更新仿真进度条
@@ -51,11 +63,6 @@ signals:
      * @param t2      y坐标集合
      */
     void adddata(unsigned,QVector<double>,QVector<double>);
-    /**
-     * @brief slotUpdateUi 更新仿真进度条
-     * @param x            进度
-     * @param y            仿真运行时间
-     */
 public slots:
     void slotUpdateUi(double,QString);
     /**
@@ -73,7 +80,7 @@ public slots:
 private:
     Plot *m_gui;               /** 主线程对象指针*/
     ComponentList*m_compList;  /** 组件管理*/
-    RuleManager*m_ruleManager; /** 规则管理*/
+    RuleManager m_ruleManager; /** 规则管理*/
     double m_start;            /** 仿真开始时间*/
     double m_end;              /** 仿真结束时间*/
     double m_step;             /** 规则判断间隔*/

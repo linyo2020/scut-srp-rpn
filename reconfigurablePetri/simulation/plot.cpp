@@ -190,7 +190,7 @@ void Plot::startSimulation()
 //    Calculate *p = new Calculate(this);
 //    p->start();
 //    bool suc=p->run(PlotId,l_start,l_end,dh,ui->checkBox->checkState()==Qt::Checked);
-      SimulationController*p = new SimulationController(com_list,this,l_start,l_end,dh);
+      SimulationController*p = new SimulationController(m_com_list,m_ruleManager,this,l_start,l_end,dh);
       p->start();
       bool suc=true;
 
@@ -1321,5 +1321,10 @@ void Plot::initialLineWidth()
 
 void Plot::setComList(ComponentList*list)
 {
-    com_list=list;
+    m_com_list=list;
+}
+
+void Plot::setRuleManager(RuleManager&ruleManager)
+{
+    m_ruleManager=ruleManager;
 }

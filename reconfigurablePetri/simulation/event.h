@@ -53,12 +53,17 @@ public:
      * @brief occur 进行事件：运行一次组件的仿真或规则判断
      * @return 规则类型事件返回是否触发规则运行规则；仿真执行类型事件返回仿真是否成功
      */
+    bool occur();
     /**
      * @brief getStep
      * @return
      */
     double getStep();
-    bool occur();
+    /**
+     * @brief getComponent
+     * @return
+     */
+    Component*getComponent()const;
 private:
     enum type{rule,execution};   /**事件类型:规则类型和仿真执行类型*/
     int m_prior;                 /**事件优先级：规则类型的优先级最高，数值为0；数值越小，优先级越高*/

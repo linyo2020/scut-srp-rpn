@@ -2,7 +2,6 @@
 #define RULEMANAGER_H
 
 #include"rule/baserule.h"
-#include"petritabwidget.h"
 #include"componentlist.h"
 #include"defs.h"
 #include<QList>

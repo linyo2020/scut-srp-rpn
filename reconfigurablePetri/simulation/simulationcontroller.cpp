@@ -4,18 +4,22 @@
 
 //用于组件优先级排序的一些结构和变量
 //---------------------------------------------------------------------------------
-static int DFN[COMP_NUM_MAX];
-static int low[COMP_NUM_MAX];
-static int counts=1;
-static int stack[COMP_NUM_MAX];
-static int top=1;
-static int flag[COMP_NUM_MAX];
-static int number=0;
-static int j;
-static int matrix[COMP_NUM_MAX][COMP_NUM_MAX];
-static int length;
+static int s_DFN[COMP_NUM_MAX];
+static int s_low[COMP_NUM_MAX];
+static int s_counts=1;
+static int s_stack[COMP_NUM_MAX];
+static int s_top=1;
+static int s_flag[COMP_NUM_MAX];
+static int s_number=0;
+static int s_j;
+static int s_matrix[COMP_NUM_MAX][COMP_NUM_MAX];
+static int s_length;
 static QList<int>s_priorList;//下标表示优先级大小，数值越小优先级越小；数组内容为组件的标号
 //---------------------------------------------------------------------------------
+
+//记录所有出现过的组件以及组件中第一个库所对应的曲线编号
+static QMap<QString,int>s_mCompId2GraphIndex;
+static int s_graphIndex=0;
 
 QString findCompId(QString const s)
 {
@@ -23,12 +27,14 @@ QString findCompId(QString const s)
     return l_stringList[0]+"&"+l_stringList[1];
 }
 
-SimulationController::SimulationController(ComponentList*list,Plot*gui,double start,double end,double step)
+SimulationController::SimulationController(ComponentList*list,RuleManager&ruleManager,Plot*gui,
+                                           double start,double end,double step)
 {
 
     qRegisterMetaType<QVector<double>>("QVector<double>");
     qRegisterMetaType<string>("string");
     m_compList=new ComponentList(list);
+    m_ruleManager=ruleManager;
     m_gui=gui;
     m_step = step;
     m_start = start;
@@ -130,7 +136,7 @@ void SimulationController::run()
         qDebug()<<"warning: the size of priorList is not the same as compVector's !";
     MinEventHeap*l_MinHeap=new MinEventHeap();
     //遍历s_priorList
-    for(int i = 0; i<length;i++)
+    for(int i = 0; i<s_length;i++)
     {
 //        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
         l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
@@ -138,6 +144,7 @@ void SimulationController::run()
         /***
          * todo:初始化曲线
          */
+        initCompGraph(l_vComponent[s_priorList[i]],m_start);
 
     }
     //3.规则库初始化
@@ -150,46 +157,55 @@ void SimulationController::run()
     //4.进行仿真
     while(!l_MinHeap->empty())
     {
-        l_EventPtr1=l_MinHeap->pop();
-        if(l_EventPtr1->getTime()>m_end)
+        l_EventPtr1=l_MinHeap->pop();        
+        //记录时间戳
+        double l_tempTime = l_EventPtr1->getTime();
+        if(l_tempTime>m_end)
             break;
-        //如果发生重构,需要重新分析组件拓扑图和修改事件堆
-        if(l_EventPtr1->occur()&&l_EventPtr1->getPrior()==0)
+        if(l_EventPtr1->occur())
         {
-            //记录时间戳
-            double l_tempTime = l_EventPtr1->getTime();
 
-            //模拟规则在第四次判断时触发重构（rule事件的occur()在第四次运行时返回true）
-            if(m_compList->simulateStructChanged())
-               m_compList->show();
-
-
-
-            //计算组件优先级
-            if(sort())
-                qDebug()<<"components have been sorted";
-            l_vComponent=m_compList->getComponentList();
-            l_length=l_vComponent.size();
-            l_vEvent=l_MinHeap->getVector();
-            l_MinHeap->clear();
-            for(int i =0;i<l_vEvent.size();i++)
+            //如果事件为规则类型，发生重构,需要重新分析组件拓扑图和修改事件堆
+            if(l_EventPtr1->getPrior()==0)
             {
-                l_compId2Index[l_vEvent[i]->showCompId()]=i;
-            }
-            for(int i =0;i<length;i++)
+                //模拟规则在第四次判断时触发重构（rule事件的occur()在第四次运行时返回true）
+                if(m_compList->simulateStructChanged())
+                m_compList->show();
+
+                //计算组件优先级
+                if(sort())
+                    qDebug()<<"components have been sorted";
+                l_vComponent=m_compList->getComponentList();
+                l_length=l_vComponent.size();//l_length好像可以用length替换
+                l_vEvent=l_MinHeap->getVector();
+                l_MinHeap->clear();
+                for(int i =0;i<l_vEvent.size();i++)
+                {
+                    l_compId2Index[l_vEvent[i]->showCompId()]=i;
+                }
+                for(int i =0;i<s_length;i++)
             {
                 QString l_tempId=l_vComponent[s_priorList[i]]->getID();
                 //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
                 if(l_compId2Index.contains( l_tempId))
                 {
                     l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
-                    l_EventPtr2->setPrior(length+1-i);
+                    l_EventPtr2->setPrior(s_length+1-i);
                 }
-                else l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,length+1-i);
-
+                else
+                {
+                    l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
+                    initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
+                }
                 l_MinHeap->push(l_EventPtr2);
             }
-            l_MinHeap->show();
+                l_MinHeap->show();
+            }
+            else
+            {
+                Component*l_compTemp = l_EventPtr1->getComponent();
+                drawCompData(l_compTemp,l_tempTime);
+            }
         }
         l_MinHeap->push(l_EventPtr1);
     }
@@ -214,36 +230,36 @@ void SimulationController::slotUpdateUi(double x,QString y)
 
 void SimulationController::tarjan(int u)
 {
-    DFN[u]=low[u]=counts++;
-    stack[++top]=u;
-    flag[u]=1;
+    s_DFN[u]=s_low[u]=s_counts++;
+    s_stack[++s_top]=u;
+    s_flag[u]=1;
 
-    for(int v=0;v<length;v++)
+    for(int v=0;v<s_length;v++)
     {
-        if(matrix[u][v])
+        if(s_matrix[u][v])
         {
-            if(!DFN[v])
+            if(!s_DFN[v])
             {
                 tarjan(v);
-                if(low[v]<low[u])
-                    low[u]=low[v];
+                if(s_low[v]<s_low[u])
+                    s_low[u]=s_low[v];
             }
             else{
-                if(DFN[v]<low[u]&&flag[v])
-                    low[u]=DFN[v];
+                if(s_DFN[v]<s_low[u]&&s_flag[v])
+                    s_low[u]=s_DFN[v];
             }
         }
     }
 
-    if(DFN[u]==low[u])
+    if(s_DFN[u]==s_low[u])
     {
-        number++;
+        s_number++;
         do{
-            j=stack[top--];
-            s_priorList.push_back(j);
+            s_j=s_stack[s_top--];
+            s_priorList.push_back(s_j);
 //            qDebug()<<j;
-            flag[j]=0;
-        }while(j!=u);
+            s_flag[s_j]=0;
+        }while(s_j!=u);
     }
 }
 
@@ -254,24 +270,24 @@ bool SimulationController::sort()
     QList<CONNECTOR_ATTR> l_ConnectorAttrList=m_compList->getConnectorAttrList();
     QVector<Component*> l_vComponent=m_compList->getComponentList();
     QMap<QString,int>l_mCompId2Order;
-    length=l_vComponent.size();
-    if(length>COMP_NUM_MAX)
+    s_length=l_vComponent.size();
+    if(s_length>COMP_NUM_MAX)
     {
         qDebug()<<"warning : the number of component is out of range !";
         return false;
     }
     //数组初始化
-    memset(DFN,0,sizeof (DFN));
-    memset(low,0,sizeof (low));
-    memset(flag,0,sizeof (flag));
+    memset(s_DFN,0,sizeof (s_DFN));
+    memset(s_low,0,sizeof (s_low));
+    memset(s_flag,0,sizeof (s_flag));
     s_priorList.clear();
-    for(int i =0;i<length;i++)
+    for(int i =0;i<s_length;i++)
     {
-        for(int j =0;j<length;j++)
-            matrix[i][j]=0;
+        for(int j =0;j<s_length;j++)
+            s_matrix[i][j]=0;
     }
     //用数字标记数组
-    for(int i=0;i<length;i++)
+    for(int i=0;i<s_length;i++)
     {
         l_mCompId2Order[l_vComponent[i]->getID()]=i;
     }
@@ -290,12 +306,12 @@ bool SimulationController::sort()
             qDebug()<<l_ConnectorAttrList[i].id<<" has invalid source"<<l_ConnectorAttrList[i].target;
         }
         qDebug()<<"the "<<i<<" connector is from "<<source<<" to "<<target;
-        matrix[l_mCompId2Order[source]][l_mCompId2Order[target]]=1;
+        s_matrix[l_mCompId2Order[source]][l_mCompId2Order[target]]=1;
     }
     //tarjan算法排序(！！！注意：targan一遍可能不能搜完所有点，因为可能存在孤立点或者其它)
-    for(int i = 0;i < length;i++)
+    for(int i = 0;i < s_length;i++)
     {
-        if(!DFN[i])
+        if(!s_DFN[i])
         {
             tarjan(i);
         }
@@ -307,3 +323,43 @@ bool SimulationController::sort()
     return true;
 }
 
+void SimulationController::initCompGraph(Component* component,double start)
+{
+    QList<PLACE_ATTR>l_placeList=component->getPlace_ATTRList();
+    QString l_compName=component->getID().split("&")[0]+"&"+component->getID().split("&")[1];
+    QString l_graphName;
+    s_mCompId2GraphIndex[component->getID()]=s_graphIndex;
+    for(int i =0;i<l_placeList.size();i++)
+    {
+        l_graphName="("+l_compName+")"+l_placeList[i].name;
+        emit addgraph(l_graphName.toStdString());
+        QVector <double>l_tempX;
+        QVector <double> l_tempY;
+        l_tempX.push_back(start);
+        l_tempY.push_back(l_placeList[i].initmark);
+        emit adddata(i,l_tempX,l_tempY);
+        s_graphIndex++;
+    }
+}
+
+bool SimulationController::drawCompData(Component*component,double time)
+{
+    QString l_compID=component->getID();
+    QList<PLACE_ATTR>l_placeList=component->getPlace_ATTRList();
+    if(s_mCompId2GraphIndex.contains(component->getID()))
+    {
+        int l_index =s_mCompId2GraphIndex.value(l_compID);
+        for(int i=0;i<l_placeList.size();i++)
+        {
+            QVector <double>l_tempX;
+            QVector <double> l_tempY;
+            l_tempX.push_back(time);
+            l_tempY.push_back(l_placeList[i].initmark);
+            emit adddata(l_index,l_tempX,l_tempY);
+            qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark;
+            l_index++;
+        }
+        return true;
+    }
+    return false;
+}

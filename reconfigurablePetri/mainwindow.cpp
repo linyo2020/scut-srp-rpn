@@ -460,9 +460,12 @@ void MainWindow::buttonGroupClicked(int id)
 
             //创建仿真窗口
             Plot* view = new Plot();
+            RuleManager ruleManager =tab->getRuleManager();
             view->setPlotId(tab->getId());
-            //尝试将com_list传入plot
+            //将com_list传入plot
             view->setComList(tabWidget->com_list);
+            //将规则管理器传入plot
+            view->setRuleManager(ruleManager);
             /*
             QString e = tab->getId();
             QFile file("./used_to_record_the_id.txt");

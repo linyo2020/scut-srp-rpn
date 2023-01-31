@@ -40,12 +40,13 @@ QString Event::showCompId()
 
 bool Event::occur()
 {
-     bool strutChanged =false;
+     bool structChanged =false;
      if(execution==m_type)
      {
         //单步仿真
         //模拟
          qDebug()<<m_component->getID()<<" has one simulation finished at time "<<m_time;
+         structChanged=true;
      }
      else{
          /***
@@ -54,11 +55,11 @@ bool Event::occur()
          qDebug()<<"rule has one check at time "<<m_time;
          //模拟0时刻开始，第四次规则判断时触发规则
          if(abs(m_time-4*m_step)<0.00000000001)
-             strutChanged=true;
+             structChanged=true;
      }
      //更新下一次仿真时间
      update();
-     return strutChanged;
+     return structChanged;
 }
 
 int Event::getPrior()
@@ -74,4 +75,9 @@ double Event::getTime()
 double Event::getStep()
 {
     return m_step;
+}
+
+Component* Event::getComponent() const
+{
+    return m_component;
 }

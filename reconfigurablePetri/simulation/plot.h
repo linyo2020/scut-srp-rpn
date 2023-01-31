@@ -25,6 +25,7 @@
 #include"savediffcsv.h"
 #include<QFont>
 #include"componentlist.h"
+#include"rulemanager.h"
 /** 页id和vector的映射*/
 extern map<QString,QVector<QString>> namevector;
 /** 用于数据表格化 */
@@ -111,6 +112,10 @@ public slots:
      * @brief setComList
      */
     void setComList(ComponentList*);
+    /**
+     * @brief setRuleManager
+     */
+    void setRuleManager(RuleManager&);
 private slots:
     /**
      * @brief addNewGraphv
@@ -242,7 +247,8 @@ private:
     QFont legendFont;
     map<string,double> m_mInputVaraible2Value;
     vector<FUNCTIONDEF> m_vFunDef;
-    ComponentList*com_list;
+    ComponentList*m_com_list;
+    RuleManager m_ruleManager;
 };
 
 #endif // PLOT_H
