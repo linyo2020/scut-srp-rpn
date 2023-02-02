@@ -267,6 +267,7 @@ void ComponentList::deleteConnect(QString PlaceID1, QString PlaceID2)
         if((connectList[i]->getSourceId()==PlaceID1&&connectList[i]->getTargetId()==PlaceID2)||(connectList[i]->getSourceId()==PlaceID2&&connectList[i]->getTargetId()==PlaceID1))
         {
             connectList.removeAt(i);
+            m_lConnector.removeAt(i);
         }
     }
 }
@@ -603,6 +604,7 @@ void ComponentList::addComponentPort(QString portID1, QString portID2)
         qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(con);
         qgraphicsitem_cast<Place*>(targetItem)->addInputArc(con);
         connectList.append(con);
+        m_lConnector.append(con->toXml());
 //        p->setTokens(p1->getTokens()+p2->getTokens());
 //        p->setCapacity(p1->getCapacity()+p2->getCapacity());
 //        p->setCompoundPort(true);
@@ -804,6 +806,7 @@ const QList<Connector *> ComponentList::getConnectorList()
 void ComponentList::push_back_connectorList(Connector *c)
 {
     this->connectList.push_back(c);
+    this->m_lConnector.push_back(c->toXml());
 }
 
 void ComponentList::deleteArc(QString placeId, QString transitionID)

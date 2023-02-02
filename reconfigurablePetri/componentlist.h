@@ -57,7 +57,13 @@ public:
     void getComponent(ComponentController *comController){this->comController=comController;}
     void getPTNScene(PTNscene * scene){Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
-    void initConnector_list(QList<Connector*>l){connectList=l;};
+    void initConnector_list(QList<Connector*>l)
+        {   connectList=l;
+            for(int i=0;i<connectList.size();i++)
+            {
+                this->m_lConnector.push_back(connectList[i]->toXml());
+            }
+        }
     /**
      * @brief getConnectorAttrList返回lconnector的属性结构体
      * @author lwy
@@ -82,7 +88,7 @@ private:
     Component* OriginComponent(QString Filename);//欣然
 
 
-    void deleteArc(QString placeId,QString transitionID);
+
     //!!!一定要在addNewComponent()函数中调用，返回已分配好ID的组件
     void setnewComponentIDinSimulation(Component *newComponent);
     QList<Connector*> connectList;
@@ -95,6 +101,7 @@ private:
     //没用
     //----------------------------------
     //void addNewComponent(Component*newCom);
+    void deleteArc(QString placeId,QString transitionID);
     Transition*getcertainTransition(QString tranID);
 
 
@@ -103,8 +110,8 @@ private:
 
     //没用了
     //-----------------------------
-    QMap<QString,PTNscene*>garbage;//要
-    PTNscene*Scene;//要
+    QMap<QString,PTNscene*>garbage;
+    PTNscene*Scene;
 
     /**
      * @brief m_vConnector
