@@ -27,7 +27,7 @@ bool ODEsolver::parser()
         FunctionParser fparser1;
         std::vector<std::string> vReturnVars;
         std::string sss = m_vFunDef[i].m_sFunctionExp;
-        qDebug()<<QString::fromStdString(sss)<<" is the function expression of "<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName);
+//        qDebug()<<QString::fromStdString(sss)<<" is the function expression of "<<QString::fromStdString(m_vFunDef[i].m_sDifferentialName);
         //将变量名从函数表达式中提取出来
         int res = fparser1.ParseAndDeduceVariables(sss, vReturnVars);
         if(res >= 0)

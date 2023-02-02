@@ -74,11 +74,16 @@ void SimulationController::run()
 //        }
 //        //测试：速率函数的生成
 //        l_vComponent[i]->makeFunction();
-//        //测试：单步仿真
-//        l_vComponent[i]->tick(1,true);
+//        //测试：单步仿真与数据可视化
+////        l_vComponent[i]->tick(1,true);
+//          Event *l_event=new Event(l_vComponent[i],0,i+1);
+//          initCompGraph(l_vComponent[i],0);
+//          l_event->occur();
+//          drawCompData(l_event->getComponent(),0.5);
 //        //获取更新后的数据并打印
-//        l_vComponent = m_compList->getComponentList();
-//        l_placeList=l_vComponent[i]->getPlace_ATTRList();
+////        l_vComponent = m_compList->getComponentList();
+////        l_placeList=l_vComponent[i]->getPlace_ATTRList();
+//          l_placeList=l_event->getComponent()->getPlace_ATTRList();
 //        for( int i = 0; i<l_placeList.size();i++)
 //        {
 //             qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
@@ -130,8 +135,8 @@ void SimulationController::run()
     //2.生成事件树
     QVector<Event*>l_vEvent;
     QMap<QString,int>l_compId2Index;
-    Event*l_EventPtr1;
-    Event*l_EventPtr2;
+    Event*l_EventPtr1=nullptr;
+    Event*l_EventPtr2=nullptr;
     if(s_priorList.size()!=l_length)
         qDebug()<<"warning: the size of priorList is not the same as compVector's !";
     MinEventHeap*l_MinHeap=new MinEventHeap();
@@ -140,6 +145,7 @@ void SimulationController::run()
     {
 //        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
         l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
+        l_vComponent[s_priorList[i]]->makeFunction();//易漏
         l_MinHeap->push(l_EventPtr1);
         /***
          * todo:初始化曲线
@@ -157,7 +163,7 @@ void SimulationController::run()
     //4.进行仿真
     while(!l_MinHeap->empty())
     {
-        l_EventPtr1=l_MinHeap->pop();        
+        l_EventPtr1=l_MinHeap->pop();
         //记录时间戳
         double l_tempTime = l_EventPtr1->getTime();
         if(l_tempTime>m_end)
@@ -203,8 +209,13 @@ void SimulationController::run()
             }
             else
             {
-                Component*l_compTemp = l_EventPtr1->getComponent();
-                drawCompData(l_compTemp,l_tempTime);
+//                Component*l_compTemp = l_EventPtr1->getComponent();
+//                QList<PLACE_ATTR>l_placeList=l_compTemp->getPlace_ATTRList();
+//                        for( int i = 0; i<l_placeList.size();i++)
+//                        {
+//                             qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
+//                        }
+                drawCompData(l_EventPtr1->getComponent(),l_tempTime);
             }
         }
         l_MinHeap->push(l_EventPtr1);
@@ -328,7 +339,9 @@ void SimulationController::initCompGraph(Component* component,double start)
     QList<PLACE_ATTR>l_placeList=component->getPlace_ATTRList();
     QString l_compName=component->getID().split("&")[0]+"&"+component->getID().split("&")[1];
     QString l_graphName;
-    s_mCompId2GraphIndex[component->getID()]=s_graphIndex;
+    int l_startIndex=s_graphIndex;
+    s_mCompId2GraphIndex[component->getID()]=l_startIndex;
+
     for(int i =0;i<l_placeList.size();i++)
     {
         l_graphName="("+l_compName+")"+l_placeList[i].name;
@@ -337,7 +350,8 @@ void SimulationController::initCompGraph(Component* component,double start)
         QVector <double> l_tempY;
         l_tempX.push_back(start);
         l_tempY.push_back(l_placeList[i].initmark);
-        emit adddata(i,l_tempX,l_tempY);
+        emit adddata(i+l_startIndex,l_tempX,l_tempY);
+        qDebug()<<component->getID()<<"init data : ("<<start<<" ,"<<l_placeList[i].initmark<<")";
         s_graphIndex++;
     }
 }
@@ -356,7 +370,7 @@ bool SimulationController::drawCompData(Component*component,double time)
             l_tempX.push_back(time);
             l_tempY.push_back(l_placeList[i].initmark);
             emit adddata(l_index,l_tempX,l_tempY);
-            qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark;
+//            qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark<<")";
             l_index++;
         }
         return true;

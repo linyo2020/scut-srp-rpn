@@ -63,7 +63,7 @@ public:
      * @brief getComponent
      * @return
      */
-    Component*getComponent()const;
+    Component*getComponent();
 private:
     enum type{rule,execution};   /**事件类型:规则类型和仿真执行类型*/
     int m_prior;                 /**事件优先级：规则类型的优先级最高，数值为0；数值越小，优先级越高*/

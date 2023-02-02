@@ -511,7 +511,7 @@ void Component::transform()
 
 bool Component::tick(double l_start,bool state = true)
 {
-            qDebug()<<"tick() is in thread: "<<QThread::currentThreadId();
+//            qDebug()<<"tick() is in thread: "<<QThread::currentThreadId();
             //ode计算器初始化
             ODEsolver l_solver;
             l_solver.setMap(m_mInputVaraible2Value);
@@ -633,12 +633,6 @@ bool Component::tick(double l_start,bool state = true)
                      m_mInputVaraible2Value[m_vFunDef[i].m_sDifferentialName]=receiver[i];
                      placeList[i].initmark=receiver[i];
                  }
-
-
-
-
-
-
             }
 
         return true;

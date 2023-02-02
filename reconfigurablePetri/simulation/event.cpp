@@ -1,4 +1,5 @@
 #include "event.h"
+#include"QThread"
 Event::Event(Component*component,double time,int prior)
 {
     m_type=execution;
@@ -45,7 +46,14 @@ bool Event::occur()
      {
         //单步仿真
         //模拟
+//         qDebug()<<"Event::occur is in thread: "<<QThread::currentThreadId();
          qDebug()<<m_component->getID()<<" has one simulation finished at time "<<m_time;
+         m_component->tick(m_time-m_step,true);
+//         QList<PLACE_ATTR>l_placeList=m_component->getPlace_ATTRList();
+//                 for( int i = 0; i<l_placeList.size();i++)
+//                 {
+//                      qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
+//                 }
          structChanged=true;
      }
      else{
@@ -54,8 +62,8 @@ bool Event::occur()
           */
          qDebug()<<"rule has one check at time "<<m_time;
          //模拟0时刻开始，第四次规则判断时触发规则
-         if(abs(m_time-4*m_step)<0.00000000001)
-             structChanged=true;
+//         if(abs(m_time-4*m_step)<0.00000000001)
+//             structChanged=true;
      }
      //更新下一次仿真时间
      update();
@@ -77,7 +85,7 @@ double Event::getStep()
     return m_step;
 }
 
-Component* Event::getComponent() const
+Component* Event::getComponent()
 {
     return m_component;
 }
