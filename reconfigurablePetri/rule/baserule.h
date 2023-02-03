@@ -21,10 +21,6 @@ public:
     virtual void initRule()=0;
     virtual BaseRule* clone() const=0;//拷贝并返回类指针，建议用基类指针接收
 
-    const QString &getName()const{return name;}
-    void setName(const QString &n){name=n;}
-    const QString &getComment()const{return comment;}
-    void setComment(const QString &c){comment=c;}
 
 
 protected:  
