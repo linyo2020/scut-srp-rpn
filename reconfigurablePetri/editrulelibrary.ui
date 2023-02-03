@@ -94,7 +94,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-20</y>
+          <y>0</y>
           <width>552</width>
           <height>534</height>
          </rect>
@@ -344,12 +344,27 @@
          <item>
           <widget class="QFrame" name="actionGridFrame">
            <layout class="QGridLayout" name="actionGridLayout" columnstretch="0,0,0">
-            <item row="1" column="0">
-             <widget class="QLabel" name="actionTypeLabel">
-              <property name="text">
-               <string>Action type</string>
-              </property>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="actionTypeComboBox">
+              <item>
+               <property name="text">
+                <string>update</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>add</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>delete</string>
+               </property>
+              </item>
              </widget>
+            </item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QLineEdit" name="target1LineEdit"/>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="ActionLabel">
@@ -365,43 +380,11 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
             <item row="3" column="0">
              <widget class="QLabel" name="target2Label">
               <property name="text">
                <string>To</string>
               </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="actionTypeComboBox">
-              <item>
-               <property name="text">
-                <string>update</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>create</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>delete</string>
-               </property>
-              </item>
              </widget>
             </item>
             <item row="2" column="0">
@@ -411,11 +394,29 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="actionTypeLabel">
+              <property name="text">
+               <string>Action type</string>
+              </property>
+             </widget>
+            </item>
             <item row="3" column="1" colspan="2">
              <widget class="QLineEdit" name="target2LineEdit"/>
             </item>
-            <item row="2" column="1" colspan="2">
-             <widget class="QLineEdit" name="target1LineEdit"/>
+            <item row="1" column="2">
+             <widget class="QComboBox" name="actionSubtypeComboBox">
+              <item>
+               <property name="text">
+                <string>old</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>new</string>
+               </property>
+              </item>
+             </widget>
             </item>
            </layout>
           </widget>

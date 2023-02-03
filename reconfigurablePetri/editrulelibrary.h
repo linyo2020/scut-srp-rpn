@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include"rulemanager.h"
-
+#include <QGroupBox>
 namespace Ui {
 class editRuleLibrary;
 }
