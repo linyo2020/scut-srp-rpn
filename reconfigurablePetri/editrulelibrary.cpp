@@ -19,7 +19,7 @@ editRuleLibrary::editRuleLibrary(QWidget *parent) :
         tempManager=dynamic_cast<PetriTabWidget*>(dynamic_cast<MainWindow*>(parent)->getTabwidget()->currentWidget())->getRuleManager();
         ui->rulesSettingsScrollArea->hide();
         for(BaseRule* rule:*tempManager.getRuleList())
-            ui->listWidget->addItem(rule->name);
+            ui->listWidget->addItem(rule->getName());
     }
 }
 

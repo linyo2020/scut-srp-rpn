@@ -139,7 +139,6 @@ HEADERS += \
     rule/baserule.h \
     rulemanager.h \
     rule/timerule.h \
-    baseoperation.h \
     operation/baseoperation.h \
     operation/deleteoperation.h \
     operation/seperateoperation.h \
