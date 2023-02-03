@@ -26,6 +26,8 @@ public:
     void setName(const QString &n){name=n;}
     QString getComment()const{return comment;}
     void setComment(const QString &c){comment=c;}
+    const QList<QList<CONDITION> > &getConditionList()const{return conditionList;}
+    const QList<BaseOperation* > &getOperationList()const{return operationList;}
 
 
 private:
