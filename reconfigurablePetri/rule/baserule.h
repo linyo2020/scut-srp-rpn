@@ -20,12 +20,16 @@ public:
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)=0;
     virtual void initRule()=0;
     virtual BaseRule* clone() const=0;//拷贝并返回类指针，建议用基类指针接收
+    virtual RuleType getType()const{return type;}
 
     QString getName()const{return name;}
     void setName(const QString &n){name=n;}
     QString getComment()const{return comment;}
     void setComment(const QString &c){comment=c;}
 
+
+private:
+    constexpr static RuleType type=BASE_RULE;
 
 protected:  
     QString name,comment;

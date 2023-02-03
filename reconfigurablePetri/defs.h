@@ -31,6 +31,7 @@ typedef struct{
       QColor brushColor;/*可导入导出*/
       QColor penColor;/*可导入导出*/
       QString component_id;//[new]属于哪个组件/*可导入导出*/
+      bool inputPort,outputPort,isCompoundPort;/*可导入导出*/
    } PLACE_ATTR;
 
 typedef struct{
@@ -202,6 +203,24 @@ typedef struct
 {
     double totalTime;//总仿真时间、仿真全局时钟
 }RULE_RUNTIME_INFOMATION;
+
+//规则和操作类型枚举
+enum RuleType{
+    BASE_RULE=0,
+    EVENT_RULE,
+    STATE_RULE,
+    TIME_RULE
+};
+enum OperationType{
+    BASE_OPERATION=0,
+    ADD_OPERATION,
+    DELETE_OPERATION,
+    MERGE_OPERATION,
+    RECOVER_OPERATION,
+    REPLACE_WITH_EXIST_OPERATION,
+    REPLACE_WITH_NEW_OPERATION,
+    SEPERATE_OPERATION
+};
 
 //[/规则库相关定义]
 

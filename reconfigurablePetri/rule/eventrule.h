@@ -13,6 +13,9 @@ public:
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual EventRule *clone() const override;
+    virtual RuleType getType()const override{return type;}
+private:
+    constexpr static RuleType type=EVENT_RULE;
 };
 
 #endif // EVENTRULE_H

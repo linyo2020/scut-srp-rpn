@@ -14,8 +14,10 @@ public:
     virtual ~DeleteOperation();
     virtual void execOperation(ComponentList*) const override;
     virtual DeleteOperation* clone() const override;
+    virtual OperationType getType()const override{return type;}
 private:
     QString ComponentInstanceToDelete;
+    constexpr static OperationType type=DELETE_OPERATION;
 };
 
 #endif // DELETEOPERATION_H

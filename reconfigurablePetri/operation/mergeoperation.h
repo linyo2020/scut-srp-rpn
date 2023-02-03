@@ -13,8 +13,10 @@ public:
     virtual ~MergeOperation();
     virtual void execOperation(ComponentList*) const override;
     virtual MergeOperation* clone() const override;
+    virtual OperationType getType()const override{return type;}
 private:
     QString portId1,portId2;
+    constexpr static OperationType type=MERGE_OPERATION;
 };
 
 #endif // MERGEOPERATION_H

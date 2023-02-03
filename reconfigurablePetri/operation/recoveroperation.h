@@ -12,8 +12,10 @@ public:
     virtual ~RecoverOperation();
     virtual void execOperation(ComponentList*) const override;
     virtual RecoverOperation* clone() const override;
+    virtual OperationType getType()const override{return type;}
 private:
     QString componentInstanceId;
+    constexpr static OperationType type=RECOVER_OPERATION;
 };
 
 #endif // RECOVEROPERATION_H

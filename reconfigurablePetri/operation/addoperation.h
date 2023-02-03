@@ -12,8 +12,10 @@ public:
     virtual ~AddOperation();
     virtual void execOperation(ComponentList*) const override;
     virtual AddOperation* clone()const override;
+    virtual OperationType getType()const override{return type;}
 private:
     QString newComponentName;
+    constexpr static OperationType type=ADD_OPERATION;
 };
 
 #endif // ADDOPERATION_H

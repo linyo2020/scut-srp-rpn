@@ -13,8 +13,10 @@ public:
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual TimeRule *clone() const override;
+    virtual RuleType getType()const override{return type;}
 private:
     double step,totalSimuTime,durationCounter;//step:距离上次验证规则经过的步长；durationCounter：某种条件下的持续时间
+    constexpr static RuleType type=TIME_RULE;
 };
 
 #endif // TIMERULE_H

@@ -19,10 +19,12 @@ public:
     virtual ~ReplaceWithNewOperation();
     virtual void execOperation(ComponentList*) const override;
     virtual ReplaceWithNewOperation *clone() const override;
+    virtual OperationType getType()const override{return type;}
     const static QString NEW_COMPONENT_ID;
 private:
     QString oldComponentId,newComponentName;
     QList<QPair<QString,QString> >mergePortList;
+    constexpr static OperationType type=REPLACE_WITH_NEW_OPERATION;
 };
 
 

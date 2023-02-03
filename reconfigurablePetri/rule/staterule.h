@@ -13,5 +13,8 @@ public:
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual StateRule* clone() const override;
+    virtual RuleType getType()const override{return type;}
+private:
+    constexpr static RuleType type=STATE_RULE;
 };
 #endif // STATERULE_H
