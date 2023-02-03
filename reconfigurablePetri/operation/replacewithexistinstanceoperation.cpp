@@ -26,3 +26,13 @@ ReplaceWithExistInstanceOperation *ReplaceWithExistInstanceOperation::clone() co
 {
     return new ReplaceWithExistInstanceOperation(oldComponentId,newComponentId,mergePortList);
 }
+
+QList<QString*> ReplaceWithExistInstanceOperation::getArguments()
+{
+    return QList<QString*>{&oldComponentId,&newComponentId};
+}
+
+QList<QPair<QString, QString> > *ReplaceWithExistInstanceOperation::getMergeList()
+{
+    return &mergePortList;
+}

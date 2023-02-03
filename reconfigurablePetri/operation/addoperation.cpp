@@ -20,3 +20,8 @@ AddOperation *AddOperation::clone() const
 {
     return new AddOperation(newComponentName);
 }
+
+QList<QString*> AddOperation::getArguments()
+{
+    return QList<QString*>{&newComponentName};
+}

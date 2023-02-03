@@ -20,3 +20,8 @@ MergeOperation *MergeOperation::clone() const
 {
     return new MergeOperation(portId1,portId2);
 }
+
+QList<QString*> MergeOperation::getArguments()
+{
+    return QList<QString*>{&portId1,&portId2};
+}
