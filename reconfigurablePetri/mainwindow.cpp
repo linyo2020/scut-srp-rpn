@@ -572,8 +572,8 @@ void MainWindow::about()
 }
 void MainWindow::openRuleLibrary()
 {
-    editRuleLibrary* editRuleDialog=new editRuleLibrary(this);
-    editRuleDialog->show();
+    editRuleLibrary editRuleDialog(this);
+    editRuleDialog.exec();
 }
 void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
 {
@@ -616,7 +616,10 @@ void MainWindow::editComponentStep(QString componentName,double componentStep)
          }
     }
 }
-
+TabWidget* MainWindow::getTabwidget()
+{
+    return tabWidget;
+}
 MainWindow::~MainWindow()
 {
     delete newToolButton;

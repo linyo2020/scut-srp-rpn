@@ -55,6 +55,7 @@ public:
     PTNscene* getSCene();
     QString getName();
     RuleManager &getRuleManager();
+    void setRuleManager(RuleManager);
 
 //    GraphVisualizer * createGraphVis ();
 //    GraphVisualizer * getGraphVis ();

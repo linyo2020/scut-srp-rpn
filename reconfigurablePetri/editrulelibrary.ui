@@ -94,7 +94,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-14</y>
+          <y>-20</y>
           <width>552</width>
           <height>534</height>
          </rect>
@@ -127,7 +127,7 @@
              <widget class="QTextEdit" name="commentTextEdit"/>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="RuleNamelineEdit"/>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="ruleNameLabel">
@@ -156,7 +156,32 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="1" column="1">
+             <widget class="QComboBox" name="conditionTypeComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>time</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>state</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>event</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="5" column="1">
              <widget class="QComboBox" name="ConditionOperatorComboBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -196,7 +221,14 @@
               </item>
              </widget>
             </item>
-            <item row="1" column="2" colspan="2">
+            <item row="1" column="0">
+             <widget class="QLabel" name="conditionTypeLabel">
+              <property name="text">
+               <string>Condition type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3" colspan="2">
              <widget class="QComboBox" name="subtypeComboBox">
               <item>
                <property name="text">
@@ -215,58 +247,6 @@
               </item>
              </widget>
             </item>
-            <item row="2" column="1" colspan="4">
-             <widget class="QLineEdit" name="monitorObjectLineEdit"/>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="subtypeLabel">
-              <property name="text">
-               <string>Duration</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QLineEdit" name="conditionValue1LineEdit"/>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="conditionLabel">
-              <property name="text">
-               <string>Condition</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="conditionTypeLabel">
-              <property name="text">
-               <string>Condition type</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="conditionTypeComboBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text">
-                <string>time</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>state</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>event</string>
-               </property>
-              </item>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="TriggerLabel">
               <property name="font">
@@ -281,14 +261,21 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="4">
-             <widget class="QLabel" name="conditionUnitLabel">
+            <item row="5" column="0">
+             <widget class="QLabel" name="conditionLabel">
               <property name="text">
-               <string>token(s)</string>
+               <string>Condition</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="6" column="0">
+             <widget class="QLabel" name="subtypeLabel">
+              <property name="text">
+               <string>Duration</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
              <widget class="QComboBox" name="TimeOperatorComboBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -328,13 +315,19 @@
               </item>
              </widget>
             </item>
-            <item row="4" column="2">
-             <widget class="QLineEdit" name="timeValueLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+            <item row="2" column="1" colspan="4">
+             <widget class="QLineEdit" name="monitorObjectLineEdit"/>
+            </item>
+            <item row="5" column="3">
+             <widget class="QSpinBox" name="conditionValueSpinBox"/>
+            </item>
+            <item row="6" column="3">
+             <widget class="QSpinBox" name="timeValueSpinBox"/>
+            </item>
+            <item row="5" column="4">
+             <widget class="QLabel" name="conditionUnitLabel">
+              <property name="text">
+               <string>token(s)</string>
               </property>
              </widget>
             </item>
@@ -418,11 +411,11 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1" colspan="2">
-             <widget class="QLineEdit" name="target1LineEdit"/>
-            </item>
             <item row="3" column="1" colspan="2">
              <widget class="QLineEdit" name="target2LineEdit"/>
+            </item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QLineEdit" name="target1LineEdit"/>
             </item>
            </layout>
           </widget>

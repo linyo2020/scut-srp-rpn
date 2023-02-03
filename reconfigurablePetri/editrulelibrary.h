@@ -38,9 +38,21 @@ private slots:
 
     void on_listWidget_currentRowChanged(int currentRow);
 
+    void on_buttonBox_accepted();
+
+    void on_RuleNamelineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::editRuleLibrary *ui;
-    QList<BaseRule*>ruleList;
+    RuleManager tempManager;
+    int previousRow;
+    static ComparisonSymbol tonum(const QString&);
+    static QString tostring(ComparisonSymbol);
+    CONDITION getcondition();
+    void setcondition(BaseRule*);
+    QList<BaseOperation*> getoperation();
+    void setoperation(BaseRule*);
+    void saverule(int);
 };
 
 #endif // EDITRULELIBRARY_H
