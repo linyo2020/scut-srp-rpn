@@ -30,4 +30,14 @@ ReplaceWithNewOperation *ReplaceWithNewOperation::clone() const
     return new ReplaceWithNewOperation(oldComponentId,newComponentName,mergePortList);
 }
 
+QList<QString*> ReplaceWithNewOperation::getArguments()
+{
+    return QList<QString*>{&oldComponentId,&newComponentName};
+}
+
+QList<QPair<QString, QString> > *ReplaceWithNewOperation::getMergeList()
+{
+    return &mergePortList;
+}
+
 const QString ReplaceWithNewOperation::NEW_COMPONENT_ID=QString("&&&&");

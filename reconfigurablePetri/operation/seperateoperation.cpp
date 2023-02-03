@@ -20,3 +20,8 @@ SeperateOperation *SeperateOperation::clone() const
 {
     return new SeperateOperation(portToSeperate_1,portToSeperate_2);
 }
+
+QList<QString*> SeperateOperation::getArguments()
+{
+    return QList<QString*>{&portToSeperate_1,&portToSeperate_2};
+}

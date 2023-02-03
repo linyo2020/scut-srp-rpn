@@ -13,6 +13,7 @@ public:
     virtual void execOperation(ComponentList*) const override;
     virtual RecoverOperation* clone() const override;
     virtual OperationType getType()const override{return type;}
+    virtual QList<QString*> getArguments() override;
 private:
     QString componentInstanceId;
     constexpr static OperationType type=RECOVER_OPERATION;

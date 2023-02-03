@@ -20,3 +20,8 @@ RecoverOperation *RecoverOperation::clone() const
 {
     return new RecoverOperation(componentInstanceId);
 }
+
+QList<QString*> RecoverOperation::getArguments()
+{
+    return QList<QString*>{&componentInstanceId};
+}

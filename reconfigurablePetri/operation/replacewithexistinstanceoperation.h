@@ -20,6 +20,8 @@ public:
     virtual void execOperation(ComponentList*) const override;
     virtual ReplaceWithExistInstanceOperation* clone() const override;
     virtual OperationType getType()const override{return type;}
+    virtual QList<QString*> getArguments() override;
+    virtual QList<QPair<QString,QString> > *getMergeList() override;
 private:
     QString oldComponentId,newComponentId;
     QList<QPair<QString,QString> >mergePortList;

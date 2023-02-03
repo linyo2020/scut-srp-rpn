@@ -18,3 +18,8 @@ DeleteOperation *DeleteOperation::clone() const
 {
     return new DeleteOperation(ComponentInstanceToDelete);
 }
+
+QList<QString*> DeleteOperation::getArguments()
+{
+    return QList<QString*>{&ComponentInstanceToDelete};
+}
