@@ -5,6 +5,7 @@
 #include"event.h"
 #include"mineventheap.h"
 #include"rulemanager.h"
+#include"disjsets.h"
 class SimulationController: public QThread
 {
     Q_OBJECT
@@ -44,6 +45,24 @@ public:
      * @param double
      */
     void initCompGraph(Component*,double);
+    /**
+     * @brief connectData 实现一个组件相关的connector数据交流
+     */
+    void connectData(Component*);
+    /**
+     * @brief initConnectData 连接瞬间使得connector两端的库所同步token信息
+     * 要求将被连接上的库所的token值为0；不为0则被覆盖
+     */
+    void initConnect();
+    /**
+     * @brief updateConnect 网结构发生变化后，连接器可能发生变化
+     */
+    void updateConnect();
+//    /**
+//     * @brief findConnectedPlace
+//     */
+//    void findConnectedPlace(QString);
+
 signals:
     /**
      * @brief updateui 更新仿真进度条
@@ -78,12 +97,21 @@ public slots:
      */
     void slotAddData(unsigned,QVector<double>,QVector<double>);
 private:
-    Plot *m_gui;               /** 主线程对象指针*/
-    ComponentList*m_compList;  /** 组件管理*/
-    RuleManager m_ruleManager; /** 规则管理*/
-    double m_start;            /** 仿真开始时间*/
-    double m_end;              /** 仿真结束时间*/
-    double m_step;             /** 规则判断间隔*/
+    /**主线程对象指针*/
+    Plot *m_gui;
+    /**组件管理*/
+    ComponentList*m_compList;
+    /**规则管理*/
+    RuleManager m_ruleManager;
+    /**不相交集*/
+    DisjSets *m_disjSets;
+    /**仿真开始时间*/
+    double m_start;
+    /**仿真结束时间*/
+    double m_end;
+    /**规则判断间隔*/
+    double m_step;
+
 };
 
 #endif // SIMULATIONCONTROLLER_H

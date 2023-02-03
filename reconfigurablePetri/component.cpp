@@ -237,12 +237,18 @@ Place *Component::getCertainPlace(QString PlaceID)
 
 double Component::getCertainPlaceToken(QString PlaceID)
 {
-    for(int i=0;i<mynet->PlaceList.size();i++)
+//    for(int i=0;i<mynet->PlaceList.size();i++)
+//    {
+//        if(mynet->PlaceList[i]->getId()==PlaceID)
+//        {
+//            return mynet->PlaceList[i]->getTokens();
+//        }
+//    }
+//    return -1.0;
+    for(int i=0;i<placeList.size();i++)
     {
-        if(mynet->PlaceList[i]->getId()==PlaceID)
-        {
-            return mynet->PlaceList[i]->getTokens();
-        }
+        if(placeList[i].id==PlaceID)
+            return placeList[i].initmark;
     }
     return -1.0;
 }

@@ -85,7 +85,8 @@ SOURCES += \
     arcus.cpp\
     rule/staterule.cpp \
     simulation/event.cpp \
-    simulation/mineventheap.cpp
+    simulation/mineventheap.cpp \
+    simulation/disjsets.cpp
 
 
 HEADERS += \
@@ -153,7 +154,8 @@ HEADERS += \
     arcus.h\
     rule/staterule.h \
     simulation/event.h \
-    simulation/mineventheap.h
+    simulation/mineventheap.h \
+    simulation/disjsets.h
 
 
 # Default rules for deployment.

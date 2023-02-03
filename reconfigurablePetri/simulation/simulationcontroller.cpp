@@ -20,7 +20,10 @@ static QList<int>s_priorList;//下标表示优先级大小，数值越小优先�
 //记录所有出现过的组件以及组件中第一个库所对应的曲线编号
 static QMap<QString,int>s_mCompId2GraphIndex;
 static int s_graphIndex=0;
-
+//存储仿真数据,更新时机为组件更新绘图数据时
+static QMap<QString,double>s_placeId2Value;
+//记录组件id对应的组件列表下标
+static QMap<QString,int>s_comId2ListIndex;
 QString findCompId(QString const s)
 {
     QStringList l_stringList=s.split("&");
@@ -125,10 +128,17 @@ void SimulationController::run()
     qDebug()<<"仿真步长模拟";
     for(int i = 0;i<l_length;i++)
     {
-        l_vComponent[i]->setStep(0.5*i+0.5);
+        //记录组件id对应的组件列表下标
+        s_comId2ListIndex[l_vComponent[i]->getID()]=i;
+        //记录各库所的token值
+        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+        for(int i=0;i<l_placeAttrList.size();i++)
+        {
+            s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
+        }
+        l_vComponent[i]->setStep(0.1*i+0.1);
         //qDebug()<<l_vComponent[i]->getID()<<" : "<<l_vComponent[i]->getStep();
     }
-
     //1.对组件进行优先级排序
     if(sort())
         qDebug()<<"components have been sorted";
@@ -147,9 +157,7 @@ void SimulationController::run()
         l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
         l_vComponent[s_priorList[i]]->makeFunction();//易漏
         l_MinHeap->push(l_EventPtr1);
-        /***
-         * todo:初始化曲线
-         */
+        //初始化曲线
         initCompGraph(l_vComponent[s_priorList[i]],m_start);
 
     }
@@ -174,13 +182,15 @@ void SimulationController::run()
             //如果事件为规则类型，发生重构,需要重新分析组件拓扑图和修改事件堆
             if(l_EventPtr1->getPrior()==0)
             {
-                //模拟规则在第四次判断时触发重构（rule事件的occur()在第四次运行时返回true）
+                //模拟重构操作：删除一个组件以及相应的连接件
                 if(m_compList->simulateStructChanged())
                 m_compList->show();
 
                 //计算组件优先级
                 if(sort())
                     qDebug()<<"components have been sorted";
+                //更新connector的同步token值
+                updateConnect();
                 l_vComponent=m_compList->getComponentList();
                 l_length=l_vComponent.size();//l_length好像可以用length替换
                 l_vEvent=l_MinHeap->getVector();
@@ -190,21 +200,21 @@ void SimulationController::run()
                     l_compId2Index[l_vEvent[i]->showCompId()]=i;
                 }
                 for(int i =0;i<s_length;i++)
-            {
-                QString l_tempId=l_vComponent[s_priorList[i]]->getID();
-                //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
-                if(l_compId2Index.contains( l_tempId))
                 {
-                    l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
-                    l_EventPtr2->setPrior(s_length+1-i);
+                    QString l_tempId=l_vComponent[s_priorList[i]]->getID();
+                    //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
+                    if(l_compId2Index.contains( l_tempId))
+                    {
+                        l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
+                        l_EventPtr2->setPrior(s_length+1-i);
+                    }
+                    else
+                    {
+                        l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
+                        initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
+                    }
+                    l_MinHeap->push(l_EventPtr2);
                 }
-                else
-                {
-                    l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
-                    initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
-                }
-                l_MinHeap->push(l_EventPtr2);
-            }
                 l_MinHeap->show();
             }
             else
@@ -215,6 +225,7 @@ void SimulationController::run()
 //                        {
 //                             qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
 //                        }
+                connectData(l_EventPtr1->getComponent());
                 drawCompData(l_EventPtr1->getComponent(),l_tempTime);
             }
         }
@@ -371,9 +382,102 @@ bool SimulationController::drawCompData(Component*component,double time)
             l_tempY.push_back(l_placeList[i].initmark);
             emit adddata(l_index,l_tempX,l_tempY);
 //            qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark<<")";
+            s_placeId2Value[l_placeList[i].id]=l_placeList[i].initmark;
             l_index++;
         }
         return true;
     }
     return false;
+}
+
+void SimulationController::connectData(Component *component)
+{
+      QList<QString>l_placeIDList=m_disjSets->getPlaceIDInDisjSets();
+      QVector<Component*>l_vComponent=m_compList->getComponentList();
+      QString l_compID=component->getID();
+      int l_length=l_placeIDList.size();
+//      int l_visit[l_length];
+//      memset(l_visit,0,sizeof(l_visit));
+      QString l_placeID_1,l_placeID_2;
+      //遍历不相交集合里的库所id
+      for(int i=0;i<l_length;i++)
+      {
+          //目前没有考虑组件内端口自连的情况
+          l_placeID_1=l_placeIDList[i];
+          if(l_placeID_1.contains(l_compID,Qt::CaseSensitive))
+          {
+              double updateData=component->getCertainPlaceToken(l_placeID_1);
+              double change=updateData-s_placeId2Value.value(l_placeID_1);
+              int l_set=m_disjSets->find(l_placeID_1);
+              for(int j=i+1;j<l_length;j++)
+              {
+                  l_placeID_2=l_placeIDList[j];
+                  if(l_set==m_disjSets->find(l_placeID_2))
+                  {
+                      QString l_compID=l_placeID_2.split("&")[0]+"&"+l_placeIDList[j].split("&")[1];
+                      l_vComponent[s_comId2ListIndex[l_compID]]->changeTokens(l_placeID_2,s_placeId2Value[l_placeID_2]+change);
+                  }
+              }
+          }
+      }
+}
+
+//void SimulationController::findConnectedPlace(QString compID)
+//{
+//    //采用的算法性能不高
+//    QList<CONNECTOR_ATTR>connectorAttrList=m_compList->getConnectorAttrList();
+//    for(int i=0;i<connectorAttrList.size();i++)
+//    {
+
+//    }
+//}
+
+static QVector<QString>s_vConnectorID;
+void SimulationController::initConnect()
+{
+    QList<CONNECTOR_ATTR>l_connectorAttrList=m_compList->getConnectorAttrList();
+    QVector<Component*>l_vComponent=m_compList->getComponentList();
+    for(int i =0;i<l_connectorAttrList.size();i++)
+    {
+        s_vConnectorID.push_back(l_connectorAttrList[i].id);
+        QString l_source=l_connectorAttrList[i].source;
+        QString l_target=l_connectorAttrList[i].target;
+        QString l_targetCompID=l_target.split("&")[0]+"&"+l_target.split("&")[1];
+        if(s_placeId2Value.contains(l_source)&&s_comId2ListIndex.contains(l_targetCompID))
+        {
+            double l_value=s_placeId2Value[l_source];
+            l_vComponent[s_mCompId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
+        }
+
+    }
+    //将连接件的库所分进不相交集中
+    m_disjSets=new DisjSets(l_connectorAttrList);
+}
+
+void SimulationController::updateConnect()
+{
+    QList<CONNECTOR_ATTR>l_connectorAttrList=m_compList->getConnectorAttrList();
+    QVector<Component*>l_vComponent=m_compList->getComponentList();
+    for(int i =0;i<l_connectorAttrList.size();i++)
+    {
+        if(!s_vConnectorID.contains(l_connectorAttrList[i].id))
+        {
+            s_vConnectorID.push_back(l_connectorAttrList[i].id);
+            QString l_source=l_connectorAttrList[i].source;
+            QString l_target=l_connectorAttrList[i].target;
+            QString l_targetCompID=l_target.split("&")[0]+"&"+l_target.split("&")[1];
+            if(s_placeId2Value.contains(l_source)&&s_comId2ListIndex.contains(l_targetCompID))
+            {
+                double l_value=s_placeId2Value[l_source];
+                l_vComponent[s_mCompId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
+            }
+        }
+    }
+    //重新将连接件的库所分进不相交集中
+    if(m_disjSets!=nullptr)
+    {
+        DisjSets*l_pDisjSets=m_disjSets;
+        delete l_pDisjSets;
+        m_disjSets=new DisjSets(l_connectorAttrList);
+    }
 }
