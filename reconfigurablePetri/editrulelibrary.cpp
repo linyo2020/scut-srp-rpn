@@ -19,7 +19,7 @@ editRuleLibrary::editRuleLibrary(QWidget *parent) :
         tempManager=dynamic_cast<PetriTabWidget*>(dynamic_cast<MainWindow*>(parent)->getTabwidget()->currentWidget())->getRuleManager();
         ui->rulesSettingsScrollArea->hide();
         for(BaseRule* rule:*tempManager.getRuleList())
-            ui->listWidget->addItem(rule->name);
+            ui->listWidget->addItem(rule->getName());
     }
 }
 
@@ -245,9 +245,9 @@ CONDITION editRuleLibrary::getcondition()
 }
 void editRuleLibrary::setcondition(BaseRule * currentrule)
 {
-    ui->RuleNamelineEdit->setText(currentrule->name);
-    ui->commentTextEdit->setText(currentrule->comment);
-    CONDITION condition=currentrule->conditionList.front().front();
+    ui->RuleNamelineEdit->setText(currentrule->getName());
+    ui->commentTextEdit->setText(currentrule->getComment());
+    CONDITION condition=currentrule->getConditionList().front().front();
     if(condition.conditionOption==CERTAIN_TOKEN_DURATION)
     {
         ui->monitorObjectLineEdit->setText(condition.monitorFactor);
