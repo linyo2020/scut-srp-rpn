@@ -22,8 +22,6 @@ public:
     virtual BaseRule* clone() const=0;//拷贝并返回类指针，建议用基类指针接收
 
 
-
-protected:  
     QString name,comment;
     QList<QList<CONDITION> >conditionList;
     QList<BaseOperation* >operationList;

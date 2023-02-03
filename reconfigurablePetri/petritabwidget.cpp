@@ -440,7 +440,10 @@ RuleManager &PetriTabWidget::getRuleManager()
 {
     return ruleManager;
 }
-
+void PetriTabWidget::setRuleManager(RuleManager manager)
+{
+    ruleManager=manager;
+}
 /* error message */
 void PetriTabWidget::showErrorMessage (const QString &title, const QString &errorMsg)
 {

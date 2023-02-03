@@ -58,6 +58,7 @@ public:
     void openComponentDock();
     void bindingComponent();
     void unbindingComponent();
+    TabWidget* getTabwidget();
 
 signals:
     void addComponentController(QString componentPath);
