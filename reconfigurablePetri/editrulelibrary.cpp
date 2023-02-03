@@ -245,9 +245,9 @@ CONDITION editRuleLibrary::getcondition()
 }
 void editRuleLibrary::setcondition(BaseRule * currentrule)
 {
-    ui->RuleNamelineEdit->setText(currentrule->name);
-    ui->commentTextEdit->setText(currentrule->comment);
-    CONDITION condition=currentrule->conditionList.front().front();
+    ui->RuleNamelineEdit->setText(currentrule->getName());
+    ui->commentTextEdit->setText(currentrule->getComment());
+    CONDITION condition=currentrule->getConditionList().front().front();
     if(condition.conditionOption==CERTAIN_TOKEN_DURATION)
     {
         ui->monitorObjectLineEdit->setText(condition.monitorFactor);
