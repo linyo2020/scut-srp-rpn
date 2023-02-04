@@ -14,6 +14,8 @@ StateRule::~StateRule()
 
 bool StateRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
+    if(conditionList.empty()||operationList.empty())
+        return false;
     bool computeResult=false;
     for(const QList<CONDITION>& orCompute:conditionList)
     {

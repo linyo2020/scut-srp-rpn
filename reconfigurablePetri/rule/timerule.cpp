@@ -14,6 +14,8 @@ TimeRule::~TimeRule()
 
 bool TimeRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
+    if(conditionList.empty()||operationList.empty())
+        return false;
     step=runtimeInfo.totalTime-totalSimuTime;
     totalSimuTime=runtimeInfo.totalTime;
     bool computeResult=false;
