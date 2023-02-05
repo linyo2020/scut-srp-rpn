@@ -662,11 +662,13 @@ void Component::setArc_ATTRList(QList<ARC_ATTR> a)
 bool Component::changeTokens(QString placeID,double tokens)
 {
     bool found = false;
-    for(unsigned int i = 0; i<placeList.size();i++)
+    for(int i = 0; i<placeList.size();i++)
     {
         if(placeID == placeList[i].id)
         {
             placeList[i].initmark=tokens;
+            //（易漏）仿真是通过map来获取token数据，因此token需要修改时需要修改map的内容，注意key为库所的name而不是id
+            m_mInputVaraible2Value[placeList[i].name.toStdString()]=tokens;
             found = true;
             break;
         }

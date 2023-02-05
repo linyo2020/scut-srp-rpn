@@ -27,6 +27,7 @@ public:
      * @param root2
      */
     void unionSets(int root1,int root2);
+    bool isEmpty();
     QList<QString> getPlaceIDInDisjSets();
 private:
     QVector<int> m_root;

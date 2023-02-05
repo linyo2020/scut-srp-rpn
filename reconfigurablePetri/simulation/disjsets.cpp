@@ -35,7 +35,7 @@ DisjSets::DisjSets(QList<CONNECTOR_ATTR>connectorAttrList)
 
 int DisjSets::find(QString placeID)
 {
-    if(m_placeID2Index.contains(placeID))
+    if(!m_placeID2Index.contains(placeID))
        qDebug()<<placeID<<"is not in the disjSet";
     int l_index=m_placeID2Index[placeID];
     return find(l_index);
@@ -66,4 +66,9 @@ void DisjSets::unionSets(int root1,int root2)
 QList<QString> DisjSets::getPlaceIDInDisjSets()
 {
     return m_placeID2Index.keys();
+}
+
+bool DisjSets::isEmpty()
+{
+    return m_placeID2Index.empty();
 }
