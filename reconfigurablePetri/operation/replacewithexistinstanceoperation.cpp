@@ -2,7 +2,7 @@
 
 
 ReplaceWithExistInstanceOperation::ReplaceWithExistInstanceOperation(const QString& componentIdToReplace,const QString& componentIdToAdd,const QList<QPair<QString, QString> >& mergePortList)
-    :oldComponentId(componentIdToReplace),newComponentId(componentIdToAdd),mergePortList(mergePortList)
+    :oldComponentId(componentIdToReplace),newComponentId(componentIdToAdd),mergePortList(std::move(mergePortList))
 {
 
 }
@@ -35,4 +35,14 @@ QList<QString*> ReplaceWithExistInstanceOperation::getArguments()
 QList<QPair<QString, QString> > *ReplaceWithExistInstanceOperation::getMergeList()
 {
     return &mergePortList;
+}
+
+OPERATION_ATTR ReplaceWithExistInstanceOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(oldComponentId);
+    operation.arguments.push_back(newComponentId);
+    operation.portsToMerge=mergePortList;
+    return operation;
 }

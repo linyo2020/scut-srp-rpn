@@ -45,6 +45,10 @@ Place::Place(const PLACE_ATTR &place)
     label->setPos(place.offsetx, place.offsety);
 
     if(show)setLabel_2();
+
+    inputPort=place.inputPort;
+    outputPort=place.outputPort;
+    isCompoundPort=place.isCompoundPort;
 }
 
 Place::Place(const QString &id, const QPointF &position)
@@ -252,6 +256,9 @@ PLACE_ATTR Place::toXml() const
   place.show = show;
   place.brushColor = m_brushColor;
   place.penColor = m_penColor;
+  place.inputPort=inputPort;
+  place.outputPort=outputPort;
+  place.isCompoundPort=isCompoundPort;
 //  place.componet_id=component_id;
   return place;
 }

@@ -23,3 +23,11 @@ QList<QString*> DeleteOperation::getArguments()
 {
     return QList<QString*>{&ComponentInstanceToDelete};
 }
+
+OPERATION_ATTR DeleteOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(ComponentInstanceToDelete);
+    return operation;
+}

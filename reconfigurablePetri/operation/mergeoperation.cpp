@@ -25,3 +25,12 @@ QList<QString*> MergeOperation::getArguments()
 {
     return QList<QString*>{&portId1,&portId2};
 }
+
+OPERATION_ATTR MergeOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(portId1);
+    operation.arguments.push_back(portId2);
+    return operation;
+}

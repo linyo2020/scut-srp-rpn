@@ -12,6 +12,8 @@ public:
     virtual OperationType getType()const{return type;}
     virtual QList<QString*> getArguments()=0;//在返回列表中根据声明顺序填入QString
     virtual QList<QPair<QString,QString> > *getMergeList(){return nullptr;}//两个replace操作使用
+
+    virtual OPERATION_ATTR toXML() const=0;
 private:
     constexpr static OperationType type=BASE_OPERATION;
 };

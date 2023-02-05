@@ -20,11 +20,13 @@ class XmlWriter
 
  private:
 
-    bool writePage(QXmlStreamWriter &xml, PAGE_ATTR page);
-    bool writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place);
-    bool writeTransitionNode(QXmlStreamWriter &xml, TRANSITION_ATTR transition);
-    bool writeArc(QXmlStreamWriter &xml, ARC_ATTR arc);
-    bool writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector);
+    bool writePage(QXmlStreamWriter &xml, const PAGE_ATTR &page);
+    bool writePlaceNode(QXmlStreamWriter &xml, const PLACE_ATTR &place);
+    bool writeTransitionNode(QXmlStreamWriter &xml, const TRANSITION_ATTR &transition);
+    bool writeArc(QXmlStreamWriter &xml, const ARC_ATTR &arc);
+    bool writeConnnector(QXmlStreamWriter &xml, const CONNECTOR_ATTR &connector);
+    bool writeComponent(QXmlStreamWriter &xml,const COMPONENT_ATTR &component);
+    bool writeRule(QXmlStreamWriter &xml,const RULE_ATTR &rule);
     PTNET_ATTR ptnet;
 };
 

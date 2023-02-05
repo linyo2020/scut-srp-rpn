@@ -15,7 +15,6 @@ bool XmlParser::parseXML(const QString &xmlContent)
 {
     QXmlStreamReader xml(xmlContent);
 
-    bool isPnml=false;
     while (!xml.atEnd() && !xml.hasError())
     {
         QXmlStreamReader::TokenType token = xml.readNext();
@@ -27,27 +26,17 @@ bool XmlParser::parseXML(const QString &xmlContent)
         {
             if (xml.name() == "pnml")
             {
-                isPnml=true;
                 continue;
             }
 
-            if (xml.name() == "net"&&isPnml==true)
+            if (xml.name() == "net")
             {
-                if (xml.attributes().hasAttribute("id"))
-                {
-                    net.id = xml.attributes().value("id").toString();
+                net.id = xml.attributes().value("id").toString();
 
-                    if (!parseXML_Net(xml))
-                        return false;
+                if (!parseXML_Net(xml))
+                    return false;
 
-                    continue;
-                }
-            }
-            else if(xml.name() == "net"&&isPnml==false)
-            {
-                QMessageBox::critical(0,"Warning!",QString("Not a pnml!"),
-                                      QMessageBox::Ok,0,0);
-                return false;
+                continue;
             }
          }
     }
@@ -86,15 +75,12 @@ bool XmlParser::parseXML_Net(QXmlStreamReader &xml)
             {
                 PAGE_ATTR page;
 
-                if (xml.attributes().hasAttribute("id"))
-                {
-                    page.id = xml.attributes().value("id").toString();
+                page.id = xml.attributes().value("id").toString();
 
-                    if (!parseXML_Page(xml, page))
-                        return false;
+                if (!parseXML_Page(xml, page))
+                    return false;
 
-                    continue;
-                }
+                continue;
             }
         }
     }
@@ -127,61 +113,63 @@ bool XmlParser::parseXML_Page(QXmlStreamReader &xml, PAGE_ATTR &page)
             }
             if (xml.name() == "place")
             {
-                if (xml.attributes().hasAttribute("id"))
-                {
-                    id = xml.attributes().value("id").toString();
+                id = xml.attributes().value("id").toString();
+                place_component_id=xml.attributes().value("component_id").toString();
 
-                    if (!parseXML_Place(xml, page))
-                        return false;
+                if (!parseXML_Place(xml, page))
+                    return false;
 
-                    continue;
-                }
+                continue;
             }
             if (xml.name() == "transition")
             {
-                if (xml.attributes().hasAttribute("id"))
-                {
-                    id = xml.attributes().value("id").toString();
+                id = xml.attributes().value("id").toString();
 
-                    if (!parseXML_Transition(xml, page))
-                        return false;
+                if (!parseXML_Transition(xml, page))
+                    return false;
 
-                    continue;
-                }
+                continue;
             }
             if (xml.name() == "arc")
             {
-                if (xml.attributes().hasAttribute("id")
-                    && xml.attributes().hasAttribute("source")
-                    && xml.attributes().hasAttribute("target"))
-                 {
-                    id = xml.attributes().value("id").toString();
-                    source = xml.attributes().value("source").toString();
-                    target = xml.attributes().value("target").toString();
+                id = xml.attributes().value("id").toString();
+                source = xml.attributes().value("source").toString();
+                target = xml.attributes().value("target").toString();
 
-                    if (!parseXML_Arc(xml, page))
-                        return false;
+                if (!parseXML_Arc(xml, page))
+                    return false;
 
-                     continue;
-                 }
+                continue;
             }
             if (xml.name() == "connector")
             {
-                if (xml.attributes().hasAttribute("id")
-                    && xml.attributes().hasAttribute("source")
-                    && xml.attributes().hasAttribute("target"))
-                 {
-                    id = xml.attributes().value("id").toString();
-                    source = xml.attributes().value("source").toString();
-                    target = xml.attributes().value("target").toString();
+                id = xml.attributes().value("id").toString();
+                source = xml.attributes().value("source").toString();
+                target = xml.attributes().value("target").toString();
 
-                    if (!parseXML_Connector(xml, page))
-                        return false;
+                if (!parseXML_Connector(xml, page))
+                    return false;
 
-                     continue;
-                 }
+                continue;
             }
-            continue;
+            if(xml.name()=="component")
+            {
+                id=xml.attributes().value("id").toString();
+                type=xml.attributes().value("type").toString();
+                step=xml.attributes().value("step").toDouble();
+
+                if(!parseXML_Component(xml,page))
+                    return false;
+                continue;
+            }
+            if(xml.name()=="rule")
+            {
+                type=xml.attributes().value("type").toString();
+                if(!parseXML_Rule(xml,page))
+                    return false;
+                continue;
+            }
+
         }
     }
 
@@ -195,7 +183,7 @@ bool XmlParser::parseXML_Page(QXmlStreamReader &xml, PAGE_ATTR &page)
 
 }
 
-bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page)
+bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page, COMPONENT_ATTR *component)
 {
     while (!xml.atEnd() && !xml.hasError())
     {
@@ -220,18 +208,18 @@ bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page)
             place.brushColor = brushColor;
             place.penColor = penColor;
             place.component_id=place_component_id;
-            page.placeNodes << place;
+            place.inputPort=(inputPort=="Y");
+            place.outputPort=(outputPort=="Y");
+            place.isCompoundPort=(isCompoundPort=="Y");
+            if(component==nullptr)
+                page.placeNodes << place;
+            else
+                component->placeNodes<<place;
 
             break;
         }
         if (token == QXmlStreamReader::StartElement)
         {
-            if(xml.name()=="component_id")
-            {
-                if(!parseXML_ComponentId(xml))
-                    return false;
-                continue;
-            }
             if (xml.name() == "name")
             {
                 if (!parseXML_Name(xml))
@@ -260,6 +248,10 @@ bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page)
             {
                 if(!parseXML_Color(xml)) return false;
                 continue;
+            }else if(xml.name()=="port")
+            {
+                if(!parseXML_Port(xml)) return false;
+                continue;
             }
         }
     }
@@ -267,7 +259,7 @@ bool XmlParser::parseXML_Place(QXmlStreamReader &xml, PAGE_ATTR &page)
     return true;
 }
 
-bool XmlParser::parseXML_Transition(QXmlStreamReader &xml, PAGE_ATTR &page)
+bool XmlParser::parseXML_Transition(QXmlStreamReader &xml, PAGE_ATTR &page,COMPONENT_ATTR *component)
 {
     while (!xml.atEnd() && !xml.hasError())
     {
@@ -292,7 +284,10 @@ bool XmlParser::parseXML_Transition(QXmlStreamReader &xml, PAGE_ATTR &page)
             QColor penColor(pen.red,pen.green,pen.blue);
             transition.brushColor = brushColor;
             transition.penColor = penColor;
-            page.transitionNodes << transition;
+            if(component==nullptr)
+                page.transitionNodes << transition;
+            else
+                component->transitionNodes<<transition;
 
             break;
         }
@@ -345,7 +340,7 @@ bool XmlParser::parseXML_Transition(QXmlStreamReader &xml, PAGE_ATTR &page)
     return true;
 }
 
-bool XmlParser::parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page)
+bool XmlParser::parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page,COMPONENT_ATTR *component)
 {
     while (!xml.atEnd() && !xml.hasError())
     {
@@ -365,8 +360,10 @@ bool XmlParser::parseXML_Arc(QXmlStreamReader &xml, PAGE_ATTR &page)
             arc.brushColor = brushColor;
             arc.penColor = penColor;
             points.clear();
-
-            page.arcs << arc;
+            if(component==nullptr)
+                page.arcs << arc;
+            else
+                component->arcs<<arc;
             break;
         }
 
@@ -436,95 +433,128 @@ bool XmlParser::parseXML_Connector(QXmlStreamReader &xml, PAGE_ATTR &page)
     return true;
 
 }
-bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<double> &vec, std::string eleName)
+
+bool XmlParser::parseXML_Component(QXmlStreamReader &xml, PAGE_ATTR &page)
 {
-    while(!xml.atEnd() && !xml.hasError())
+    COMPONENT_ATTR component;
+    component.id = id;
+    component.type=type;
+    component.step=step;
+    while (!xml.atEnd() && !xml.hasError())
     {
         QXmlStreamReader::TokenType token = xml.readNext();
 
-        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+        if (token == QXmlStreamReader::EndElement && xml.name() == "component")
         {
+
+            page.componentList<<component;
             break;
         }
 
         if (token == QXmlStreamReader::StartElement)
         {
-            if (xml.name() == "double")
+            if (xml.name() == "name")
             {
-                v.setValue(getElementData(xml));
-                vec.push_back(v.toDouble());
+                if (!parseXML_Name(xml))
+                    return false;
+                component.name=name;
                 continue;
+
+            }
+            if (xml.name() == "place")
+            {
+                if (xml.attributes().hasAttribute("id")
+                        &&xml.attributes().hasAttribute("component_id"))
+                {
+                    id = xml.attributes().value("id").toString();
+                    place_component_id=xml.attributes().value("component_id").toString();
+
+                    if (!parseXML_Place(xml, page,&component))
+                        return false;
+
+                    continue;
+                }
+            }
+            if (xml.name() == "transition")
+            {
+                if (xml.attributes().hasAttribute("id"))
+                {
+                    id = xml.attributes().value("id").toString();
+
+                    if (!parseXML_Transition(xml, page,&component))
+                        return false;
+
+                    continue;
+                }
+            }
+            if (xml.name() == "arc")
+            {
+                if (xml.attributes().hasAttribute("id")
+                    && xml.attributes().hasAttribute("source")
+                    && xml.attributes().hasAttribute("target"))
+                 {
+                    id = xml.attributes().value("id").toString();
+                    source = xml.attributes().value("source").toString();
+                    target = xml.attributes().value("target").toString();
+
+                    if (!parseXML_Arc(xml, page,&component))
+                        return false;
+
+                     continue;
+                 }
             }
         }
     }
+
     return true;
 }
 
-bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<int> &vec, std::string eleName)
+bool XmlParser::parseXML_Rule(QXmlStreamReader &xml, PAGE_ATTR &page)
 {
-    while(!xml.atEnd() && !xml.hasError())
+    RULE_ATTR rule;
+    rule.type=type.toInt();
+    if(rule.type<0||rule.type>MAX_RULE_TYPE)
+        rule.type=0;
+
+    while (!xml.atEnd() && !xml.hasError())
     {
         QXmlStreamReader::TokenType token = xml.readNext();
 
-        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+        if (token == QXmlStreamReader::EndElement && xml.name() == "rule")
         {
+            page.rules.push_back(rule);
             break;
         }
 
         if (token == QXmlStreamReader::StartElement)
         {
-            if (xml.name() == "int")
+            if (xml.name() == "name")
             {
-                v.setValue(getElementData(xml));
-                vec.push_back(v.toInt());
+                if (!parseXML_Name(xml))
+                    return false;
+                rule.name=name;//即时写入，防止覆盖
+
+                continue;
+
+            }
+            if(xml.name()=="comment")
+            {
+                if(!parseXML_Comment(xml))
+                    return false;
+                rule.comment=comment;
+
                 continue;
             }
-        }
-    }
-    return true;
-}
-
-bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<std::string> &vec, std::string eleName)
-{
-    while(!xml.atEnd() && !xml.hasError())
-    {
-        QXmlStreamReader::TokenType token = xml.readNext();
-
-        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
-        {
-            break;
-        }
-
-        if (token == QXmlStreamReader::StartElement)
-        {
-            if (xml.name() == "string")
+            if(xml.name()=="orCondition")
             {
-                vec.push_back(getElementData(xml).toStdString());
+                if(!parseXML_Condition(xml,rule))
+                    return false;
                 continue;
             }
-        }
-    }
-    return true;
-}
-
-template<typename T>
-bool XmlParser::parseXML_bloVector(QXmlStreamReader &xml, std::vector<T> &vec, std::string eleName)
-{
-    while(!xml.atEnd() && !xml.hasError())
-    {
-        QXmlStreamReader::TokenType token = xml.readNext();
-
-        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
-        {
-            break;
-        }
-
-        if (token == QXmlStreamReader::StartElement)
-        {
-            if (xml.name() == "row")
+            if(xml.name()=="operation")
             {
-                vec.resize(vec.size()+1);
-                if(!parseXML_Vector(xml, vec[vec.size()-1], "row"))
+                type=xml.attributes().value("type").toString();
+                if(!parseXML_Operation(xml,rule))
                     return false;
                 continue;
             }
@@ -532,6 +562,235 @@ bool XmlParser::parseXML_bloVector(QXmlStreamReader &xml, std::vector<T> &vec, s
     }
     return true;
 }
+
+bool XmlParser::parseXML_Condition(QXmlStreamReader &xml, RULE_ATTR &rule)
+{
+    while (!xml.atEnd() && !xml.hasError())
+    {
+        QXmlStreamReader::TokenType token = xml.readNext();
+
+        if (token == QXmlStreamReader::EndElement && xml.name() == "orCondition")
+        {
+            break;
+        }
+
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xml.name() == "andCondition")
+            {
+                rule.conditions.push_back(QList<CONDITION>());
+                while(!xml.atEnd()&&!xml.hasError())
+                {
+                    token=xml.readNext();
+                    if(token==QXmlStreamReader::EndElement&&xml.name()=="andCondition")
+                    {
+                        break;
+                    }
+                    if(token==QXmlStreamReader::StartElement)
+                    {
+                        if(xml.name()=="condition")
+                        {
+                            while("conditionOption"!=xml.name())
+                                xml.readNext();//!!!readNext会读入"\n"
+                            conditionOption=getElementData(xml).toInt();
+                            if(conditionOption<0||conditionOption>MAX_COMPARISION_TYPE)
+                                conditionOption=0;
+
+                            while("monitorFactor"!=xml.name())
+                                xml.readNext();
+                            monitorFactor=getElementData(xml);
+
+                            while("symbol"!=xml.name())
+                                xml.readNext();
+                            symbol=getElementData(xml).toInt();
+                            if(symbol<0||symbol>MAX_COMPARISON_SYMBOL)
+                                symbol=0;
+
+                            while("value"!=xml.name())
+                                xml.readNext();
+                            value=getElementData(xml);
+
+                            //立马写入，防止覆盖
+                            CONDITION condition(ComparisionType(conditionOption),
+                                                monitorFactor,
+                                                ComparisonSymbol(symbol),
+                                                QVariant(value));
+
+                            while(xml.name()!="rearPart"&&xml.name()!="condition")
+                                token=xml.readNext();//<rearPart>or</condition>
+                            if(token==QXmlStreamReader::StartElement&&xml.name()=="rearPart")
+                            {
+                                while("conditionOption"!=xml.name())
+                                    xml.readNext();
+                                conditionOption=getElementData(xml).toInt();
+                                if(conditionOption<0||conditionOption>MAX_COMPARISION_TYPE)
+                                    conditionOption=0;
+
+                                while("monitorFactor"!=xml.name())
+                                    xml.readNext();
+                                monitorFactor=getElementData(xml);
+
+                                while("symbol"!=xml.name())
+                                    xml.readNext();
+                                symbol=getElementData(xml).toInt();
+                                if(symbol<0||symbol>MAX_COMPARISON_SYMBOL)
+                                    symbol=0;
+
+                                while("value"!=xml.name())
+                                    xml.readNext();
+                                value=getElementData(xml);
+
+                                condition.rearPart=new CONDITION(ComparisionType(conditionOption),
+                                                                 monitorFactor,
+                                                                 ComparisonSymbol(symbol),
+                                                                 QVariant(value));
+                                while(xml.name()!="condition")
+                                    token=xml.readNext();
+                            }
+                            if(token==QXmlStreamReader::EndElement&&xml.name()=="condition")
+                                rule.conditions.last().push_back(condition);
+                            continue;//if(xml.name()=="condition")
+                        }
+                    }
+                }
+                continue;//if (xml.name() == "andCondition")
+            }
+        }
+    }
+    return true;
+}
+
+bool XmlParser::parseXML_Operation(QXmlStreamReader &xml, RULE_ATTR &rule)
+{
+    OPERATION_ATTR operation;
+    operation.type=type.toInt();
+    if(operation.type<0||operation.type>MAX_OPERATION_TYPE)
+        operation.type=0;
+    while (!xml.atEnd() && !xml.hasError())
+    {
+        QXmlStreamReader::TokenType token = xml.readNext();
+
+        if (token == QXmlStreamReader::EndElement && xml.name() == "operation")
+        {
+            rule.operations.push_back(operation);
+            break;
+        }
+
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xml.name() == "argument")
+            {
+                operation.arguments.push_back(getElementData(xml));
+                continue;
+            }
+            if(xml.name()=="portsToMerge")
+            {
+                QString port1=xml.attributes().value("port1").toString();
+                QString port2=xml.attributes().value("port2").toString();
+                operation.portsToMerge.push_back(QPair<QString,QString>(port1,port2));
+                continue;
+            }
+        }
+    }
+    return true;
+}
+
+//bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<double> &vec, std::string eleName)
+//{
+//    while(!xml.atEnd() && !xml.hasError())
+//    {
+//        QXmlStreamReader::TokenType token = xml.readNext();
+
+//        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+//        {
+//            break;
+//        }
+
+//        if (token == QXmlStreamReader::StartElement)
+//        {
+//            if (xml.name() == "double")
+//            {
+//                v.setValue(getElementData(xml));
+//                vec.push_back(v.toDouble());
+//                continue;
+//            }
+//        }
+//    }
+//    return true;
+//}
+
+//bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<int> &vec, std::string eleName)
+//{
+//    while(!xml.atEnd() && !xml.hasError())
+//    {
+//        QXmlStreamReader::TokenType token = xml.readNext();
+
+//        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+//        {
+//            break;
+//        }
+
+//        if (token == QXmlStreamReader::StartElement)
+//        {
+//            if (xml.name() == "int")
+//            {
+//                v.setValue(getElementData(xml));
+//                vec.push_back(v.toInt());
+//                continue;
+//            }
+//        }
+//    }
+//    return true;
+//}
+
+//bool XmlParser::parseXML_Vector(QXmlStreamReader &xml, std::vector<std::string> &vec, std::string eleName)
+//{
+//    while(!xml.atEnd() && !xml.hasError())
+//    {
+//        QXmlStreamReader::TokenType token = xml.readNext();
+
+//        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+//        {
+//            break;
+//        }
+
+//        if (token == QXmlStreamReader::StartElement)
+//        {
+//            if (xml.name() == "string")
+//            {
+//                vec.push_back(getElementData(xml).toStdString());
+//                continue;
+//            }
+//        }
+//    }
+//    return true;
+//}
+
+//template<typename T>
+//bool XmlParser::parseXML_bloVector(QXmlStreamReader &xml, std::vector<T> &vec, std::string eleName)
+//{
+//    while(!xml.atEnd() && !xml.hasError())
+//    {
+//        QXmlStreamReader::TokenType token = xml.readNext();
+
+//        if (token == QXmlStreamReader::EndElement && xml.name() == QString::fromStdString(eleName))
+//        {
+//            break;
+//        }
+
+//        if (token == QXmlStreamReader::StartElement)
+//        {
+//            if (xml.name() == "row")
+//            {
+//                vec.resize(vec.size()+1);
+//                if(!parseXML_Vector(xml, vec[vec.size()-1], "row"))
+//                    return false;
+//                continue;
+//            }
+//        }
+//    }
+//    return true;
+//}
 
 
 
@@ -781,21 +1040,30 @@ bool XmlParser::parseXML_Comment(QXmlStreamReader &xml)
     return true;
 }
 
-bool XmlParser::parseXML_ComponentId(QXmlStreamReader &xml)
+bool XmlParser::parseXML_Port(QXmlStreamReader &xml)
 {
-    while (!xml.atEnd()&&!xml.hasError())
+    while(!xml.atEnd() && !xml.hasError())
     {
         QXmlStreamReader::TokenType token = xml.readNext();
 
-        if (token == QXmlStreamReader::EndElement && xml.name() == "component_id")
+        if (token == QXmlStreamReader::EndElement && xml.name() == "port")
         {
             break;
         }
+
         if (token == QXmlStreamReader::StartElement)
         {
-            if (xml.name() == "id")
+            if (xml.name() == "inputPort")
             {
-                place_component_id = getElementData(xml);
+                inputPort = getElementData(xml);
+                continue;
+            }else if(xml.name() == "outputPort")
+            {
+                outputPort = getElementData(xml);
+                continue;
+            }else if(xml.name()=="isCompoundPort")
+            {
+                isCompoundPort=getElementData(xml);
                 continue;
             }
         }

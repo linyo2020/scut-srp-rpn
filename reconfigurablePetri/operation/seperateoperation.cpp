@@ -25,3 +25,12 @@ QList<QString*> SeperateOperation::getArguments()
 {
     return QList<QString*>{&portToSeperate_1,&portToSeperate_2};
 }
+
+OPERATION_ATTR SeperateOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(portToSeperate_1);
+    operation.arguments.push_back(portToSeperate_2);
+    return operation;
+}

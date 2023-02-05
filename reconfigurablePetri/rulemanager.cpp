@@ -1,4 +1,5 @@
 #include"rulemanager.h"
+#include"rule/rulefactory.h"
 RuleManager::RuleManager()
     :m_componentList(nullptr)
 {
@@ -41,6 +42,26 @@ RuleManager::~RuleManager()
     m_componentList=nullptr;
     for(auto eachRule:ruleList)
         delete eachRule;
+}
+
+RuleManager::RuleManager(const QList<RULE_ATTR> &rules)
+    :m_componentList(nullptr)
+{
+    for(const auto &rule : rules)
+    {
+        BaseRule *r=RuleFactory::fromXML(rule);
+        if(nullptr==r)
+            continue;
+        ruleList.push_back(r);
+    }
+}
+
+QList<RULE_ATTR> RuleManager::toXML() const
+{
+    QList<RULE_ATTR>rules;
+    for(const auto rule:ruleList)
+        rules.push_back(rule->toXML());
+    return rules;
 }
 
 void RuleManager::appendRule(BaseRule* rule)

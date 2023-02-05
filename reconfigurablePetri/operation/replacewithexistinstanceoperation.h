@@ -22,6 +22,8 @@ public:
     virtual OperationType getType()const override{return type;}
     virtual QList<QString*> getArguments() override;
     virtual QList<QPair<QString,QString> > *getMergeList() override;
+
+    virtual OPERATION_ATTR toXML() const override;
 private:
     QString oldComponentId,newComponentId;
     QList<QPair<QString,QString> >mergePortList;

@@ -1,7 +1,7 @@
 #include "replacewithnewoperation.h"
 
 ReplaceWithNewOperation::ReplaceWithNewOperation(const QString& componentIdToReplace,const QString& componentNameToAdd,const QList<QPair<QString, QString> >& mergePortList)
-    :oldComponentId(componentIdToReplace),newComponentName(componentNameToAdd),mergePortList(mergePortList)
+    :oldComponentId(componentIdToReplace),newComponentName(componentNameToAdd),mergePortList(std::move(mergePortList))
 {
 
 }
@@ -38,6 +38,16 @@ QList<QString*> ReplaceWithNewOperation::getArguments()
 QList<QPair<QString, QString> > *ReplaceWithNewOperation::getMergeList()
 {
     return &mergePortList;
+}
+
+OPERATION_ATTR ReplaceWithNewOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(oldComponentId);
+    operation.arguments.push_back(newComponentName);
+    operation.portsToMerge=mergePortList;
+    return operation;
 }
 
 const QString ReplaceWithNewOperation::NEW_COMPONENT_ID=QString("&&&&");

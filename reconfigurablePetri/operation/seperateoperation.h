@@ -16,6 +16,8 @@ public:
     virtual SeperateOperation *clone() const override;
     virtual OperationType getType()const override{return type;}
     virtual QList<QString*> getArguments() override;
+
+    virtual OPERATION_ATTR toXML() const override;
 private:
     QString portToSeperate_1,portToSeperate_2;
     constexpr static OperationType type=SEPERATE_OPERATION;

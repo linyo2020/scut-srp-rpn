@@ -32,15 +32,8 @@
 </xs:element>
 
 <xs:element name="place">
-	<xs:complexType>
-		<xs:sequence>
-                        <xs:element name="component_id" minOccurs="1" maxOccurs="1">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="id" type="xs:string"/>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
+        <xs:complexType>
+                <xs:sequence>
 			<xs:element name="name">
 				<xs:complexType>
 					<xs:sequence>
@@ -98,8 +91,18 @@
                                         </xs:sequence>
                                 </xs:complexType>
                         </xs:element>
+                        <xs:element name="port">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="inputPort" type="xs:string"/>
+                                                <xs:element name="outputPort" type="xs:string"/>
+                                                <xs:element name="isCompoundPort" type="xs:string"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:string"/>
+                <xs:attribute name="id" type="xs:string"/>
+                <xs:attribute name="component_id" type="xs:string"/>
 	</xs:complexType>
 </xs:element>
 
@@ -168,130 +171,6 @@
 	</xs:complexType>
 </xs:element>
 
-<xs:element name="fis">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element name="FISName" type="xs:string"/>
-			<xs:element name="FISType" type="xs:string"/>
-			<xs:element name="Deffuzification" type="xs:string"/>
-			<xs:element name="TimeStep" type="xs:string"/>
-			<xs:element name="VariableName" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="RangeMin" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="RangeMax" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="InputOrOutput" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="LinguisticName" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="LinguisticType" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Para1" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Para2" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Para3" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="double" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="NewSortedVariables" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Rules" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="int" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
-
 <xs:element name="arc">
 	<xs:complexType>
 		<xs:sequence>
@@ -324,13 +203,13 @@
                                         </xs:sequence>
                                 </xs:complexType>
                         </xs:element>
-			<xs:element ref="fis" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string"/>
 		<xs:attribute name="source" type="xs:string"/>
 		<xs:attribute name="target" type="xs:string"/>
 	</xs:complexType>
 </xs:element>
+
 <xs:element name="connector">
 	<xs:complexType>
 		<xs:sequence>
@@ -347,6 +226,99 @@
 		<xs:attribute name="target" type="xs:string"/>
 	</xs:complexType>
 </xs:element>
+
+<xs:element name="component">
+    <xs:complexType>
+        <xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="place" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="transition" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="arc" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="type" type="xs:string"/>
+		<xs:attribute name="step" type="xs:decimal"/>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="operation">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="argument" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="portsToMerge" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="port1" type="xs:string"/>
+					<xs:attribute name="port2" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:decimal"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="condition">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="conditionOption" type="xs:decimal"/>
+			<xs:element name="monitorFactor" type="xs:string"/>
+			<xs:element name="symbol" type="xs:decimal"/>
+			<xs:element name="value" type="xs:string"/>
+			<xs:element name="rearPart" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="conditionOption" type="xs:decimal"/>
+						<xs:element name="monitorFactor" type="xs:string"/>
+						<xs:element name="symbol" type="xs:decimal"/>
+						<xs:element name="value" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="rule">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="comment">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="orCondition">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="andCondition" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="condition" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="operation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:decimal"/>
+	</xs:complexType>
+</xs:element>
+
 <xs:element name="pnml">
 	<xs:complexType>
 		<xs:sequence>
@@ -374,6 +346,8 @@
 									<xs:element ref="transition" minOccurs="0" maxOccurs="unbounded"/>
 									<xs:element ref="arc" minOccurs="0" maxOccurs="unbounded"/>
 									<xs:element ref="connector" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element ref="component" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element ref="rule" minOccurs="0" maxOccurs="unbounded"/>
 								</xs:sequence>
 								<xs:attribute name="id" type="xs:string"/>
 							</xs:complexType>

@@ -20,9 +20,15 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
 //    component_vector.push_back(com);
 
     createTab ();
+
     // xml
     scene->from_Xml (ptnet.pages);
     view->centerOn(scene->itemsBoundingRect().center());
+
+    if(!ptnet.pages.empty())
+        ruleManager=(ptnet.pages[0].rules);
+    else
+        ruleManager=RuleManager();
 }
 
 //设置组件
@@ -278,6 +284,8 @@ PTNET_ATTR PetriTabWidget::toXml() const
             continue;
         }
     }
+
+    page.rules<<ruleManager.toXML();
 
     net.pages << page;
 

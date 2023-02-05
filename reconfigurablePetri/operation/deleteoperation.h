@@ -16,6 +16,8 @@ public:
     virtual DeleteOperation* clone() const override;
     virtual OperationType getType()const override{return type;}
     virtual QList<QString*> getArguments() override;
+
+    OPERATION_ATTR toXML() const override;
 private:
     QString ComponentInstanceToDelete;
     constexpr static OperationType type=DELETE_OPERATION;

@@ -25,3 +25,11 @@ QList<QString*> AddOperation::getArguments()
 {
     return QList<QString*>{&newComponentName};
 }
+
+OPERATION_ATTR AddOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(newComponentName);
+    return operation;
+}

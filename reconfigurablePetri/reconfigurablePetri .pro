@@ -86,7 +86,9 @@ SOURCES += \
     rule/staterule.cpp \
     simulation/event.cpp \
     simulation/mineventheap.cpp \
-    simulation/disjsets.cpp
+    simulation/disjsets.cpp \
+    rule/rulefactory.cpp \
+    operation/operationfactory.cpp
 
 
 HEADERS += \
@@ -155,7 +157,9 @@ HEADERS += \
     rule/staterule.h \
     simulation/event.h \
     simulation/mineventheap.h \
-    simulation/disjsets.h
+    simulation/disjsets.h \
+    rule/rulefactory.h \
+    operation/operationfactory.h
 
 
 # Default rules for deployment.

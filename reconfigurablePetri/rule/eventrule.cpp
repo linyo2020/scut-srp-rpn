@@ -14,6 +14,8 @@ EventRule::~EventRule()
 
 bool EventRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
+    Q_UNUSED(runtimeInfo);
+
     if(conditionList.empty()||operationList.empty())
         return false;
     bool computeResult=false;
@@ -52,17 +54,34 @@ EventRule *EventRule::clone() const
 {
     QList<QList<CONDITION> > newConditionListQList;
     QList<BaseOperation*> newOperationList;
-    int currentRow=0;
-    for(const auto& andCondition:conditionList)
+    for(const auto& orCondition:conditionList)
     {
         newConditionListQList.push_back(QList<CONDITION>());
-        for(const auto& orCondition:andCondition)
+        for(const auto& andCondition:orCondition)
         {
-            newConditionListQList[currentRow].push_back(CONDITION(orCondition));
+            newConditionListQList.last().push_back(CONDITION(andCondition));
         }
-        currentRow++;
     }
     for(const auto operation:operationList)
         newOperationList.push_back(operation->clone());
     return new EventRule(name,comment,newConditionListQList,newOperationList);
+}
+
+RULE_ATTR EventRule::toXML() const
+{
+    RULE_ATTR rule;
+    rule.name=name;
+    rule.comment=comment;
+    rule.type=type;
+    for(const auto &orCondition:conditionList)
+    {
+        rule.conditions.push_back(QList<CONDITION>());
+        for(const auto &andCondition:orCondition)
+        {
+            rule.conditions.last().push_back(CONDITION(andCondition));
+        }
+    }
+    for(const auto operation:operationList)
+        rule.operations.push_back(operation->toXML());
+    return rule;
 }

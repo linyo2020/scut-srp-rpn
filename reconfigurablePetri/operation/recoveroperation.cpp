@@ -25,3 +25,11 @@ QList<QString*> RecoverOperation::getArguments()
 {
     return QList<QString*>{&componentInstanceId};
 }
+
+OPERATION_ATTR RecoverOperation::toXML() const
+{
+    OPERATION_ATTR operation;
+    operation.type=type;
+    operation.arguments.push_back(componentInstanceId);
+    return operation;
+}

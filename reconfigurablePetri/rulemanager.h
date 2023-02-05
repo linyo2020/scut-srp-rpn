@@ -16,6 +16,11 @@ public:
     RuleManager(RuleManager&&);
     RuleManager &operator=(RuleManager&&);
     ~RuleManager();
+
+    /* X M L */
+    RuleManager(const QList<RULE_ATTR> &rules);
+    QList<RULE_ATTR> toXML()const;
+
     //仿真前使用
     void appendRule(BaseRule*);
     const QList<BaseRule*>* getRuleList() const;

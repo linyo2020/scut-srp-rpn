@@ -14,6 +14,8 @@ public:
     virtual void initRule()override;
     virtual EventRule *clone() const override;
     virtual RuleType getType()const override{return type;}
+
+    virtual RULE_ATTR toXML() const override;
 private:
     constexpr static RuleType type=EVENT_RULE;
 };

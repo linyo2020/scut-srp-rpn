@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QMap>
 #include <QColor>
+#include <QPair>
 //#include "FIS/pn_defines.h"
 
 #define omega 9999999
@@ -26,12 +27,12 @@ typedef struct{
      /* label offset */
      int offsetx, offsety;/*可导入导出*/
      /* new addition */
-      QString comment;/*可导入导出*/
-      bool show;/*可导入导出*/
-      QColor brushColor;/*可导入导出*/
-      QColor penColor;/*可导入导出*/
-      QString component_id;//[new]属于哪个组件/*可导入导出*/
-      bool inputPort,outputPort,isCompoundPort;/*可导入导出*/
+     QString comment;/*可导入导出*/
+     bool show;/*可导入导出*/
+     QColor brushColor;/*可导入导出*/
+     QColor penColor;/*可导入导出*/
+     QString component_id;//[new]属于哪个组件/*可导入导出*/
+     bool inputPort,outputPort,isCompoundPort;/*可导入导出*/
    } PLACE_ATTR;
 
 typedef struct{
@@ -72,31 +73,33 @@ typedef struct{
 
 
 typedef struct{
-    QString id;
-    QString name;
-    QString type;
-    double step;//仿真步长
-    QList <PLACE_ATTR> placeNodes;
-    QList <TRANSITION_ATTR> transitionNodes;
-    QList <ARC_ATTR> arcs;
+    QString id;/*可导入导出*/
+    QString name;/*可导入导出*/
+    QString type;/*可导入导出*/
+    double step;//仿真步长/*可导入导出*/
+    QList <PLACE_ATTR> placeNodes;/*可导入导出*/
+    QList <TRANSITION_ATTR> transitionNodes;/*可导入导出*/
+    QList <ARC_ATTR> arcs;/*可导入导出*/
 
 } COMPONENT_ATTR;
 
+struct RULE_ATTR;//前置声明
 
 typedef struct{
      QString id;/*可导入导出*/
      QString name;/*可导入导出*/
-     QList <PLACE_ATTR> placeNodes;
-     QList <TRANSITION_ATTR> transitionNodes;
-     QList <ARC_ATTR> arcs;
-     QList <CONNECTOR_ATTR> connector;
-     QList <COMPONENT_ATTR> componentList;
+     QList <PLACE_ATTR> placeNodes;/*可导入导出*/
+     QList <TRANSITION_ATTR> transitionNodes;/*可导入导出*/
+     QList <ARC_ATTR> arcs;/*可导入导出*/
+     QList <CONNECTOR_ATTR> connector;/*可导入导出*/
+     QList <COMPONENT_ATTR> componentList;/*可导入导出*/
+     QList <RULE_ATTR> rules;
    } PAGE_ATTR;
 
 typedef struct{
      QString id;/*可导入导出*/
      QString name;/*可导入导出*/
-     QList <PAGE_ATTR> pages;
+     QList <PAGE_ATTR> pages;/*可导入导出*/
    } PTNET_ATTR;
 
 
@@ -117,6 +120,7 @@ typedef struct{
 //[规则库相关定义]
 //比较的符号
 enum ComparisonSymbol{EQUAL=1,NOT_EQUAL,GREATER,LESS,GREATER_EQUAL,LESS_EQUAL};
+constexpr static int MAX_COMPARISON_SYMBOL=int(LESS_EQUAL);
 
 //比较的类型，每种规则只处理对应的类型，如时间规则只处理时间规则相关类型
 enum ComparisionType{
@@ -131,6 +135,8 @@ enum ComparisionType{
     /*状态规则相关类型*/
     TOKEN_COMPARE//比较token是否符合范围
 };
+constexpr static int MAX_COMPARISION_TYPE=int(TOKEN_COMPARE);
+
 //<监控的因素（token等)><比较符号（大于/小于等）><要比较的数值>
 #pragma pack(push)
 #pragma pack(1)
@@ -211,6 +217,7 @@ enum RuleType{
     STATE_RULE,
     TIME_RULE
 };
+constexpr static int MAX_RULE_TYPE=int(TIME_RULE);
 enum OperationType{
     BASE_OPERATION=0,
     ADD_OPERATION,
@@ -221,6 +228,21 @@ enum OperationType{
     REPLACE_WITH_NEW_OPERATION,
     SEPERATE_OPERATION
 };
+constexpr static int MAX_OPERATION_TYPE=int(SEPERATE_OPERATION);
+
+struct OPERATION_ATTR{
+    int type;
+    QList<QString> arguments;
+    QList<QPair<QString,QString> > portsToMerge;
+};
+
+struct RULE_ATTR{
+    QString name,comment;
+    int type;
+    QList<QList<CONDITION> > conditions;
+    QList<OPERATION_ATTR> operations;
+};
+
 
 //[/规则库相关定义]
 

@@ -49,7 +49,7 @@ bool XmlWriter::writeXML(QFile * xmlContent)
 
 //![1]
 /* write page */
-bool XmlWriter::writePage(QXmlStreamWriter &xml, PAGE_ATTR page)
+bool XmlWriter::writePage(QXmlStreamWriter &xml, const PAGE_ATTR &page)
 {
     /* <page id="pagexx"> */
     xml.writeStartElement("page");
@@ -60,28 +60,39 @@ bool XmlWriter::writePage(QXmlStreamWriter &xml, PAGE_ATTR page)
     xml.writeEndElement();
 
 
-        foreach(PLACE_ATTR place, page.placeNodes)
-        {
-            if(!writePlaceNode(xml, place))
-                qDebug()<<"Error ...";
-        }
 
-        foreach(TRANSITION_ATTR transition, page.transitionNodes)
-        {
-            if(!writeTransitionNode(xml, transition))
-                qDebug()<<"Error ...";
-        }
+    for(const auto &place : page.placeNodes)
+    {
+        if(!writePlaceNode(xml, place))
+            qDebug()<<"Error ...";
+    }
 
-        foreach(ARC_ATTR arc, page.arcs)
-        {
-             if(!writeArc(xml, arc))
-                qDebug()<<"Error ...";
-        }
-        foreach(CONNECTOR_ATTR conn, page.connector)
-        {
-             if(!writeConnnector(xml, conn))
-                qDebug()<<"Error ...";
-        }
+    for(const auto &transition : page.transitionNodes)
+    {
+        if(!writeTransitionNode(xml, transition))
+            qDebug()<<"Error ...";
+    }
+
+    for(const auto &arc : page.arcs)
+    {
+        if(!writeArc(xml, arc))
+            qDebug()<<"Error ...";
+    }
+    for(const auto &conn : page.connector)
+    {
+        if(!writeConnnector(xml, conn))
+            qDebug()<<"Error ...";
+    }
+    for(const auto &component : page.componentList)
+    {
+        if(!writeComponent(xml,component))
+            qDebug()<<"Error ...";
+    }
+    for(const auto &rule : page.rules)
+    {
+        if(!writeRule(xml,rule))
+            qDebug()<<"Error ...";
+    }
 
     xml.writeEndElement();
     /* </page>*/
@@ -93,7 +104,7 @@ bool XmlWriter::writePage(QXmlStreamWriter &xml, PAGE_ATTR page)
 }
 
 /* write place */
-bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place)
+bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, const PLACE_ATTR &place)
 {
    QVariant v;
    v.setValue(place.x);
@@ -124,15 +135,14 @@ bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place)
    QString pGreen = v.toString();
    v.setValue(b);
    QString pBlue = v.toString();
+   QString inputPort=(place.inputPort?"Y":"N");
+   QString outputPort=(place.outputPort?"Y":"N");
+   QString isCompoundPort=(place.isCompoundPort?"Y":"N");
 
-   /* <place id="xx"> */
+   /* <place id="xx" component_id="xx"> */
    xml.writeStartElement("place");
    xml.writeAttribute("id", place.id);
-
-   /* <component_id> */
-   xml.writeStartElement("component_id");
-        xml.writeTextElement("id",place.component_id);
-   xml.writeEndElement();
+   xml.writeAttribute("component_id",place.component_id);
 
     /*<name>*/
     xml.writeStartElement("name");
@@ -184,6 +194,13 @@ bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place)
         xml.writeTextElement("show", show);
     xml.writeEndElement();
 
+    /* <port> */
+    xml.writeStartElement("port");
+        xml.writeTextElement("inputPort",inputPort);
+        xml.writeTextElement("outputPort",outputPort);
+        xml.writeTextElement("isCompoundPort",isCompoundPort);
+    xml.writeEndElement();
+
   xml.writeEndElement();
   /*</place>*/
 
@@ -193,7 +210,7 @@ bool XmlWriter::writePlaceNode(QXmlStreamWriter &xml, PLACE_ATTR place)
    return true;
 }
 
-bool XmlWriter::writeTransitionNode(QXmlStreamWriter &xml, TRANSITION_ATTR transition)
+bool XmlWriter::writeTransitionNode(QXmlStreamWriter &xml, const TRANSITION_ATTR &transition)
 {
    QVariant v;
    v.setValue(transition.x);
@@ -290,7 +307,7 @@ bool XmlWriter::writeTransitionNode(QXmlStreamWriter &xml, TRANSITION_ATTR trans
 }
 
 /* write arc */
-bool XmlWriter::writeArc(QXmlStreamWriter &xml, ARC_ATTR arc)
+bool XmlWriter::writeArc(QXmlStreamWriter &xml, const ARC_ATTR &arc)
 {
     QVariant v;
     int r,g,b;
@@ -327,7 +344,7 @@ bool XmlWriter::writeArc(QXmlStreamWriter &xml, ARC_ATTR arc)
         /* <graphics> */
         xml.writeStartElement("graphics");
 
-        foreach(QPointF p, arc.points)
+        for(const auto &p : arc.points)
         {
             xml.writeEmptyElement("position");
                 v.setValue(p.x());
@@ -361,8 +378,8 @@ bool XmlWriter::writeArc(QXmlStreamWriter &xml, ARC_ATTR arc)
 
     return true;
 }
-/* write arc */
-bool XmlWriter::writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector)
+/* write connector */
+bool XmlWriter::writeConnnector(QXmlStreamWriter &xml, const CONNECTOR_ATTR &connector)
 {
     QVariant v;
     xml.writeStartElement("connector");
@@ -377,7 +394,7 @@ bool XmlWriter::writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector)
         /* <graphics> */
         xml.writeStartElement("graphics");
 
-        foreach(QPointF p, connector.points)
+        for(const auto &p : connector.points)
         {
             xml.writeEmptyElement("position");
                 v.setValue(p.x());
@@ -399,3 +416,128 @@ bool XmlWriter::writeConnnector(QXmlStreamWriter &xml, CONNECTOR_ATTR connector)
 
     return true;
 }
+
+bool XmlWriter::writeComponent(QXmlStreamWriter &xml, const COMPONENT_ATTR &component)
+{
+    QVariant v;
+    v.setValue(component.step);
+    QString step=v.toString();
+
+    /* <component id="xx" type="xx" step="xx"> */
+    xml.writeStartElement("component");
+    xml.writeAttribute("id",component.id);
+    xml.writeAttribute("type",component.type);
+    xml.writeAttribute("step",step);
+
+    /* <name> */
+    xml.writeStartElement("name");
+        xml.writeTextElement("text",component.name);
+    xml.writeEndElement();
+    /* </name> */
+
+    for(const auto &place : component.placeNodes)
+    {
+        if(!writePlaceNode(xml,place))
+            qDebug()<<"Error ...";
+    }
+    for(const auto &transition : component.transitionNodes)
+    {
+        if(!writeTransitionNode(xml, transition))
+            qDebug()<<"Error ...";
+    }
+
+    for(const auto &arc : component.arcs)
+    {
+         if(!writeArc(xml, arc))
+            qDebug()<<"Error ...";
+    }
+    return true;
+}
+
+bool XmlWriter::writeRule(QXmlStreamWriter &xml, const RULE_ATTR &rule)
+{
+    QString type=QString::number(rule.type);
+
+    /* <rule type="xx"> */
+    xml.writeStartElement("rule");
+    xml.writeAttribute("type",type);
+
+    /* <name> */
+    xml.writeStartElement("name");
+        xml.writeTextElement("text",rule.name);
+    xml.writeEndElement();
+
+    /* <comment> */
+    xml.writeStartElement("comment");
+        xml.writeTextElement("text",rule.comment);
+    xml.writeEndElement();
+
+    /* <orCondition> */
+    xml.writeStartElement("orCondition");
+    for(const auto &orCondition:rule.conditions)
+    {
+        /* <andCondition> */
+        xml.writeStartElement("andCondition");
+        for(const auto &andCondition:orCondition)
+        {
+            QString conditionOption=QString::number(int(andCondition.conditionOption));
+            QString symbol=QString::number(int(andCondition.symbol));
+
+            /* <condition> */
+            xml.writeStartElement("condition");
+                xml.writeTextElement("conditionOption",conditionOption);
+                xml.writeTextElement("monitorFactor",andCondition.monitorFactor);
+                xml.writeTextElement("symbol",symbol);
+                xml.writeTextElement("value",andCondition.value.toString());
+            if(andCondition.rearPart!=nullptr)
+            {
+                conditionOption=QString::number(int(andCondition.rearPart->conditionOption));
+                symbol=QString::number(int(andCondition.rearPart->symbol));
+
+                /* <rearPart> */
+                xml.writeStartElement("rearPart");
+                    xml.writeTextElement("conditionOption",conditionOption);
+                    xml.writeTextElement("monitorFactor",andCondition.rearPart->monitorFactor);
+                    xml.writeTextElement("symbol",symbol);
+                    xml.writeTextElement("value",andCondition.rearPart->value.toString());
+                xml.writeEndElement();
+            }
+            xml.writeEndElement();
+        }
+        xml.writeEndElement();
+        /* </andCondition> */
+    }
+    xml.writeEndElement();
+    /* </orCondition> */
+
+    for(const auto &operation:rule.operations)
+    {
+        QString type=QString::number(operation.type);
+
+        /* <operation type="xx"> */
+        xml.writeStartElement("operation");
+        xml.writeAttribute("type",type);
+        for(const auto &argument:operation.arguments)
+        {
+            /* <argument> */
+            xml.writeTextElement("argument",argument);
+        }
+        for(const auto &ports:operation.portsToMerge)
+        {
+            /* <portsToMerge port1="xx" port2="xx"> */
+            xml.writeStartElement("portsToMerge");
+            xml.writeAttribute("port1",ports.first);
+            xml.writeAttribute("port2",ports.second);
+            xml.writeEndElement();
+        }
+
+        xml.writeEndElement();
+    }
+
+    xml.writeEndElement();
+    /* </rule> */
+    if(xml.hasError())
+        return false;
+    return true;
+}
+

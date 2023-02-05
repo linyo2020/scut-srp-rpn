@@ -14,6 +14,8 @@ public:
     virtual RecoverOperation* clone() const override;
     virtual OperationType getType()const override{return type;}
     virtual QList<QString*> getArguments() override;
+
+    virtual OPERATION_ATTR toXML() const override;
 private:
     QString componentInstanceId;
     constexpr static OperationType type=RECOVER_OPERATION;

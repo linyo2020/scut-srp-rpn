@@ -15,6 +15,8 @@ public:
     virtual OperationType getType()const override{return type;}
     virtual QList<QString*> getArguments() override;
 
+    virtual OPERATION_ATTR toXML() const override;
+
 private:
     QString newComponentName;
     constexpr static OperationType type=ADD_OPERATION;
