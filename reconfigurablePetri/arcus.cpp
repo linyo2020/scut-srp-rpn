@@ -275,9 +275,9 @@ void Arcus::paint ( QPainter * painter,
 
     //！！后续迭代注意更新
     if(targetItem->type() == QGraphicsItem::UserType+1)//目标点为库所
-       head_point = intersectionWithPlace(targetItem, &lastLine);
+       head_point = mapFromScene(intersectionWithPlace(targetItem, &lastLine));
     else if(targetItem->type()==QGraphicsItem::UserType+2)//目标点为变迁
-       head_point = intersectionWithTransition(targetItem, &lastLine);
+       head_point = mapFromScene(intersectionWithTransition(targetItem, &lastLine));
 
     int elementIndexCounter = 1;//此弧中每一小段弧的尾部索引
     foreach(ArcEdgeSelectionRectangle * rec, rects)
@@ -349,13 +349,14 @@ QPointF Arcus::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) cons
 
     qreal x0 = (circle->mapToScene(circle->shape().controlPointRect().center())).x();
     qreal y0 = (circle->mapToScene(circle->shape().controlPointRect().center())).y();
+    QLineF newline=QLineF(mapToScene(line->p1()),mapToScene(line->p2()));
 
- if(line->x2() != line->x1()) // not vertical
+ if(newline.x2() != newline.x1()) // not vertical
   {
     QPointF yaxis_intersection;
-    line->intersect( QLineF(QPointF(0, 10000), QPointF(0, -10000)), &yaxis_intersection);//取得与y轴交点
+    newline.intersect( QLineF(QPointF(0, 10000), QPointF(0, -10000)), &yaxis_intersection);//取得与y轴交点
 
-    qreal a = (line->y2() - line->y1())/(line->x2() - line->x1());
+    qreal a = (newline.y2() - newline.y1())/(newline.x2() - newline.x1());
     qreal b = yaxis_intersection.y();
 
     qreal A = 1 + a*a;
@@ -369,8 +370,8 @@ QPointF Arcus::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) cons
        QPointF ps1(s1, a*s1 + b);
        QPointF ps2(s2, a*s2 + b);
 
-    if(QLineF(line->p1(), ps1).length()
-        <= QLineF(line->p1(), ps2).length())
+    if(QLineF(newline.p1(), ps1).length()
+        <= QLineF(newline.p1(), ps2).length())
      return ps1;
     else
      return ps2;
@@ -378,7 +379,7 @@ QPointF Arcus::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) cons
   else
    {
      // y*y - 2*y0*y + (x - x0)*(x - x0) + y0*y0 - R*R = 0
-     qreal x = line->x1();
+     qreal x = newline.x1();
      qreal C = (x - x0)*(x - x0) + y0*y0 - R*R;
      qreal Q = 4*y0*y0 - 4*C;
        qreal s1 = y0 - sqrt(Q)/2;
@@ -386,8 +387,8 @@ QPointF Arcus::intersectionWithPlace(QGraphicsItem * circle, QLineF * line) cons
        QPointF ps1(x, s1);
        QPointF ps2(x, s2);
 
-    if(QLineF(line->p1(), ps1).length()
-        <= QLineF(line->p1(), ps2).length())
+    if(QLineF(newline.p1(), ps1).length()
+        <= QLineF(newline.p1(), ps2).length())
      return ps1;
     else
      return ps2;
@@ -400,6 +401,7 @@ QPointF Arcus::intersectionWithTransition(QGraphicsItem * rectangle, QLineF * li
 {
     QPointF point, intersectPoint;
     QList<QLineF> list;
+    QLineF newline=QLineF(mapToScene(line->p1()),mapToScene(line->p2()));
 
     QPainterPath shape = rectangle->mapToScene(rectangle->shape());
     QLineF line5(shape.elementAt(0).x, shape.elementAt(0).y,
@@ -414,7 +416,7 @@ QPointF Arcus::intersectionWithTransition(QGraphicsItem * rectangle, QLineF * li
     list<<line5<<line6<<line7<<line8;
 
     foreach(QLineF l,list)
-        if(line->intersect(l, &intersectPoint ) == QLineF::BoundedIntersection)
+        if(newline.intersect(l, &intersectPoint ) == QLineF::BoundedIntersection)
             point = intersectPoint;
 
     return point;
