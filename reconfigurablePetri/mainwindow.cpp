@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFont(font);
 
      //选项卡，设置为中心窗口部件
-      tabWidget = new TabWidget;
+      tabWidget = new TabWidget(this);
       setCentralWidget (tabWidget);
 
       this->comType="A";
@@ -42,35 +42,35 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::createToolBar ()
 {
     //增加新widget页面按钮
-    newToolButton = new QToolButton;
+    newToolButton = new QToolButton(this);
     newToolButton->setIconSize(QSize(50, 50));
     newToolButton->setIcon(QIcon(QPixmap(":/images/widow-new.png")));
     newToolButton->setToolTip(tr("Create a new Petri Net <span style=\"color:gray;\">Ctrl+N</span>"));
     connect(newToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->createNew();});
     //打开文件
-    openToolButton = new QToolButton;
+    openToolButton = new QToolButton(this);
     openToolButton->setIconSize(QSize(50, 50));
     openToolButton->setIcon(QIcon(QPixmap(":/images/folder-open.png")));
     openToolButton->setToolTip(tr("Open a Petri Net document <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(openToolButton,&QToolButton::clicked,this,[=](){this->open();});
 
-    saveToolButton = new QToolButton;
+    saveToolButton = new QToolButton(this);
     saveToolButton->setIconSize(QSize(50, 50));
     saveToolButton->setIcon(QIcon(QPixmap(":/images/document-save.png")));
     saveToolButton->setToolTip(tr("Save the current Petri Net <span style=\"color:gray;\">Ctrl+S</span>"));
     connect(saveToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->save();});
-    saveAsToolButton = new QToolButton;
+    saveAsToolButton = new QToolButton(this);
     saveAsToolButton->setIconSize(QSize(50, 50));
     saveAsToolButton->setIcon(QIcon(QPixmap(":/images/saveAs.png")));
     saveAsToolButton->setToolTip(tr("Save the current Petri Net as <span style=\"color:gray;\">F12</span>"));
     connect(saveAsToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveAs();});
-    printToolButton = new QToolButton;
+    printToolButton = new QToolButton(this);
     printToolButton->setIconSize(QSize(50, 50));
     printToolButton->setIcon(QIcon(QPixmap(":/images/printer.png")));
     printToolButton->setToolTip(tr("Print <span style=\"color:gray;\">Ctrl+P</span>"));
     connect(printToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->print();});
 
-    undoToolButton = new QToolButton;
+    undoToolButton = new QToolButton(this);
     undoToolButton->setIconSize(QSize(50, 50));
     undoToolButton->setIcon(QIcon(QPixmap(":/images/undo.png")));
     undoToolButton->setToolTip(tr("Undo the last action <span style=\"color:gray;\">Ctrl+Z</span>"));
@@ -78,7 +78,7 @@ void MainWindow::createToolBar ()
     connect(undoToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->undo();});
     connect(tabWidget, &TabWidget::canUndoChange, undoToolButton, &QToolButton::setEnabled);
 
-    redoToolButton = new QToolButton;
+    redoToolButton = new QToolButton(this);
     redoToolButton->setIconSize(QSize(50, 50));
     redoToolButton->setIcon(QIcon(QPixmap(":/images/redo.png")));
     redoToolButton->setToolTip(tr("Redo the last undone action <span style=\"color:gray;\">Ctrl+Shift+Z</span>"));
@@ -86,44 +86,44 @@ void MainWindow::createToolBar ()
     connect(redoToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->redo();});
     connect(tabWidget, &TabWidget::canRedoChange, redoToolButton, &QToolButton::setEnabled);
 
-    removeToolButton = new QToolButton;
+    removeToolButton = new QToolButton(this);
     removeToolButton->setIconSize(QSize(50, 50));
     removeToolButton->setIcon(QIcon(QPixmap(":/images/edit-delete.png")));
     removeToolButton->setToolTip(tr("Remove the selected items <span style=\"color:gray;\">Del</span> "));
     connect(removeToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->removeItems();});
 
-    cursorToolButton = new QToolButton;
+    cursorToolButton = new QToolButton(this);
     cursorToolButton->setIconSize(QSize(50, 50));
     cursorToolButton->setCheckable(true);
     cursorToolButton->setIcon(QIcon(QPixmap(":/images/cursor.png")));
     cursorToolButton->setToolTip(tr("Normal cursor"));
 
-    addPlaceToolButton = new QToolButton;
+    addPlaceToolButton = new QToolButton(this);
     addPlaceToolButton->setIconSize(QSize(50, 50));
     addPlaceToolButton->setCheckable(true);
     addPlaceToolButton->setIcon(QIcon(QPixmap(":/images/place.png")));
     addPlaceToolButton->setToolTip(tr("Add places"));
 
-    addTransToolButton = new QToolButton;
+    addTransToolButton = new QToolButton(this);
     addTransToolButton->setIconSize(QSize(50, 50));
     addTransToolButton->setCheckable(true);
     addTransToolButton->setIcon(QIcon(QPixmap(":/images/transition.png")));
     addTransToolButton->setToolTip(tr("Add transitions"));
 
-    drawArcToolButton = new QToolButton;
+    drawArcToolButton = new QToolButton(this);
     drawArcToolButton->setIconSize(QSize(50, 50));
     drawArcToolButton->setCheckable(true);
     drawArcToolButton->setIcon(QIcon(QPixmap(":/images/arc.png")));
     drawArcToolButton->setToolTip(tr("Draw Polylines Arcs"));
 
-    drawConnectorToolButton= new QToolButton;
+    drawConnectorToolButton= new QToolButton(this);
     drawConnectorToolButton->setIconSize(QSize(50,50));
     drawConnectorToolButton->setCheckable(true);
     drawConnectorToolButton->setIcon(QIcon(QPixmap(":/images/connector.png")));
     drawConnectorToolButton->setToolTip(tr("Draw Connectors"));
 
     //仿真
-    animateToolButton = new QToolButton;
+    animateToolButton = new QToolButton(this);
     animateToolButton->setIconSize(QSize(50, 50));
     animateToolButton->setCheckable(true);
     animateToolButton->setIcon(QIcon(QPixmap(":/images/animate.png")));
@@ -161,7 +161,7 @@ void MainWindow::createToolBar ()
     cursorToolButton->setChecked (true);
 
     //添加工具栏按钮
-    toolBar = new QToolBar;
+    toolBar = new QToolBar(this);
     toolBar->addWidget(newToolButton);
     toolBar->addWidget(openToolButton);
     toolBar->addWidget(saveToolButton);
@@ -305,8 +305,8 @@ void MainWindow::sliderValueChanged(int value)
  *  */
 void MainWindow::createStatusBar ()
 {
-    statusBar = new QStatusBar;
-    slider = new QSlider(Qt::Horizontal);
+    statusBar = new QStatusBar(this);
+    slider = new QSlider(Qt::Horizontal,this);
     slider->setMaximum(150);
     slider->setFixedWidth(150);
     slider->setRange(50, 150);
@@ -335,11 +335,11 @@ void MainWindow::createComponentDock()
     addDockWidget(Qt::RightDockWidgetArea, componentDock);
     componentDock->setAllowedAreas(Qt::RightDockWidgetArea);
     componentDock->setMinimumWidth(475);
-    newComponent=new QToolButton();
-    deleteComponent=new QToolButton();
-    addComponent=new QToolButton();
-    bindComponent=new QToolButton();
-    unbindComponent=new QToolButton();
+    newComponent=new QToolButton(this);
+    deleteComponent=new QToolButton(this);
+    addComponent=new QToolButton(this);
+    bindComponent=new QToolButton(this);
+    unbindComponent=new QToolButton(this);
     componentTree=new QTreeWidget();
 
     //---------不要调整下面connect顺序，会报错--------------------
@@ -378,7 +378,7 @@ void MainWindow::createComponentDock()
     unbindComponent->setToolTip(tr("Unbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(unbindComponent,&QToolButton::clicked,this,[=](){this->unbindingComponent();});
 
-    componentBar=new QToolBar();
+    componentBar=new QToolBar(this);
 
     componentBar->addWidget(newComponent);
     componentBar->addWidget(deleteComponent);
@@ -622,33 +622,5 @@ TabWidget* MainWindow::getTabwidget()
 }
 MainWindow::~MainWindow()
 {
-    delete newToolButton;
-    delete openToolButton;
-    delete saveToolButton;
-    delete undoToolButton;
-    delete redoToolButton;
-    delete removeToolButton;
-    delete cursorToolButton;
-    delete addPlaceToolButton;
-    delete addTransToolButton;
-    delete drawArcToolButton;
-    delete drawConnectorToolButton;
-    delete printToolButton;
-    delete animateToolButton;
-
-    delete toolBar;
-    delete tabWidget;
-
-    delete buttomDock;
-    delete slider;
-    delete statusBar;
-    delete componentDock;
-
-    delete newComponent;
-    delete addComponent;
-    delete deleteComponent;
-    delete bindComponent;
-    delete unbindComponent;
-    delete componentBar;
     //delete editcommenu;
 }
