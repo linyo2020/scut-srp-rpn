@@ -92,32 +92,87 @@ Place *ComponentList::getCertainPlace(QString PlaceID)
 
 }
 
-double ComponentList::getCertainPlaceToken(QString PlaceID)
+QList<double> ComponentList::getCertainPlaceToken(QString PlaceID)
 {
-    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+    QList<double>result;
     if(com_list.size()==0)
+        return result;
+    QStringList id=PlaceID.split("&");
+    //如果id为组件名+编号+元素
+    if(id.size()==3)
     {
-        qDebug()<<"use getCertainPlace,but com_list.size()==0";
-        return -1.0;
-    }
-    else
-    {
+        QString comId=id[0]+"&"+id[1];
         for(int i=0;i<com_list.size();i++)
         {
-            if(com_list[i]->getID()==comID)
+            if(com_list[i]->getID()==comId)
             {
-                for(int y=0;y<com_list[i]->mynet->PlaceList.size();y++)
+                QList<PLACE_ATTR>l_placeAttrList=com_list[i]->getPlace_ATTRList();
+                for(int j=0;j<l_placeAttrList.size();j++)
                 {
-                    if(com_list[i]->mynet->PlaceList[y]->getId()==PlaceID)
+                    if(l_placeAttrList[i].id==PlaceID)
                     {
-                        return com_list[i]->mynet->PlaceList[y]->getTokens();
+                        result.push_back(l_placeAttrList[i].initmark);
+                        return result;
                     }
                 }
             }
         }
-        return -1.0;
+        return result;
+    }
+    if(id.size()==2)
+    {
+        //如果id名为组件名+元素
+        for(int i=0;i<com_list.size();i++)
+        {
+            QString placeInnerId;
+            QStringList id1=com_list[i]->getID().split("&");
+            QString targetString=com_list[i]->getID();
+            if(id[0]==id1[0])
+            {
+                QList<PLACE_ATTR>l_placeAttrList=com_list[i]->getPlace_ATTRList();
+                 for(int j=0;j<l_placeAttrList.size();j++)
+                 {
+                     if(l_placeAttrList[j].id.split("&")[2]==id[1])
+                     {
+                         result.push_back(l_placeAttrList[j].initmark);
+                         qDebug()<<l_placeAttrList[j].initmark;
+                     }
+                 }
+            }
+        }
+        return result;
+    }
+    else {
+        return result;
     }
 }
+
+//double ComponentList::getCertainPlaceToken(QString PlaceID)
+//{
+//    QString comID=(PlaceID.split("+")[0].split("&")[0]+"&"+PlaceID.split("+")[0].split("&")[1]);
+//    if(com_list.size()==0)
+//    {
+//        qDebug()<<"use getCertainPlace,but com_list.size()==0";
+//        return -1.0;
+//    }
+//    else
+//    {
+//        for(int i=0;i<com_list.size();i++)
+//        {
+//            if(com_list[i]->getID()==comID)
+//            {
+//                for(int y=0;y<com_list[i]->mynet->PlaceList.size();y++)
+//                {
+//                    if(com_list[i]->mynet->PlaceList[y]->getId()==PlaceID)
+//                    {
+//                        return com_list[i]->mynet->PlaceList[y]->getTokens();
+//                    }
+//                }
+//            }
+//        }
+//        return -1.0;
+//    }
+//}
 
 QList<Place *> ComponentList::getPortinComponent(QString ComponentID)
 {

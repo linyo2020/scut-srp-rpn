@@ -126,6 +126,14 @@ void SimulationController::run()
 //        emit adddata(0,temp1,temp2);
 //        emit adddata(1,temp1,temp3);
 //    }
+//    //测试componentlist的获取token函数
+//    QList<double>l_tokensList=m_compList->getCertainPlaceToken(QString("C3&p1"),1);
+//    if(!l_tokensList.empty())
+//    {
+//        qDebug()<<"the token list of C3&p1 : ";
+//        qDebug()<<l_tokensList;
+//    }
+//    else qDebug()<<"the token list is empty";
 //-------------------------------------------------------------------------------------------------------------------------
 
     QVector<Component*> l_vComponent=m_compList->getComponentList();
@@ -142,6 +150,7 @@ void SimulationController::run()
             s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
         }
         //设置模拟步长
+        qDebug()<<l_vComponent[i]->getID()<<" ' step : "<<l_vComponent[i]->getStep();
         l_vComponent[i]->setStep(0.1*i+0.1);
         //qDebug()<<l_vComponent[i]->getID()<<" : "<<l_vComponent[i]->getStep();
     }

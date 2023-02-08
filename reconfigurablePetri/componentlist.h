@@ -21,8 +21,16 @@ public:
 
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
-    //返回库所token值
-    double getCertainPlaceToken(QString PlaceID);
+
+//    double getCertainPlaceToken(QString PlaceID);
+//    double getCertainPlaceToken(QString PlaceID);
+    /**
+     * @brief getCertainPlaceToken 获取特定库所的token值
+     * @author lwy
+     * @param PlaceID [组件名+序号+元素内部id]或[组件名+元素内部id]，例：C3&1&p0 , C3&p0
+     * @return
+     */
+    QList<double> getCertainPlaceToken(QString PlaceID);
     //获取指定组件的端口对象（仅返回普通端口）
     QList<Place*> getPortinComponent(QString ComponentID);//完成
 
@@ -80,6 +88,15 @@ public:
      * @brief show 打印组件信息和连接器信息
      */
     void show();
+//    /**
+//     * @brief checkCompPlaceTokens
+//     * @param id 格式为“组件名称+库所在组件内的id”,使用‘&’分隔，例：C3&p0
+//     * @param value 比较值
+//     * @param symbol 比较的符号
+//     * @param resPlaceId 随机返回一个满足条件的完整的库所id，例：C3&1&p0
+//     */
+//    bool checkCompPlaceTokens(QString id,double value,ComparisonSymbol symbol,QString& resPlaceId);
+
 private:
     //func
     //如果未找到返回nullptr
