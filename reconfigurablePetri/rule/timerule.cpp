@@ -32,7 +32,13 @@ bool TimeRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMAT
             case CERTAIN_TOKEN_DURATION://对token的比较满足，并维持一定的时间。
             {
                 static bool isLastStepFrontPartSatisfy=false;
-                double token=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                QList<double> tokens=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                if(tokens.empty())
+                {
+                    andComputeResult&=false;
+                    break;
+                }
+                double token=tokens[0];
                 if(doubleCompare(-1.0,token,EQUAL))
                 {
                     andComputeResult&=false;
@@ -66,7 +72,13 @@ bool TimeRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMAT
                 break;
             case TIME_TO_REACH_CERTAIN_TOKEN://令token满足比较,所需的时间
             {
-                double token=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                QList<double> tokens=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                if(tokens.empty())
+                {
+                    andComputeResult&=false;
+                    break;
+                }
+                double token=tokens[0];
                 if(doubleCompare(-1.0,token,EQUAL))
                 {
                     andComputeResult&=false;

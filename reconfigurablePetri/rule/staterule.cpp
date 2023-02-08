@@ -27,16 +27,21 @@ bool StateRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMA
             switch (andCompute.conditionOption) {
             case TOKEN_COMPARE:
             {
-                double token=componentList->getCertainPlaceToken(andCompute.monitorFactor);
-                if(doubleCompare(-1.0,token,EQUAL))
+                QList<double> tokens=componentList->getCertainPlaceToken(andCompute.monitorFactor);
+                if(tokens.empty())
                 {
                     andComputeResult&=false;
                     break;
                 }
-                if(false==doubleCompare(token,
-                                        andCompute.value.toDouble(),
-                                        andCompute.symbol))//不满足条件则置false，满足条件不做处理
-                    andComputeResult&=false;
+                for(auto token=tokens.begin();token!=tokens.end();token++)
+                {
+                    if(true==doubleCompare(*token,
+                                            andCompute.value.toDouble(),
+                                            andCompute.symbol))//满足条件则退出循环，直至循环结束仍不满足条件则置false
+                        break;
+                    if(token==tokens.end())
+                        andComputeResult&=false;
+                }
             }
             break;
             default:
