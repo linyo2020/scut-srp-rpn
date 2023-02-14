@@ -53,6 +53,7 @@ PTNET_ATTR ComponentController::getPTnet(QString filename)
     PTNET_ATTR net;
     while(iterator.hasNext())
     {
+        iterator.next();
         if(filename==iterator.key())
         {
             QFile file(iterator.value());
@@ -78,6 +79,7 @@ QList<PAGE_ATTR> ComponentController::getXMLpages(QString filename)
     QList<PAGE_ATTR> page;
     while(iterator.hasNext())
     {
+        iterator.next();
         if(filename==iterator.key())
         {
             QFile file(iterator.value());
@@ -105,6 +107,7 @@ Component * ComponentController::getComponent(QString filename)
     Component*com=new Component();
     while(iterator.hasNext())
     {
+        iterator.next();
         if(filename==iterator.key())
         {
             QFile file(iterator.value());
@@ -203,6 +206,7 @@ double ComponentController::getToken(QString filename,QString ID)
     double capacityNum;
     while(iterator.hasNext())
     {
+        iterator.next();
         if(filename==iterator.key())
         {
             QFile file(iterator.value());

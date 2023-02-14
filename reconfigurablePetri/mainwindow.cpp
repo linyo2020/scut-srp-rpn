@@ -616,6 +616,7 @@ void MainWindow::editComponentInfo(QString componentName)
     QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
     while(iterator.hasNext())
     {
+        iterator.next();
         if(oldComponentName==iterator.key())
         {
             this->component_controller->itemsFile[componentName]=iterator.value();
