@@ -43,8 +43,9 @@ void ComponentController::addComponentTreeNode(QTreeWidget *newTree,QString comp
 void ComponentController::removeComponentTreeNode(QTreeWidgetItem *item)
 {
     //if(item->checkState(0)==Qt::Checked)
-    delete item;
 
+    itemsFile.remove(item->text(0));
+    delete item;
 }
 PTNET_ATTR ComponentController::getPTnet(QString filename)
 {

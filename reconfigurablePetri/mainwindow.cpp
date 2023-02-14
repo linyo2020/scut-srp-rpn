@@ -604,7 +604,25 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
 void MainWindow::editComponentInfo(QString componentName)
 {
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
+    QString oldComponentName=currentItem->text(0);
     currentItem->setText(0,componentName);
+    foreach(Component* com,this->tabWidget->getcom_arry())
+    {
+        if(com->getComponentFileName()==oldComponentName)
+        {
+            com->setID(componentName+com->getID().split("&")[1]);
+        }
+    }
+    QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
+    while(iterator.hasNext())
+    {
+        if(oldComponentName==iterator.key())
+        {
+            this->component_controller->itemsFile[componentName]=iterator.value();
+            this->component_controller->itemsFile.remove(oldComponentName);
+            break;
+        }
+    }
 }
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {
