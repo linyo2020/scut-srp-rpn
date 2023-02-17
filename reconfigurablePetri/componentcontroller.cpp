@@ -62,6 +62,7 @@ PTNET_ATTR ComponentController::getPTnet(QString filename)
             //![3] parse xml file
             file.seek(0);
             QTextStream textstream(&file);
+            textstream.setCodec("utf-8");
             QString xmlContent = textstream.readAll();
             file.close();
 
@@ -88,6 +89,7 @@ QList<PAGE_ATTR> ComponentController::getXMLpages(QString filename)
             //![3] parse xml file
             file.seek(0);
             QTextStream textstream(&file);
+            textstream.setCodec("utf-8");
             QString xmlContent = textstream.readAll();
             file.close();
 
@@ -116,6 +118,7 @@ Component * ComponentController::getComponent(QString filename)
             //![3] parse xml file
             file.seek(0);
             QTextStream textstream(&file);
+            textstream.setCodec("utf-8");
             QString xmlContent = textstream.readAll();
             file.close();
 
@@ -215,6 +218,7 @@ double ComponentController::getToken(QString filename,QString ID)
             //![3] parse xml file
             file.seek(0);
             QTextStream textstream(&file);
+            textstream.setCodec("utf-8");
             QString xmlContent = textstream.readAll();
             file.close();
 

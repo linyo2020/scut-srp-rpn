@@ -692,6 +692,7 @@ bool TabWidget::open (MessageHandler &messageHandler)
     //![3] parse xml file
     file.seek(0);
     QTextStream textstream(&file);
+    textstream.setCodec("utf-8");
     QString xmlContent = textstream.readAll();
     file.close();
 
@@ -741,6 +742,7 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
     //![3] parse xml file
     file.seek(0);
     QTextStream textstream(&file);
+    textstream.setCodec("utf-8");
     QString xmlContent = textstream.readAll();
     file.close();
 
@@ -766,6 +768,7 @@ void TabWidget::addComponent(QString componentPath)
     //![3] parse xml file
     file.seek(0);
     QTextStream textstream(&file);
+    textstream.setCodec("utf-8");
     QString xmlContent = textstream.readAll();
     file.close();
 

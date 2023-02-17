@@ -11,6 +11,7 @@ XmlWriter::XmlWriter(const PTNET_ATTR &net)
 bool XmlWriter::writeXML(QFile * xmlContent)
 {
     QXmlStreamWriter xml(xmlContent);
+    xml.setCodec("utf-8");
     xml.setAutoFormatting(true);
 
     xml.writeStartDocument();
@@ -26,7 +27,7 @@ bool XmlWriter::writeXML(QFile * xmlContent)
             xml.writeTextElement("text", ptnet.name);
         xml.writeEndElement();
 
-        foreach(PAGE_ATTR page, ptnet.pages)
+        for(const PAGE_ATTR &page : ptnet.pages)
         {
             if(!writePage(xml, page))
                 qDebug()<<"Error ...";
