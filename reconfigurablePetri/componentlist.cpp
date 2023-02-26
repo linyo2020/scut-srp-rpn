@@ -1560,12 +1560,13 @@ ComponentList::ComponentList(ComponentList* source)
 {
     Scene=source->Scene;
     comController=source->comController;
-    m_lConnector=source->m_lConnector;
+//    m_lConnector=source->m_lConnector;
     Component*p;
     for(unsigned int i = 0; i < source->com_list.size();i++)
     {
         p=new Component(source->com_list[i]);
         com_list.push_back(p);
+        p=nullptr;
     }
     for(unsigned int i = 0; i< source->connectList.size();i++)
     {

@@ -18,7 +18,7 @@ static QList<int>s_priorList;//下标表示优先级大小，数值越小优先�
 //---------------------------------------------------------------------------------
 
 //记录所有出现过的组件以及组件中第一个库所对应的曲线编号
-static QMap<QString,int>s_mCompId2GraphIndex;
+static QMap<QString,int>s_mPlaceId2GraphIndex;
 static int s_graphIndex=0;
 //存储仿真数据,更新时机为组件更新绘图数据时
 static QMap<QString,double>s_placeId2Value;
@@ -165,6 +165,8 @@ void SimulationController::run()
     if(s_priorList.size()!=l_length)
         qDebug()<<"warning: the size of priorList is not the same as compVector's !";
     MinEventHeap*l_MinHeap=new MinEventHeap();
+    //connector数据同步
+    initConnect();
     //遍历s_priorList
     for(int i = 0; i<s_length;i++)
     {
@@ -172,11 +174,8 @@ void SimulationController::run()
         l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
         l_vComponent[s_priorList[i]]->makeFunction();//易漏
         l_MinHeap->push(l_EventPtr1);
-        //connector数据同步
-        initConnect();
         //初始化曲线
         initCompGraph(l_vComponent[s_priorList[i]],m_start);
-
     }
     //3.规则库初始化
     //3.1初始化规则库控制器
@@ -245,6 +244,10 @@ void SimulationController::run()
                            }
                            else
                            {
+                               //ui仿真步长暂时无法修改
+                               //---------------------------------------------------
+                               l_vComponent[s_priorList[i]]->setStep(0.5);
+                               //---------------------------------------------------
                                l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
                                initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
                            }
@@ -263,7 +266,7 @@ void SimulationController::run()
 //                        }
                 if(l_EventPtr1->occur())
                 {
-                    connectData(l_EventPtr1->getComponent());
+                    connectData(l_EventPtr1->getComponent(),l_tempTime);
                     drawCompData(l_EventPtr1->getComponent(),l_tempTime);
                 }
              }
@@ -382,18 +385,16 @@ void SimulationController::initCompGraph(Component* component,double start)
     QList<PLACE_ATTR>l_placeList=component->getPlace_ATTRList();
     QString l_compName=component->getID().split("&")[0]+"&"+component->getID().split("&")[1];
     QString l_graphName;
-    int l_startIndex=s_graphIndex;
-    s_mCompId2GraphIndex[component->getID()]=l_startIndex;
-
     for(int i =0;i<l_placeList.size();i++)
     {
+        s_mPlaceId2GraphIndex[l_placeList[i].id]=s_graphIndex;
         l_graphName="("+l_compName+")"+l_placeList[i].name;
         emit addgraph(l_graphName.toStdString());
         QVector <double>l_tempX;
         QVector <double> l_tempY;
         l_tempX.push_back(start);
         l_tempY.push_back(l_placeList[i].initmark);
-        emit adddata(i+l_startIndex,l_tempX,l_tempY);
+        emit adddata(s_graphIndex,l_tempX,l_tempY);
         qDebug()<<component->getID()<<"init data : ("<<start<<" ,"<<l_placeList[i].initmark<<")";
         s_graphIndex++;
     }
@@ -403,26 +404,24 @@ bool SimulationController::drawCompData(Component*component,double time)
 {
     QString l_compID=component->getID();
     QList<PLACE_ATTR>l_placeList=component->getPlace_ATTRList();
-    if(s_mCompId2GraphIndex.contains(component->getID()))
+    int l_index;
+    for(int i=0;i<l_placeList.size();i++)
     {
-        int l_index =s_mCompId2GraphIndex.value(l_compID);
-        for(int i=0;i<l_placeList.size();i++)
-        {
-            QVector <double>l_tempX;
-            QVector <double> l_tempY;
-            l_tempX.push_back(time);
-            l_tempY.push_back(l_placeList[i].initmark);
-            emit adddata(l_index,l_tempX,l_tempY);
-//            qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark<<")";
-            s_placeId2Value[l_placeList[i].id]=l_placeList[i].initmark;
-            l_index++;
+        if(s_mPlaceId2GraphIndex.contains(l_placeList[i].id))
+            l_index =s_mPlaceId2GraphIndex.value(l_placeList[i].id);
+        else break;
+        QVector <double>l_tempX;
+        QVector <double> l_tempY;
+        l_tempX.push_back(time);
+        l_tempY.push_back(l_placeList[i].initmark);
+        emit adddata(l_index,l_tempX,l_tempY);
+//      qDebug()<<l_placeList[i].name<<" adddata("<<l_index<<","<<time<<","<<l_placeList[i].initmark<<")";
+        s_placeId2Value[l_placeList[i].id]=l_placeList[i].initmark;
         }
-        return true;
-    }
-    return false;
+    return true;
 }
 
-void SimulationController::connectData(Component *component)
+void SimulationController::connectData(Component *component,double time)
 {
     //如果没有connector
       if(m_disjSets->isEmpty())
@@ -457,6 +456,12 @@ void SimulationController::connectData(Component *component)
                   {
                       QString l_compID=l_placeID_2.split("&")[0]+"&"+l_placeIDList[j].split("&")[1];
                       l_vComponent[s_comId2ListIndex[l_compID]]->changeTokens(l_placeID_2,updateData);
+                      //在曲线上增加同步数据
+                      QVector <double>l_tempX;
+                      QVector <double> l_tempY;
+                      l_tempX.push_back(time);
+                      l_tempY.push_back(updateData);
+                      emit adddata(s_mPlaceId2GraphIndex[l_placeID_2],l_tempX,l_tempY);
                   }
               }
           }
@@ -487,7 +492,7 @@ void SimulationController::initConnect()
         if(s_placeId2Value.contains(l_source)&&s_comId2ListIndex.contains(l_targetCompID))
         {
             double l_value=s_placeId2Value[l_source];
-            l_vComponent[s_mCompId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
+            l_vComponent[s_mPlaceId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
         }
 
     }
@@ -511,7 +516,7 @@ void SimulationController::updateConnect()
             if(s_placeId2Value.contains(l_source)&&s_comId2ListIndex.contains(l_targetCompID))
             {
                 double l_value=s_placeId2Value[l_source];
-                l_vComponent[s_mCompId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
+                l_vComponent[s_mPlaceId2GraphIndex[l_targetCompID]]->changeTokens(l_target,l_value);
             }
         }
     }

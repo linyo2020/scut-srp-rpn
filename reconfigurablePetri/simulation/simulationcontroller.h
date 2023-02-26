@@ -47,8 +47,10 @@ public:
     void initCompGraph(Component*,double);
     /**
      * @brief connectData 实现一个组件相关的connector数据交流
+     * @param component组件
+     * @param 时间戳
      */
-    void connectData(Component*);
+    void connectData(Component*,double);
     /**
      * @brief initConnectData 连接瞬间使得connector两端的库所同步token信息
      * 要求将被连接上的库所的token值为0；不为0则被覆盖

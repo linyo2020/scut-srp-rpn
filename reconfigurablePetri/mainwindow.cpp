@@ -449,6 +449,19 @@ void MainWindow::buttonGroupClicked(int id)
     if(id == animationMode)
     {
         buttomDock->show();
+
+        /***
+         * 测试组件的数据
+         */
+        //发现：this的component_list无有效数据
+        QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
+        for(int i=0;i<l_vTestComp.size();i++)
+        {
+            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+        }
+
+
+
         if(!tab->checkNet())
         {
             tab->setMode (normalMode);
