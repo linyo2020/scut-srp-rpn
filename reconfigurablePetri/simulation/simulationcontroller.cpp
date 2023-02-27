@@ -136,143 +136,185 @@ void SimulationController::run()
 //    else qDebug()<<"the token list is empty";
 //-------------------------------------------------------------------------------------------------------------------------
 
-    QVector<Component*> l_vComponent=m_compList->getComponentList();
-    int l_length=l_vComponent.size();
-//    qDebug()<<"仿真步长模拟";
+//    QVector<Component*> l_vComponent=m_compList->getComponentList();
+//    int l_length=l_vComponent.size();
+////    qDebug()<<"仿真步长模拟";
+//    for(int i = 0;i<l_length;i++)
+//    {
+//        //记录组件id对应的组件列表下标
+//        s_comId2ListIndex[l_vComponent[i]->getID()]=i;
+//        //记录各库所的token值
+//        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+//        for(int i=0;i<l_placeAttrList.size();i++)
+//        {
+//            s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
+//        }
+//        //设置模拟步长
+//        qDebug()<<l_vComponent[i]->getID()<<" ' step : "<<l_vComponent[i]->getStep();
+//        l_vComponent[i]->setStep(0.1*i+0.1);
+//        //qDebug()<<l_vComponent[i]->getID()<<" : "<<l_vComponent[i]->getStep();
+//    }
+//    //1.对组件进行优先级排序
+//    if(sort())
+//        qDebug()<<"components have been sorted";
+//    //2.生成事件树
+//    QVector<Event*>l_vEvent;
+//    QMap<QString,int>l_compId2Index;
+//    Event*l_EventPtr1=nullptr;
+//    Event*l_EventPtr2=nullptr;
+//    if(s_priorList.size()!=l_length)
+//        qDebug()<<"warning: the size of priorList is not the same as compVector's !";
+//    MinEventHeap*l_MinHeap=new MinEventHeap();
+//    //connector数据同步
+//    initConnect();
+//    //遍历s_priorList
+//    for(int i = 0; i<s_length;i++)
+//    {
+////        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
+//        l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
+//        l_vComponent[s_priorList[i]]->makeFunction();//易漏
+//        l_MinHeap->push(l_EventPtr1);
+//        //初始化曲线
+//        initCompGraph(l_vComponent[s_priorList[i]],m_start);
+//    }
+//    //3.规则库初始化
+//    //3.1初始化规则库控制器
+//    m_ruleManager.initRule(m_compList);
+//    //3.2初始化规则判断事件
+//    l_EventPtr1=new Event(m_step,m_start);
+//    l_MinHeap->push(l_EventPtr1);
+//    l_EventPtr1=nullptr;
+//    l_MinHeap->show();
+//    //4.进行仿真
+//    while(!l_MinHeap->empty())
+//    {
+//        l_EventPtr1=l_MinHeap->pop();
+//        //记录时间戳
+//        double l_tempTime = l_EventPtr1->getTime();
+//        if(l_tempTime>m_end)
+//            break;
+//        if(l_EventPtr1->getPrior()==0)
+//        {
+//            l_EventPtr1->occur();
+//            RULE_RUNTIME_INFOMATION l_ruleRunTimeInfo{l_tempTime};
+//               if(m_ruleManager.applyRule(l_ruleRunTimeInfo))
+//               {
+//                   //如果事件为规则类型，发生重构,需要重新分析组件拓扑图和修改事件堆
+//                       //模拟重构操作：删除一个组件以及相应的连接件
+//       //                if(m_compList->simulateStructChanged())
+//       //                m_compList->show();
+
+//                       //计算组件优先级
+//                       if(sort())
+//                           qDebug()<<"components have been sorted";
+//                       //获取新的组件信息
+//                       l_vComponent=m_compList->getComponentList();
+//                       l_length=l_vComponent.size();//l_length好像可以用length替换
+//                       //更新组件在组件容器里的位置以及库所与其token值的映射
+//                       //s_comId2ListIndex和s_placeId2Value可能需要清空
+//                       for(int i = 0;i<l_length;i++)
+//                       {
+//                           //记录组件id对应的组件列表下标
+//                           s_comId2ListIndex[l_vComponent[i]->getID()]=i;
+//                           //记录各库所的token值
+//                           QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+//                           for(int i=0;i<l_placeAttrList.size();i++)
+//                           {
+//                               s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
+//                           };
+//                       }
+//                       //更新connector的同步token值
+//                       updateConnect();
+
+//                       l_vEvent=l_MinHeap->getVector();
+//                       l_MinHeap->clear();
+//                       for(int i =0;i<l_vEvent.size();i++)
+//                       {
+//                           l_compId2Index[l_vEvent[i]->showCompId()]=i;
+//                       }
+//                       //以优先级的顺序遍历每个组件
+//                       for(int i =0;i<s_length;i++)
+//                       {
+//                           QString l_tempId=l_vComponent[s_priorList[i]]->getID();
+//                           //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
+//                           if(l_compId2Index.contains( l_tempId))
+//                           {
+//                               l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
+//                               l_EventPtr2->setPrior(s_length+1-i);
+//                           }
+//                           else
+//                           {
+//                               qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" is new added";
+//                               //ui仿真步长暂时无法修改
+//                               //---------------------------------------------------
+//                               l_vComponent[s_priorList[i]]->setStep(0.5);
+//                               //---------------------------------------------------
+//                               l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
+//                               initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
+//                           }
+//                           l_MinHeap->push(l_EventPtr2);
+//                       }
+//                       l_MinHeap->show();
+//               }
+
+//        }
+//        else{
+////                Component*l_compTemp = l_EventPtr1->getComponent();
+////                QList<PLACE_ATTR>l_placeList=l_compTemp->getPlace_ATTRList();
+////                        for( int i = 0; i<l_placeList.size();i++)
+////                        {
+////                             qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
+////                        }
+//                if(l_EventPtr1->occur())
+//                {
+//                    connectData(l_EventPtr1->getComponent(),l_tempTime);
+//                    drawCompData(l_EventPtr1->getComponent(),l_tempTime);
+//                }
+//             }
+//        l_MinHeap->push(l_EventPtr1);
+//    }
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//新测试
+    //m_compList为仿真控制类从mainwindow.tabwidget的com_list中拷贝的componentList对象
+    //m_rulemanage为仿真控制类从mainwindow中传入的RuleManager
+
+        QVector<Component*> l_vComponent=m_compList->getComponentList();
+        int l_length=l_vComponent.size();
+
+        for(int i = 0;i<l_length;i++)
+        {
+            //输出组件id
+            qDebug()<<l_vComponent[i]->getID();
+            //输出库所和token值
+            QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+            for(int i=0;i<l_placeAttrList.size();i++)
+            {
+                qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+            }
+        }
+
+
+    //测试m_compList的addNewComponent
+        //addNewComponent有问题
+//    m_compList->addNewComponent(QString("C3"));
+    //再次输出组件信息
+    l_vComponent=m_compList->getComponentList();
+    l_length=l_vComponent.size();
     for(int i = 0;i<l_length;i++)
     {
-        //记录组件id对应的组件列表下标
-        s_comId2ListIndex[l_vComponent[i]->getID()]=i;
-        //记录各库所的token值
+        //输出组件id
+        qDebug()<<l_vComponent[i]->getID();
+        //输出库所和token值
         QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
         for(int i=0;i<l_placeAttrList.size();i++)
         {
-            s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
+            qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
         }
-        //设置模拟步长
-        qDebug()<<l_vComponent[i]->getID()<<" ' step : "<<l_vComponent[i]->getStep();
-        l_vComponent[i]->setStep(0.1*i+0.1);
-        //qDebug()<<l_vComponent[i]->getID()<<" : "<<l_vComponent[i]->getStep();
     }
-    //1.对组件进行优先级排序
-    if(sort())
-        qDebug()<<"components have been sorted";
-    //2.生成事件树
-    QVector<Event*>l_vEvent;
-    QMap<QString,int>l_compId2Index;
-    Event*l_EventPtr1=nullptr;
-    Event*l_EventPtr2=nullptr;
-    if(s_priorList.size()!=l_length)
-        qDebug()<<"warning: the size of priorList is not the same as compVector's !";
-    MinEventHeap*l_MinHeap=new MinEventHeap();
-    //connector数据同步
-    initConnect();
-    //遍历s_priorList
-    for(int i = 0; i<s_length;i++)
-    {
-//        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
-        l_EventPtr1=new Event(l_vComponent[s_priorList[i]],m_start,l_length+1-i);
-        l_vComponent[s_priorList[i]]->makeFunction();//易漏
-        l_MinHeap->push(l_EventPtr1);
-        //初始化曲线
-        initCompGraph(l_vComponent[s_priorList[i]],m_start);
-    }
-    //3.规则库初始化
-    //3.1初始化规则库控制器
+
+    //初始化规则管理器
     m_ruleManager.initRule(m_compList);
-    //3.2初始化规则判断事件
-    l_EventPtr1=new Event(m_step,m_start);
-    l_MinHeap->push(l_EventPtr1);
-    l_EventPtr1=nullptr;
-    l_MinHeap->show();
-    //4.进行仿真
-    while(!l_MinHeap->empty())
-    {
-        l_EventPtr1=l_MinHeap->pop();
-        //记录时间戳
-        double l_tempTime = l_EventPtr1->getTime();
-        if(l_tempTime>m_end)
-            break;
-        if(l_EventPtr1->getPrior()==0)
-        {
-            l_EventPtr1->occur();
-            RULE_RUNTIME_INFOMATION l_ruleRunTimeInfo{l_tempTime};
-               if(m_ruleManager.applyRule(l_ruleRunTimeInfo))
-               {
-                   //如果事件为规则类型，发生重构,需要重新分析组件拓扑图和修改事件堆
-                       //模拟重构操作：删除一个组件以及相应的连接件
-       //                if(m_compList->simulateStructChanged())
-       //                m_compList->show();
-
-                       //计算组件优先级
-                       if(sort())
-                           qDebug()<<"components have been sorted";
-                       //获取新的组件信息
-                       l_vComponent=m_compList->getComponentList();
-                       l_length=l_vComponent.size();//l_length好像可以用length替换
-                       //更新组件在组件容器里的位置以及库所与其token值的映射
-                       //s_comId2ListIndex和s_placeId2Value可能需要清空
-                       for(int i = 0;i<l_length;i++)
-                       {
-                           //记录组件id对应的组件列表下标
-                           s_comId2ListIndex[l_vComponent[i]->getID()]=i;
-                           //记录各库所的token值
-                           QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
-                           for(int i=0;i<l_placeAttrList.size();i++)
-                           {
-                               s_placeId2Value[l_placeAttrList[i].id]=l_placeAttrList[i].initmark;
-                           };
-                       }
-                       //更新connector的同步token值
-                       updateConnect();
-
-                       l_vEvent=l_MinHeap->getVector();
-                       l_MinHeap->clear();
-                       for(int i =0;i<l_vEvent.size();i++)
-                       {
-                           l_compId2Index[l_vEvent[i]->showCompId()]=i;
-                       }
-                       //以优先级的顺序遍历每个组件
-                       for(int i =0;i<s_length;i++)
-                       {
-                           QString l_tempId=l_vComponent[s_priorList[i]]->getID();
-                           //重构后的组件分为两种情况：旧组件（将对应事件的优先级更新）；新组件（创建对应事件）
-                           if(l_compId2Index.contains( l_tempId))
-                           {
-                               l_EventPtr2=l_vEvent[l_compId2Index[l_tempId]];
-                               l_EventPtr2->setPrior(s_length+1-i);
-                           }
-                           else
-                           {
-                               //ui仿真步长暂时无法修改
-                               //---------------------------------------------------
-                               l_vComponent[s_priorList[i]]->setStep(0.5);
-                               //---------------------------------------------------
-                               l_EventPtr2=new Event(l_vComponent[s_priorList[i]],l_tempTime,s_length+1-i);
-                               initCompGraph(l_vComponent[s_priorList[i]],l_tempTime);
-                           }
-                           l_MinHeap->push(l_EventPtr2);
-                       }
-                       l_MinHeap->show();
-               }
-
-        }
-        else{
-//                Component*l_compTemp = l_EventPtr1->getComponent();
-//                QList<PLACE_ATTR>l_placeList=l_compTemp->getPlace_ATTRList();
-//                        for( int i = 0; i<l_placeList.size();i++)
-//                        {
-//                             qDebug()<<"place name: "<<l_placeList[i].name<<"and token after one step: "<<l_placeList[i].initmark;
-//                        }
-                if(l_EventPtr1->occur())
-                {
-                    connectData(l_EventPtr1->getComponent(),l_tempTime);
-                    drawCompData(l_EventPtr1->getComponent(),l_tempTime);
-                }
-             }
-        l_MinHeap->push(l_EventPtr1);
-    }
-
 }
 
 void SimulationController::slotAddGraph(string s)
@@ -323,8 +365,6 @@ void SimulationController::tarjan(int u)
 }
 bool SimulationController::sort()
 {
-
-
     QList<CONNECTOR_ATTR> l_ConnectorAttrList=m_compList->getConnectorAttrList();
     QVector<Component*> l_vComponent=m_compList->getComponentList();
     QMap<QString,int>l_mCompId2Order;
