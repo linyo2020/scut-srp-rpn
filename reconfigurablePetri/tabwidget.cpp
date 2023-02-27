@@ -583,11 +583,9 @@ QList<Connector *> TabWidget::init_cl()
      tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
      QString filename = tab_copy->getFilename();
 
-
      if(filename.isNull())
      {
          saveAsComponent();
-
 
      }
 
