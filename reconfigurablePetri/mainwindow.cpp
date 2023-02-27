@@ -640,6 +640,7 @@ void MainWindow::editComponentInfo(QString componentName)
 }
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {
+    qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
      foreach(Component* com,this->tabWidget->getcom_arry())
     {
         if(com->getComponentFileName()==componentName)
