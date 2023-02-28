@@ -12,6 +12,7 @@
 #define place_diameter 30
 #define transition_width 30
 #define transition_heigh 29
+#define default_step 0.1
 
 typedef QMap<QString, double> Marking;
 

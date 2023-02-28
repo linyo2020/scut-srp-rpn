@@ -1,8 +1,10 @@
 #include "component.h"
 #include"QDebug"
 #include<QThread>
+#include"defs.h"
 Component::Component()
 {
+    m_step=default_step;
     this->mynet=new PTNet();
 
 }
@@ -10,6 +12,7 @@ Component::Component()
 //bug
 Component::Component(const PTNET_ATTR& PTnet,PTNscene*scene)
 {
+    m_step=default_step;
     if(PTnet.id[0].isLetter())
     {
         Component_type=PTnet.id[0];
@@ -50,6 +53,7 @@ Component::Component(const PTNET_ATTR& PTnet,PTNscene*scene)
 
 Component::Component(QString type, QString label)
 {
+    m_step=default_step;
     this->Component_type=type;
     this->label=label;
      QDateTime time=QDateTime::currentDateTime ();
@@ -58,6 +62,7 @@ Component::Component(QString type, QString label)
 //临时采取的方法，有一定问题
 Component::Component(QString PTnet_ID, PTNscene *scene)
 {
+    m_step=default_step;
     if(PTnet_ID[0].isLetter())
     {
         this->Component_type=PTnet_ID[0];

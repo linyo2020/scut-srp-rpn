@@ -134,7 +134,8 @@ void MainWindow::createToolBar ()
     connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,[&](){
         tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());
         tabWidget->com_list->initConnector_list(tabWidget->init_cl());
-
+        ///将component_controller传入com_list中
+        tabWidget->com_list->setComponentController(component_controller);
     });
     //connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget,&TabWidget::gets);
     connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
@@ -454,11 +455,16 @@ void MainWindow::buttonGroupClicked(int id)
          * 测试组件的数据
          */
         //发现：this的component_list无有效数据
-        QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
-        for(int i=0;i<l_vTestComp.size();i++)
-        {
-            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
-        }
+//        QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
+//        for(int i=0;i<l_vTestComp.size();i++)
+//        {
+//            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+//        }
+//        QVector<Component*>l_vTestComp=tabWidget->getcom_arry();
+//        for(int i=0;i<l_vTestComp.size();i++)
+//        {
+//            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+//        }
 
 
 
@@ -623,7 +629,7 @@ void MainWindow::editComponentInfo(QString componentName)
     {
         if(com->getComponentFileName()==oldComponentName)
         {
-            com->setID(componentName+com->getID().split("&")[1]);
+            com->setID(componentName+'&'+com->getID().split("&")[1]);
         }
     }
     QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
@@ -640,12 +646,12 @@ void MainWindow::editComponentInfo(QString componentName)
 }
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {
-    qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
      foreach(Component* com,this->tabWidget->getcom_arry())
     {
         if(com->getComponentFileName()==componentName)
          {
              com->setStep(componentStep);
+//             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
          }
     }
 }
