@@ -94,7 +94,7 @@ typedef struct{
      QList <ARC_ATTR> arcs;/*可导入导出*/
      QList <CONNECTOR_ATTR> connector;/*可导入导出*/
      QList <COMPONENT_ATTR> componentList;/*可导入导出*/
-     QList <RULE_ATTR> rules;
+     QList <RULE_ATTR> rules;/*可导入导出*/
    } PAGE_ATTR;
 
 typedef struct{

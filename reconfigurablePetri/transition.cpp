@@ -238,7 +238,7 @@ TRANSITION_ATTR Transition::toXml() const
 
 Transition::~Transition ()
 {
-    delete label;
+
 }
 
 /* get id */

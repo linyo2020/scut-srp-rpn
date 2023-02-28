@@ -23,15 +23,15 @@ bool XmlWriter::writeXML(QFile * xmlContent)
      xml.writeAttribute("type", "http://www.pnml.org/version-2009/grammar/ptnet");
 
 
-        xml.writeStartElement("name");
-            xml.writeTextElement("text", ptnet.name);
-        xml.writeEndElement();
+     xml.writeStartElement("name");
+        xml.writeTextElement("text", ptnet.name);
+     xml.writeEndElement();
 
-        for(const PAGE_ATTR &page : ptnet.pages)
-        {
-            if(!writePage(xml, page))
-                qDebug()<<"Error ...";
-        }
+     for(const PAGE_ATTR &page : ptnet.pages)
+     {
+         if(!writePage(xml, page))
+             qDebug()<<"Error ...";
+     }
 
      xml.writeEndElement();
      /* </net> */
