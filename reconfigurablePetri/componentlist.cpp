@@ -758,12 +758,29 @@ Transition *ComponentList::getcertainTransition(QString tranID)
 
     foreach(QGraphicsItem*item,this->Scene->items())
     {
-        if(item->type()==Transition::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Transition*t=qgraphicsitem_cast<Transition*>(item);
-            if(t->getId()==tranID)
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                return t;
+                if(i->type()==Transition::Type)
+                {
+                    Transition*t=qgraphicsitem_cast<Transition*>(i);
+                    if(t->getId()==tranID)
+                    {
+                        return t;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(item->type()==Transition::Type)
+            {
+                Transition*t=qgraphicsitem_cast<Transition*>(item);
+                if(t->getId()==tranID)
+                {
+                    return t;
+                }
             }
         }
     }
@@ -880,9 +897,21 @@ void ComponentList::deleteArc(QString placeId, QString transitionID)
 {
     foreach(QGraphicsItem*item,this->Scene->items())
     {
-        if(item->type()==Arcus::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Arcus*a=new Arcus();
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                Arcus*a=qgraphicsitem_cast<Arcus*>(i);
+                if((a->getSourceId()==placeId&&a->getTargetId()==transitionID)||(a->getSourceId()==transitionID&&a->getTargetId()==placeId))
+                {
+                    this->Scene->removeItem(a);
+                    break;
+                }
+            }
+        }
+        else if(item->type()==Arcus::Type)
+        {
+            Arcus*a=qgraphicsitem_cast<Arcus*>(item);
             if((a->getSourceId()==placeId&&a->getTargetId()==transitionID)||(a->getSourceId()==transitionID&&a->getTargetId()==placeId))
             {
                 this->Scene->removeItem(a);

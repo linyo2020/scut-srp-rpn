@@ -32,18 +32,30 @@ void PTNscene::setMode (int mod)
 
     if(mode == animationMode)
     {
-       enableSelection(false);
-       trakInitialMarking ();
+        enableSelection(false);
+        trakInitialMarking ();
     }
     else
-       enableSelection(true);
+        enableSelection(true);
 
     if((mode == animationMode) || (mode == normalMode))
     {
         foreach(QGraphicsItem * item, items())
         {
-            if(item->type() == Transition::Type)
-                qgraphicsitem_cast<Transition*>(item)->setMode (mode);
+            if(item->type()==QGraphicsItemGroup::Type)
+            {
+                foreach(QGraphicsItem*i,item->childItems())
+                {
+                    if(i->type() == Transition::Type)
+                        qgraphicsitem_cast<Transition*>(i)->setMode (mode);
+                }
+            }
+            else
+            {
+                if(item->type() == Transition::Type)
+                    qgraphicsitem_cast<Transition*>(item)->setMode (mode);
+            }
+
         }
     }
 }
@@ -54,11 +66,26 @@ void PTNscene::trakInitialMarking ()
     initial_marking.clear();
     foreach (QGraphicsItem * item, items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-            initial_marking[place->getId()] = place->getTokens();
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(i);
+                    initial_marking[place->getId()] = place->getTokens();
+                }
+            }
         }
+        else
+        {
+            if(item->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(item);
+                initial_marking[place->getId()] = place->getTokens();
+            }
+        }
+
     }
 }
 
@@ -67,11 +94,26 @@ void PTNscene::resetInitialMarking()
 {
     foreach (QGraphicsItem * item, items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Place * place = qgraphicsitem_cast<Place*>(item);
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(i);
                     place->setTokens(initial_marking.value(place->getId()));
                     //qDebug()<<initial_marking.value(place->getId());
+                }
+            }
+        }
+        else
+        {
+            if(item->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(item);
+                place->setTokens(initial_marking.value(place->getId()));
+                //qDebug()<<initial_marking.value(place->getId());
+            }
         }
     }
 }
@@ -80,7 +122,11 @@ void PTNscene::resetInitialMarking()
 void PTNscene::enableSelection (bool selectable)
 {
     foreach(QGraphicsItem * item, items())
+    {
         item->setFlag(QGraphicsItem::ItemIsSelectable, selectable);
+
+    }
+
 }
 
 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
@@ -96,9 +142,9 @@ void PTNscene::removeItems()
 
 
     foreach(QGraphicsItem * item, selectedItems())
-       if(item->type() == QGraphicsSimpleTextItem::Type
-            || item->type() == ArcEdgeSelectionRectangle::Type)
-           item->setSelected(false);
+        if(item->type() == QGraphicsSimpleTextItem::Type
+                || item->type() == ArcEdgeSelectionRectangle::Type)
+            item->setSelected(false);
 
     /* remove arcs before */
     foreach(QGraphicsItem * item, selectedItems())
@@ -124,12 +170,12 @@ void PTNscene::removeItems()
 void PTNscene::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 {
     if(mode != normalMode)
-      return;
+        return;
 
     currentItem = itemAt(mouseEvent->scenePos(),transform);
 
     if(!currentItem)
-      return;
+        return;
 
     emit itemDoubleClicked (currentItem);
 }
@@ -144,45 +190,45 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     QVariant v;
 
     switch(mode)
-     {
-       case addPlaceMode:
+    {
+    case addPlaceMode:
 
-            v.setValue(places_indexs);
-            currentPos = QPointF(mouseEvent->scenePos().x() -15 , mouseEvent->scenePos().y() -15);
-            emit nodeInserted(currentPos, QString("p%1").arg(v.toString()));
-            places_indexs++;
-
-        break;
-       case addTransMode:
-
-            v.setValue(transitions_indexs);
-            emit nodeInserted(mouseEvent->scenePos(), QString("t%1").arg(v.toString()));
-            transitions_indexs++;
+        v.setValue(places_indexs);
+        currentPos = QPointF(mouseEvent->scenePos().x() -15 , mouseEvent->scenePos().y() -15);
+        emit nodeInserted(currentPos, QString("p%1").arg(v.toString()));
+        places_indexs++;
 
         break;
-       case drawArcMode:
+    case addTransMode:
 
-            currentItem = itemAt(mouseEvent->scenePos(),transform);
-            if(currentItem == 0)
-                return;
+        v.setValue(transitions_indexs);
+        emit nodeInserted(mouseEvent->scenePos(), QString("t%1").arg(v.toString()));
+        transitions_indexs++;
 
-            type = currentItem->type();
+        break;
+    case drawArcMode:
 
-            if(( type == Place::Type) || (type == Transition::Type) )
+        currentItem = itemAt(mouseEvent->scenePos(),transform);
+        if(currentItem == 0)
+            return;
+
+        type = currentItem->type();
+
+        if(( type == Place::Type) || (type == Transition::Type) )
+        {
+            if(pathitem == 0)
             {
-              if(pathitem == 0)
-               {
-                    pathitem = new QGraphicsPathItem;
-                    pathitem->setZValue(-1000.0);
-                    pathitem->setPen(QPen(Qt::black, 1,
-                    Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
-                    points << mouseEvent->scenePos();
-                    addItem(pathitem);
-               }
+                pathitem = new QGraphicsPathItem;
+                pathitem->setZValue(-1000.0);
+                pathitem->setPen(QPen(Qt::black, 1,
+                                      Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
+                points << mouseEvent->scenePos();
+                addItem(pathitem);
             }
+        }
 
         break;
-       case drawConnectorMode:
+    case drawConnectorMode:
         currentItem = itemAt(mouseEvent->scenePos(),transform);
         if(currentItem == 0)
             return;
@@ -191,27 +237,27 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 
         if( type == Place::Type&&dynamic_cast<Place*>(currentItem)->isOutputPort())
         {
-          if(pathitem == 0)
-           {
+            if(pathitem == 0)
+            {
                 pathitem = new QGraphicsPathItem;
                 pathitem->setZValue(-1000.0);
                 pathitem->setPen(QPen(Qt::green, 5,
-                Qt::DashLine, Qt::RoundCap, Qt::MiterJoin));
+                                      Qt::DashLine, Qt::RoundCap, Qt::MiterJoin));
                 points << mouseEvent->scenePos();
                 addItem(pathitem);
-           }
+            }
         }
 
-    break;
-       case normalMode:
+        break;
+    case normalMode:
 
         currentItem = itemAt(mouseEvent->scenePos(),transform);
 
         if((currentItem == 0)||(currentItem->type() == Arcus::Type))
         {
-           origin = mouseEvent->scenePos();
-           selectionRect = new SceneSelectionRectangle;
-           addItem(selectionRect);
+            origin = mouseEvent->scenePos();
+            selectionRect = new SceneSelectionRectangle;
+            addItem(selectionRect);
         }
         else
         {
@@ -219,45 +265,45 @@ void PTNscene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
         }
 
         break;
-       case addToken:
+    case addToken:
         currentItem = itemAt(mouseEvent->scenePos(),transform);
         if(currentItem == 0)
             return;
         if(currentItem->type() == Place::Type)
             qgraphicsitem_cast<Place*>(currentItem)->updateTokens(1);
         break;
-       case subToken:
+    case subToken:
         currentItem = itemAt(mouseEvent->scenePos(),transform);
         if(currentItem == 0)
             return;
         if(currentItem->type() == Place::Type)
             qgraphicsitem_cast<Place*>(currentItem)->updateTokens(-1);
         break;
-       case animationMode:
+    case animationMode:
 
         currentItem = itemAt(mouseEvent->scenePos(),transform);
 
         if(currentItem == 0)
-          return;
+            return;
 
         if(currentItem->type() == Transition::Type)
-         {
+        {
             Transition * transition = qgraphicsitem_cast<Transition*>(currentItem);
             if((transition->isFirable()))
             {
                 transition->fire();
             }
-         }
+        }
 
         break;
-       default:
-     ;
-     }
+    default:
+        ;
+    }
 
     if(isComponent==true)
     {
-      itemsBoundingRect().center()=QPointF(mouseEvent->scenePos().x()  , mouseEvent->scenePos().y());
-      isComponent=false;
+        itemsBoundingRect().center()=QPointF(mouseEvent->scenePos().x()  , mouseEvent->scenePos().y());
+        isComponent=false;
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
@@ -293,7 +339,7 @@ void PTNscene::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     }
 
     if(mode == normalMode)
-            QGraphicsScene::mouseMoveEvent(event);
+        QGraphicsScene::mouseMoveEvent(event);
 
     update(itemsBoundingRect());
 }
@@ -302,11 +348,11 @@ void PTNscene::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 {
     if(selectionRect != 0)
-     {
+    {
         removeItem(selectionRect);
         delete selectionRect;
         selectionRect = 0;
-     }
+    }
 
     if((currentItem != 0)&&(!oldPos.isNull()))
     {
@@ -344,14 +390,14 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     }
 
     if(((mode == drawArcMode)&&(pathitem != 0))&&(itemAt(mouseEvent->scenePos(),transform) != 0))
-     {
-       if ((itemAt(mouseEvent->scenePos(),transform)->type() == QGraphicsPathItem::Type )||
-           (itemAt(mouseEvent->scenePos(),transform) == 0))
+    {
+        if ((itemAt(mouseEvent->scenePos(),transform)->type() == QGraphicsPathItem::Type )||
+                (itemAt(mouseEvent->scenePos(),transform) == 0))
         {
             points << mouseEvent->scenePos();
             return;
         }else
-         {
+        {
 
             QPainterPath path = pathitem->path();
             removeItem(pathitem);
@@ -371,8 +417,8 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
                     int source_type = sourceItem->type();
                     int target_type = targetItem->type();
 
-            // ** Petri Net rule: no relation allowed between nodes
-            //(place or transition) of the same type!
+                    // ** Petri Net rule: no relation allowed between nodes
+                    //(place or transition) of the same type!
                     if(source_type != target_type)
                     {
                         QVariant v(arcs_indexs);
@@ -384,14 +430,14 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
         }
     }
     if(((mode == drawConnectorMode)&&(pathitem != 0))&&(itemAt(mouseEvent->scenePos(),transform) != 0))
-     {
-       if ((itemAt(mouseEvent->scenePos(),transform)->type() == QGraphicsPathItem::Type )||
-           (itemAt(mouseEvent->scenePos(),transform) == 0))
+    {
+        if ((itemAt(mouseEvent->scenePos(),transform)->type() == QGraphicsPathItem::Type )||
+                (itemAt(mouseEvent->scenePos(),transform) == 0))
         {
             points << mouseEvent->scenePos();
             return;
         }else
-         {
+        {
 
             QPainterPath path = pathitem->path();
             removeItem(pathitem);
@@ -428,14 +474,14 @@ void PTNscene::mouseReleaseEvent ( QGraphicsSceneMouseEvent * mouseEvent )
 /* Key Press Event */
 void PTNscene::keyPressEvent ( QKeyEvent * keyEvent )
 {
-  /* to cancel an arc drawing */
-  if((keyEvent->key() == Qt::Key_Escape)&&(mode == drawArcMode))
-   {
-    removeItem(pathitem);
-    delete pathitem;
-    pathitem = 0;
-    points.clear();
-  }
+    /* to cancel an arc drawing */
+    if((keyEvent->key() == Qt::Key_Escape)&&(mode == drawArcMode))
+    {
+        removeItem(pathitem);
+        delete pathitem;
+        pathitem = 0;
+        points.clear();
+    }
 }
 /*
 void PTNscene::drawBackground ( QPainter * painter, const QRectF & rect)
@@ -483,17 +529,17 @@ void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
         pGroup->addToGroup(item);
 
     }
-     auto *pRect = new QGraphicsRectItem();
-     pRect->setRect(pGroup->boundingRect());
-     pGroup->addToGroup(pRect);
-     addItem(pGroup);
+    auto *pRect = new QGraphicsRectItem();
+    pRect->setRect(pGroup->boundingRect());
+    pGroup->addToGroup(pRect);
+    addItem(pGroup);
 
 
 }
 //解除绑定组件
 void PTNscene::unbindComponent()
 {
-     if(this->currentItem != 0)
+    if(this->currentItem != 0)
     {
         QGraphicsItemGroup  *group;
         group=(QGraphicsItemGroup*)this->selectedItems().at(0);
@@ -506,7 +552,7 @@ void PTNscene::unbindComponent()
             else {
                 removeItem(item);
             }
-            }
+        }
         removeItem(group);
     }
 }
@@ -522,34 +568,34 @@ void PTNscene::bindComponent()
     int TransitionItem=0;
     int ArcItem=0;
 
-          foreach (auto *item, selectedItems())
-          {
-              if(item->type() == Place::Type)
-              {
-                  placeItem++;
-              }
-              if(item->type() == Transition::Type )
-              {
-                   TransitionItem++;
-              }
-              if(item->type() == Arcus::Type)
-              {
-                   ArcItem++;
-              }
+    foreach (auto *item, selectedItems())
+    {
+        if(item->type() == Place::Type)
+        {
+            placeItem++;
+        }
+        if(item->type() == Transition::Type )
+        {
+            TransitionItem++;
+        }
+        if(item->type() == Arcus::Type)
+        {
+            ArcItem++;
+        }
 
-          }
-          if(ArcItem!=0&&TransitionItem!=0&&placeItem!=0)
-          {
-              foreach (auto *item, selectedItems())
-              {
-                  item->setSelected(0);
-                  pGroup->addToGroup(item);
-              }
-              auto *pRect = new QGraphicsRectItem();
-              pRect->setRect(pGroup->boundingRect());
-              pGroup->addToGroup(pRect);
-              addItem(pGroup);
-          }
+    }
+    if(ArcItem!=0&&TransitionItem!=0&&placeItem!=0)
+    {
+        foreach (auto *item, selectedItems())
+        {
+            item->setSelected(0);
+            pGroup->addToGroup(item);
+        }
+        auto *pRect = new QGraphicsRectItem();
+        pRect->setRect(pGroup->boundingRect());
+        pGroup->addToGroup(pRect);
+        addItem(pGroup);
+    }
 
 
 }
@@ -576,10 +622,10 @@ void PTNscene::addXML_places (const QList <PLACE_ATTR> &places)
     }
 
     if(!indexes.isEmpty())
-     {
-       qSort(indexes.begin(), indexes.end());
-       places_indexs = indexes.last() + 1;
-     }
+    {
+        qSort(indexes.begin(), indexes.end());
+        places_indexs = indexes.last() + 1;
+    }
 
     emit nodesInserted(names);
 
@@ -610,10 +656,10 @@ void PTNscene::addXML_transitions (const QList <TRANSITION_ATTR> &transitions)
     }
 
     if(!indexes.isEmpty())
-     {
-       qSort(indexes.begin(), indexes.end());
-       transitions_indexs = indexes.last() + 1;
-     }
+    {
+        qSort(indexes.begin(), indexes.end());
+        transitions_indexs = indexes.last() + 1;
+    }
 
     emit nodesInserted(names);
 }
@@ -628,63 +674,63 @@ void PTNscene::addXML_arcs (const QList <ARC_ATTR> &arcs)
     QGraphicsItem * targetItem = 0;
 
     foreach(ARC_ATTR xmlarc, arcs)
-     {
+    {
         foreach(QGraphicsItem * node, nodes)
         {
             if(node->type() == Place::Type)
             {
                 Place * place = qgraphicsitem_cast<Place*>(node);
 
-                    if(place->getId() == xmlarc.source)
-                        {sourceItem = place;continue;}
-                    if(place->getId() == xmlarc.target)
-                        {targetItem = place;continue;}
+                if(place->getId() == xmlarc.source)
+                {sourceItem = place;continue;}
+                if(place->getId() == xmlarc.target)
+                {targetItem = place;continue;}
             }
             if(node->type() == Transition::Type)
             {
                 Transition * transition = qgraphicsitem_cast<Transition*>(node);
 
-                    if(transition->getId() == xmlarc.source)
-                        {sourceItem = transition;continue;}
-                    if(transition->getId() == xmlarc.target)
-                        {targetItem = transition;continue;}
+                if(transition->getId() == xmlarc.source)
+                {sourceItem = transition;continue;}
+                if(transition->getId() == xmlarc.target)
+                {targetItem = transition;continue;}
             }
         }
 
-      QPainterPath path(sourceItem->boundingRect().center());
+        QPainterPath path(sourceItem->boundingRect().center());
 
-      foreach(QPointF p, xmlarc.points)
-          path.lineTo(p);
+        foreach(QPointF p, xmlarc.points)
+            path.lineTo(p);
 
-      path.lineTo(targetItem->boundingRect ().center());
+        path.lineTo(targetItem->boundingRect ().center());
 
-      Arcus * arc = new Arcus(sourceItem, targetItem, path, xmlarc);
-      addItem(arc);
+        Arcus * arc = new Arcus(sourceItem, targetItem, path, xmlarc);
+        addItem(arc);
 
 
-          if(sourceItem->type() == Place::Type)
-              qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
-          else if(sourceItem->type() == Transition::Type)
-              qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
-          if(targetItem->type() == Place::Type)
-              qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
-          else if(targetItem->type() == Transition::Type)
-              qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
+        if(sourceItem->type() == Place::Type)
+            qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
+        else if(sourceItem->type() == Transition::Type)
+            qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
+        if(targetItem->type() == Place::Type)
+            qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
+        else if(targetItem->type() == Transition::Type)
+            qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
 
-          if(xmlarc.id.contains(rx))
-          {
+        if(xmlarc.id.contains(rx))
+        {
             QString str = xmlarc.id.remove(0,1);
             indexes << str.toInt();
-          }
-     }
+        }
+    }
 
     if(!indexes.isEmpty())
-     {
-       qSort(indexes.begin(), indexes.end());
-       arcs_indexs = indexes.last() + 1;
-     }
+    {
+        qSort(indexes.begin(), indexes.end());
+        arcs_indexs = indexes.last() + 1;
+    }
 
-  }
+}
 void PTNscene::addXML_connectors (const QList <CONNECTOR_ATTR> &connectors)
 {
     QList<int> indexes;
@@ -695,43 +741,43 @@ void PTNscene::addXML_connectors (const QList <CONNECTOR_ATTR> &connectors)
     QGraphicsItem * targetItem = 0;
 
     foreach(CONNECTOR_ATTR xmlconnector, connectors)
-     {
+    {
         foreach(QGraphicsItem * node, nodes)
         {
             if(node->type() == Place::Type)
             {
                 Place * place = qgraphicsitem_cast<Place*>(node);
 
-                    if(place->getId() == xmlconnector.source)
-                        {sourceItem = place;continue;}
-                    if(place->getId() == xmlconnector.target)
-                        {targetItem = place;continue;}
+                if(place->getId() == xmlconnector.source)
+                {sourceItem = place;continue;}
+                if(place->getId() == xmlconnector.target)
+                {targetItem = place;continue;}
             }
         }
         QPointF po=sourceItem->mapToScene(sourceItem->boundingRect().center());
-      QPainterPath path(po);
+        QPainterPath path(po);
 
-      foreach(QPointF p, xmlconnector.points)
-          path.lineTo(p);
-      po=targetItem->mapToScene(targetItem->boundingRect().center());;
-      path.lineTo(po);
+        foreach(QPointF p, xmlconnector.points)
+            path.lineTo(p);
+        po=targetItem->mapToScene(targetItem->boundingRect().center());;
+        path.lineTo(po);
 
-      Connector * connector = new Connector(sourceItem, targetItem, path, xmlconnector);
-      addItem(connector);
-          if(xmlconnector.id.contains(rx))
-          {
+        Connector * connector = new Connector(sourceItem, targetItem, path, xmlconnector);
+        addItem(connector);
+        if(xmlconnector.id.contains(rx))
+        {
             QString str = xmlconnector.id.remove(0,1);
             indexes << str.toInt();
-          }
-     }
+        }
+    }
 
     if(!indexes.isEmpty())
-     {
-       qSort(indexes.begin(), indexes.end());
-       connector_indexs = indexes.last() + 1;
-     }
+    {
+        qSort(indexes.begin(), indexes.end());
+        connector_indexs = indexes.last() + 1;
+    }
 
-  }
+}
 /*********************************/
 /* To generate Coverability Grap */
 /*********************************/
@@ -747,15 +793,34 @@ QMap<QString, int> PTNscene::getPlacesCapacities ()
 
     foreach (QGraphicsItem * item, items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-        int c = place->getCapacity();
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(i);
+                    int c = place->getCapacity();
 
-        if(c == 0)
-        c = omega;
+                    if(c == 0)
+                        c = omega;
 
-            map[place->getId()] = c;
+                    map[place->getId()] = c;
+                }
+            }
+        }
+        else
+        {
+            if(item->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(item);
+                int c = place->getCapacity();
+
+                if(c == 0)
+                    c = omega;
+
+                map[place->getId()] = c;
+            }
         }
     }
 
@@ -768,10 +833,24 @@ QMap<QString, QString> PTNscene::getPlacesNames ()
 
     foreach (QGraphicsItem * item, items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-            map[place->getId()] = place->getName();
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(i);
+                    map[place->getId()] = place->getName();
+                }
+            }
+        }
+        else
+        {
+            if(item->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(item);
+                map[place->getId()] = place->getName();
+            }
         }
     }
 
