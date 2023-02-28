@@ -18,7 +18,7 @@ public:
      * @param end
      * @param step
      */
-    SimulationController(ComponentList*,RuleManager&, Plot *m_gui,double start,double end,double step);
+    SimulationController(ComponentList*,RuleManager*, Plot *m_gui,double start,double end,double step);
     /**
      * @brief run 重写虚函数，在线程内进行仿真操作
      * 主要行为包括：组件优先级排序，构造最小事件堆，仿真计算与调度，数据可视化
@@ -104,7 +104,7 @@ private:
     /**组件管理*/
     ComponentList*m_compList;
     /**规则管理*/
-    RuleManager m_ruleManager;
+    RuleManager* m_ruleManager;
     /**不相交集*/
     DisjSets *m_disjSets;
     /**仿真开始时间*/

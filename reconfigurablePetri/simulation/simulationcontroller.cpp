@@ -30,7 +30,7 @@ QString findCompId(QString const s)
     return l_stringList[0]+"&"+l_stringList[1];
 }
 
-SimulationController::SimulationController(ComponentList*list,RuleManager&ruleManager,Plot*gui,
+SimulationController::SimulationController(ComponentList*list,RuleManager*ruleManager,Plot*gui,
                                            double start,double end,double step)
 {
 
@@ -314,7 +314,7 @@ void SimulationController::run()
 //    }
 
     //初始化规则管理器
-    m_ruleManager.initRule(m_compList);
+    m_ruleManager->initRule(m_compList);
 }
 
 void SimulationController::slotAddGraph(string s)

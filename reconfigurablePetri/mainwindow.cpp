@@ -481,7 +481,7 @@ void MainWindow::buttonGroupClicked(int id)
 
             //创建仿真窗口
             Plot* view = new Plot();
-            RuleManager ruleManager =tab->getRuleManager();
+            RuleManager *ruleManager =&tab->getRuleManager();
             view->setPlotId(tab->getId());
             //将com_list传入plot
             view->setComList(tabWidget->com_list);

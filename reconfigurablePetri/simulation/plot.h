@@ -115,7 +115,7 @@ public slots:
     /**
      * @brief setRuleManager
      */
-    void setRuleManager(RuleManager&);
+    void setRuleManager(RuleManager*);
 private slots:
     /**
      * @brief addNewGraphv
@@ -248,7 +248,7 @@ private:
     map<string,double> m_mInputVaraible2Value;
     vector<FUNCTIONDEF> m_vFunDef;
     ComponentList*m_com_list;
-    RuleManager m_ruleManager;
+    RuleManager* m_ruleManager;
 };
 
 #endif // PLOT_H
