@@ -86,6 +86,7 @@ public:
     bool simulateStructChanged();
     /**
      * @brief show 打印组件信息和连接器信息
+     * @author lwy
      */
     void show();
 //    /**
@@ -96,7 +97,12 @@ public:
 //     * @param resPlaceId 随机返回一个满足条件的完整的库所id，例：C3&1&p0
 //     */
 //    bool checkCompPlaceTokens(QString id,double value,ComparisonSymbol symbol,QString& resPlaceId);
-
+    /**
+     * @brief setComponentController
+     * @author lwy
+     * @return
+     */
+    bool setComponentController(ComponentController*);
 private:
     //func
     //如果未找到返回nullptr

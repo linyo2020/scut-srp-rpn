@@ -297,7 +297,7 @@ void SimulationController::run()
 
     //测试m_compList的addNewComponent
         //addNewComponent有问题
-//    m_compList->addNewComponent(QString("C3"));
+    qDebug()<<"add "<<m_compList->addNewComponent(QString("C3"));
     //再次输出组件信息
     l_vComponent=m_compList->getComponentList();
     l_length=l_vComponent.size();

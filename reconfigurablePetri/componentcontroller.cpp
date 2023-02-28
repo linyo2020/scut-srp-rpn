@@ -112,6 +112,7 @@ Component * ComponentController::getComponent(QString filename)
         iterator.next();
         if(filename==iterator.key())
         {
+//            qDebug()<<iterator.key();
             QFile file(iterator.value());
             file.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -199,6 +200,16 @@ Component * ComponentController::getComponent(QString filename)
                             }
         }
     }
+    /***
+     * 测试com
+     * 结果：
+     */
+    QList<PLACE_ATTR>l_placeAttrList=com->getPlace_ATTRList();
+    for(int i=0;i<l_placeAttrList.size();i++)
+    {
+        qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+    }
+
     return com;
 }
 

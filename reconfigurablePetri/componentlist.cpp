@@ -790,6 +790,18 @@ QString ComponentList::addNewComponent(QString Filename)
 
 //    return com->getID();
     Component*com=this->OriginComponent(Filename);
+
+    /***
+     * 测试com
+     * 结果：originCompent函数结果不正确
+     */
+    QList<PLACE_ATTR>l_placeAttrList=com->getPlace_ATTRList();
+    for(int i=0;i<l_placeAttrList.size();i++)
+    {
+        qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+    }
+
+
     this->setnewComponentIDinSimulation(com);
     this->com_list.push_back(com);
     foreach(PLACE_ATTR pl,com->getPlace_ATTRList())
@@ -850,7 +862,7 @@ QString ComponentList::addNewComponent(QString Filename)
         com->mynet->AddArc(arc);
 
     }
-
+    return  com->getID();
 }
 
 const QList<Connector *> ComponentList::getConnectorList()
@@ -1608,4 +1620,12 @@ void ComponentList::show()
     }
     for(int i = 0;i<connectList.size();i++)
         qDebug()<<"the "<<i<<" connector is from "<<connectList[i]->getSourceId()<<" to "<<connectList[i]->getTargetId();
+}
+
+bool ComponentList::setComponentController(ComponentController*scr)
+{
+    if(!scr)
+        return false;
+    comController=scr;
+    return true;
 }
