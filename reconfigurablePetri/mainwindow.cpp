@@ -59,6 +59,8 @@ void MainWindow::createToolBar ()
     saveToolButton->setIcon(QIcon(QPixmap(":/images/document-save.png")));
     saveToolButton->setToolTip(tr("Save the current Petri Net <span style=\"color:gray;\">Ctrl+S</span>"));
     connect(saveToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->save();});
+
+
     saveAsToolButton = new QToolButton(this);
     saveAsToolButton->setIconSize(QSize(50, 50));
     saveAsToolButton->setIcon(QIcon(QPixmap(":/images/saveAs.png")));

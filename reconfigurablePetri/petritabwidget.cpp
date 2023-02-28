@@ -16,8 +16,8 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
     id = ptnet.id;
     name = ptnet.name;
     filename = file;
-//    Component*com=new Component(ptnet.id,scene);
-//    component_vector.push_back(com);
+    //    Component*com=new Component(ptnet.id,scene);
+    //    component_vector.push_back(com);
 
     createTab ();
 
@@ -36,8 +36,8 @@ void PetriTabWidget::setComponent(const PTNET_ATTR &ptnet, const QString& file)
 {
     id = ptnet.id;
     name = ptnet.name;
-//    Component*com=new Component(id,scene);
-//    component_vector.push_back(com);
+    //    Component*com=new Component(id,scene);
+    //    component_vector.push_back(com);
     // xml
     scene->from_Xml_Component (ptnet.pages);
 
@@ -71,11 +71,11 @@ int PetriTabWidget::getComponentSize()
 }
 void PetriTabWidget::unbindComponent()
 {
-     scene->unbindComponent();
+    scene->unbindComponent();
 }
 void PetriTabWidget::bindComponent()
 {
-     scene->bindComponent();
+    scene->bindComponent();
 }
 void PetriTabWidget::createTab ()
 {
@@ -88,9 +88,9 @@ void PetriTabWidget::createTab ()
     view->setCacheMode(QGraphicsView::CacheBackground);
     view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     view->setRenderHints(QPainter::SmoothPixmapTransform);
-//    layout = new QHBoxLayout;  这三行是未知的神秘代码
-//    layout->addWidget(view);
-//    setLayout(layout);
+    //    layout = new QHBoxLayout;  这三行是未知的神秘代码
+    //    layout->addWidget(view);
+    //    setLayout(layout);
     scene = new PTNscene(this);
     view->setScene (scene);
     /*init the view on left-top position*/
@@ -135,21 +135,21 @@ bool PetriTabWidget::canUndo ()
 
 /* add new node to the current scene */
 void PetriTabWidget::nodeInserted(const QPointF &itemPos,
-            const QString &id)
+                                  const QString &id)
 {
     if(mode == addPlaceMode)
     {
-       undostack->push(new AddPlaceCommand(itemPos, id, scene));
-      nodes_names << id;
-      //bug
-      //mynet->AddPlace(new Place(id,itemPos));
+        undostack->push(new AddPlaceCommand(itemPos, id, scene));
+        nodes_names << id;
+        //bug
+        //mynet->AddPlace(new Place(id,itemPos));
     }else
-     {
-       undostack->push(new AddTransitionCommand(itemPos, id, scene));
-       nodes_names << id;
-       //bug
-       //mynet->AddTransition(new Transition(id,itemPos));
-     }
+    {
+        undostack->push(new AddTransitionCommand(itemPos, id, scene));
+        nodes_names << id;
+        //bug
+        //mynet->AddTransition(new Transition(id,itemPos));
+    }
 }
 
 /* set Mode */
@@ -182,7 +182,7 @@ void PetriTabWidget::setCursorShape ()
 /* is scene empty */
 bool PetriTabWidget::isNetEmpty()
 {
-  return scene->items().isEmpty();
+    return scene->items().isEmpty();
 }
 
 bool PetriTabWidget::isSaved ()
@@ -208,17 +208,17 @@ qreal PetriTabWidget::scaleValue ()
 void PetriTabWidget::removeItems ()
 {
     //同步删除PTNet中的node
-//    foreach(QGraphicsItem * item, scene->selectedItems())
-//    {
-//        if(item->type()==Place::Type)
-//        {
-//            mynet->deletePlace(qgraphicsitem_cast<Place*>(item));
-//        }
-//        else if(item->type()==Transition::Type)
-//        {
-//            mynet->deleteTransition(qgraphicsitem_cast<Transition*>(item));
-//        }
-//    }
+    //    foreach(QGraphicsItem * item, scene->selectedItems())
+    //    {
+    //        if(item->type()==Place::Type)
+    //        {
+    //            mynet->deletePlace(qgraphicsitem_cast<Place*>(item));
+    //        }
+    //        else if(item->type()==Transition::Type)
+    //        {
+    //            mynet->deleteTransition(qgraphicsitem_cast<Transition*>(item));
+    //        }
+    //    }
     scene->removeItems ();
 
 }
@@ -237,8 +237,8 @@ void PetriTabWidget::setFilename (const QString& filenm)
 
 void PetriTabWidget::cleanUndostack()
 {
-  undostack->setClean();
-      // here clean all invisible items
+    undostack->setClean();
+    // here clean all invisible items
 }
 
 void PetriTabWidget::setName(QString name)
@@ -263,25 +263,54 @@ PTNET_ATTR PetriTabWidget::toXml() const
 
     foreach(QGraphicsItem * item, scene->items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
-            continue;
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    page.placeNodes << qgraphicsitem_cast<Place*>(i)->toXml();
+                    continue;
+                }
+                if(i->type() == Transition::Type)
+                {
+                    page.transitionNodes << qgraphicsitem_cast<Transition*>(i)->toXml();
+                    continue;
+                }
+                if(i->type() == Arcus::Type)
+                {
+                    page.arcs << qgraphicsitem_cast<Arcus*>(i)->toXml();
+                    continue;
+                }
+                if(i->type()==Connector::Type)
+                {
+                    page.connector << qgraphicsitem_cast<Connector*>(i)->toXml();
+                    continue;
+                }
+            }
         }
-        if(item->type() == Transition::Type)
+        else
         {
-            page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
-            continue;
-        }
-        if(item->type() == Arcus::Type)
-        {
-            page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
-            continue;
-        }
-        if(item->type()==Connector::Type)
-        {
-            page.connector << qgraphicsitem_cast<Connector*>(item)->toXml();
-            continue;
+            if(item->type() == Place::Type)
+            {
+                page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+                continue;
+            }
+            if(item->type() == Transition::Type)
+            {
+                page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+                continue;
+            }
+            if(item->type() == Arcus::Type)
+            {
+                page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
+                continue;
+            }
+            if(item->type()==Connector::Type)
+            {
+                page.connector << qgraphicsitem_cast<Connector*>(item)->toXml();
+                continue;
+            }
         }
     }
 
@@ -292,6 +321,7 @@ PTNET_ATTR PetriTabWidget::toXml() const
 
     return net;
 }
+//与toXML()函数相比，这个函数仅针对于选中的部分进行保存，并且没有保存规则库（2023.2.28）
 PTNET_ATTR PetriTabWidget::componentToXml() const
 {
     PTNET_ATTR net;
@@ -303,20 +333,44 @@ PTNET_ATTR PetriTabWidget::componentToXml() const
 
     foreach(QGraphicsItem * item, scene->selectedItems())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
-            continue;
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                {
+                    page.placeNodes << qgraphicsitem_cast<Place*>(i)->toXml();
+                    continue;
+                }
+                if(i->type() == Transition::Type )
+                {
+                    page.transitionNodes << qgraphicsitem_cast<Transition*>(i)->toXml();
+                    continue;
+                }
+                if(i->type() == Arcus::Type)
+                {
+                    page.arcs << qgraphicsitem_cast<Arcus*>(i)->toXml();
+                    continue;
+                }
+            }
         }
-        if(item->type() == Transition::Type )
+        else
         {
-            page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
-            continue;
-        }
-        if(item->type() == Arcus::Type)
-        {
-            page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
-            continue;
+            if(item->type() == Place::Type)
+            {
+                page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+                continue;
+            }
+            if(item->type() == Transition::Type )
+            {
+                page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+                continue;
+            }
+            if(item->type() == Arcus::Type)
+            {
+                page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
+                continue;
+            }
         }
     }
     net.pages << page;
@@ -331,7 +385,7 @@ void PetriTabWidget::exportNet (const QString &imagefile)
 
     painter.begin(&image);
     scene->render(&painter , QRectF(), rect.adjusted(-10,-10,10,10).normalized(),
-              Qt::IgnoreAspectRatio);
+                  Qt::IgnoreAspectRatio);
     painter.end();
 
     image.save(imagefile);
@@ -341,8 +395,8 @@ bool PetriTabWidget::checkNet ()
 {
     bool ok = false;
 
-        emit errorMessage ("  <strong style=\"color:blue;\">Starting " \
-                           " simulation of "+name+" ... </strong>");
+    emit errorMessage ("  <strong style=\"color:blue;\">Starting " \
+                       " simulation of "+name+" ... </strong>");
 
     ok = checkMarking();
 
@@ -360,21 +414,39 @@ bool PetriTabWidget::checkNet ()
 //![0] check marking before animation
 bool PetriTabWidget::checkMarking()
 {
-  bool ok = false;
+    bool ok = false;
 
     foreach(QGraphicsItem * item ,scene->items())
     {
-        if(item->type() == Transition::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            if(qgraphicsitem_cast<Transition*>(item)->isFirable ())
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                ok = true;
-                break;
+                if(i->type() == Transition::Type)
+                {
+                    if(qgraphicsitem_cast<Transition*>(i)->isFirable ())
+                    {
+                        ok = true;
+                        break;
+                    }
+                }
             }
         }
+        else
+        {
+            if(item->type() == Transition::Type)
+            {
+                if(qgraphicsitem_cast<Transition*>(item)->isFirable ())
+                {
+                    ok = true;
+                    break;
+                }
+            }
+        }
+
     }
 
-  return ok;
+    return ok;
 }
 
 //![1] check nodes connections!
@@ -384,29 +456,59 @@ bool PetriTabWidget::checkNodesConnections()
 
     foreach(QGraphicsItem * item , scene->items())
     {
-        if(item->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Place * place = qgraphicsitem_cast<Place*>(item);
-            if(!place->hasRelations())
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                emit errorMessage ("  <span style=\"color:red;\">Error: Place "+
-                                 place->getName()+" is not connected ...</span>");
-                                ok = false;
+                if(i->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(i);
+                    if(!place->hasRelations())
+                    {
+                        emit errorMessage ("  <span style=\"color:red;\">Error: Place "+
+                                           place->getName()+" is not connected ...</span>");
+                        ok = false;
+                    }
+                }
+                if(i->type() == Transition::Type)
+                {
+                    Transition * transition = qgraphicsitem_cast<Transition*>(i);
+                    if(!transition->hasRelations())
+                    {
+                        emit errorMessage ("  <span style=\"color:red;\">Error: Transition "+
+                                           transition->getName()+" is not connected ...</span>");
+                        ok = false;
+                    }
+                }
             }
         }
-        if(item->type() == Transition::Type)
+        else
         {
-            Transition * transition = qgraphicsitem_cast<Transition*>(item);
-            if(!transition->hasRelations())
+            if(item->type() == Place::Type)
             {
-                emit errorMessage ("  <span style=\"color:red;\">Error: Transition "+
-                              transition->getName()+" is not connected ...</span>");
-                ok = false;
+                Place * place = qgraphicsitem_cast<Place*>(item);
+                if(!place->hasRelations())
+                {
+                    emit errorMessage ("  <span style=\"color:red;\">Error: Place "+
+                                       place->getName()+" is not connected ...</span>");
+                    ok = false;
+                }
+            }
+            if(item->type() == Transition::Type)
+            {
+                Transition * transition = qgraphicsitem_cast<Transition*>(item);
+                if(!transition->hasRelations())
+                {
+                    emit errorMessage ("  <span style=\"color:red;\">Error: Transition "+
+                                       transition->getName()+" is not connected ...</span>");
+                    ok = false;
+                }
             }
         }
+
     }
 
-  return ok;
+    return ok;
 }
 
 //![2] check nodes names uniqueness!
@@ -418,19 +520,34 @@ void PetriTabWidget::checkNodesNames()
 
     foreach(QGraphicsItem * item , scene->items())
     {
-        if(item->type() == Place::Type)
-            plnames << (qgraphicsitem_cast<Place*>(item))->getName();
+        if(item->type()==QGraphicsItemGroup::Type)
+        {
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type() == Place::Type)
+                    plnames << (qgraphicsitem_cast<Place*>(i))->getName();
 
-        if(item->type() == Transition::Type)
-            trnames << (qgraphicsitem_cast<Transition*>(item))->getName();
+                if(i->type() == Transition::Type)
+                    trnames << (qgraphicsitem_cast<Transition*>(i))->getName();
+            }
+        }
+        else
+        {
+            if(item->type() == Place::Type)
+                plnames << (qgraphicsitem_cast<Place*>(item))->getName();
+
+            if(item->type() == Transition::Type)
+                trnames << (qgraphicsitem_cast<Transition*>(item))->getName();
+        }
+
     }
 
     if(plnames.removeDuplicates())
-                        emit errorMessage ("  <span style=\"color:orange;\">Warning: Places names are not unique!</span>");
+        emit errorMessage ("  <span style=\"color:orange;\">Warning: Places names are not unique!</span>");
 
 
     if(trnames.removeDuplicates())
-                        emit errorMessage ("  <span style=\"color:orange;\">Warning: Transitions names are not unique!</span>");
+        emit errorMessage ("  <span style=\"color:orange;\">Warning: Transitions names are not unique!</span>");
 
 }
 
@@ -501,11 +618,11 @@ void PetriTabWidget::connect_sigs_slots ()
 void PetriTabWidget::itemDoubleClicked (QGraphicsItem* item)
 {
     if(item->type() == Place::Type)
-    placeDoubleClicked (item);
+        placeDoubleClicked (item);
     if(item->type() == Transition::Type)
-    transitionDoubleClicked (item);
+        transitionDoubleClicked (item);
     if(item->type() == Arcus::Type)
-    arcDoubleClicked (item);
+        arcDoubleClicked (item);
 
     item = 0;
 }
@@ -545,7 +662,7 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     placeEditDialog->exec();
 
     if(placeEditDialog->result() == QDialog::Rejected)
-    return;
+        return;
 
     QString new_name = placeEditDialog->inputLabel->text();
     place->setTokens(placeEditDialog->inputTokens->text().toDouble());
@@ -557,14 +674,32 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     int myflag=0;
     foreach(QGraphicsItem * item1, scene->items())
     {
-        if(item1->type() == Place::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            if(qgraphicsitem_cast<Place*>(item1)->getName()==new_name&&qgraphicsitem_cast<Place*>(item1)->getId()!=place->getId())
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                myflag=1;
-                qgraphicsitem_cast<Place*>(item1)->setTokens(place->getTokens());
+                if(i->type() == Place::Type)
+                {
+                    if(qgraphicsitem_cast<Place*>(i)->getName()==new_name&&qgraphicsitem_cast<Place*>(i)->getId()!=place->getId())
+                    {
+                        myflag=1;
+                        qgraphicsitem_cast<Place*>(i)->setTokens(place->getTokens());
+                    }
+                }
             }
         }
+        else
+        {
+            if(item1->type() == Place::Type)
+            {
+                if(qgraphicsitem_cast<Place*>(item1)->getName()==new_name&&qgraphicsitem_cast<Place*>(item1)->getId()!=place->getId())
+                {
+                    myflag=1;
+                    qgraphicsitem_cast<Place*>(item1)->setTokens(place->getTokens());
+                }
+            }
+        }
+
     }
     if(myflag==1)
     {
@@ -602,8 +737,8 @@ void PetriTabWidget::placeDoubleClicked (QGraphicsItem* item)
     }
     else if(placeEditDialog->m_notPort->isChecked())
     {
-            place->setInputPort(false);
-            place->setOutputPort(false);
+        place->setInputPort(false);
+        place->setOutputPort(false);
     }
 }
 
@@ -630,7 +765,7 @@ void PetriTabWidget::transitionDoubleClicked (QGraphicsItem* item)
     transEditDialog->exec();
 
     if(transEditDialog->result() == QDialog::Rejected)
-    return;
+        return;
 
     QString new_name = transEditDialog->inputLabel->text();
     QString new_function=transEditDialog->inputLabel1->text();
@@ -646,14 +781,32 @@ void PetriTabWidget::transitionDoubleClicked (QGraphicsItem* item)
     int myflag=0;
     foreach(QGraphicsItem * item1, scene->items())
     {
-        if(item1->type() == Transition::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            if(qgraphicsitem_cast<Transition*>(item1)->getName()==new_name&&qgraphicsitem_cast<Transition*>(item1)->getId()!=trans->getId())
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                myflag=1;
-                qgraphicsitem_cast<Transition*>(item1)->setFunction(trans->getFunction());
+                if(i->type() == Transition::Type)
+                {
+                    if(qgraphicsitem_cast<Transition*>(i)->getName()==new_name&&qgraphicsitem_cast<Transition*>(i)->getId()!=trans->getId())
+                    {
+                        myflag=1;
+                        qgraphicsitem_cast<Transition*>(i)->setFunction(trans->getFunction());
+                    }
+                }
             }
         }
+        else
+        {
+            if(item1->type() == Transition::Type)
+            {
+                if(qgraphicsitem_cast<Transition*>(item1)->getName()==new_name&&qgraphicsitem_cast<Transition*>(item1)->getId()!=trans->getId())
+                {
+                    myflag=1;
+                    qgraphicsitem_cast<Transition*>(item1)->setFunction(trans->getFunction());
+                }
+            }
+        }
+
     }
     if(myflag==1)
     {
@@ -722,12 +875,12 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
     undostack->arcClicked(item, scene);
     //arcnoclicked=false;
     Arcus* arc = qgraphicsitem_cast<Arcus*>(item);
-//	/* set the SpinBox with the arc's current weight */
-//	//arcEditDialog->inputWeight->setText(QString::number(arc->getWeight(),'f',10));
+    //	/* set the SpinBox with the arc's current weight */
+    //	//arcEditDialog->inputWeight->setText(QString::number(arc->getWeight(),'f',10));
     arcEditDialog->inputWeight->setText(QString("%1").arg(arc->getWeight()));
-//	//arcEditDialog->m_experssionEdit->setText(arc->f_getExperssion());
-//	//arcEditDialog->exec();
-//	//FL
+    //	//arcEditDialog->m_experssionEdit->setText(arc->f_getExperssion());
+    //	//arcEditDialog->exec();
+    //	//FL
     QVector<QString> l_vPlaces;
 
 
@@ -744,43 +897,71 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
     }//find transition
     foreach(QGraphicsItem * item, scene->items())
     {
-        if(item->type()==Arcus::Type)
+        if(item->type()==QGraphicsItemGroup::Type)
         {
-            Arcus *l_arc=qgraphicsitem_cast<Arcus*>(item);
-            if(l_arc->getSourceItem()->type()==Transition::Type)
+            foreach(QGraphicsItem*i,item->childItems())
             {
-                if((qgraphicsitem_cast<Transition*>(l_arc->getSourceItem()))->getName()==l_transition->getName())
+                if(i->type()==Arcus::Type)
                 {
-                    l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getTargetItem())->getName());
-                }
-            }
-            else
-            {
-                if((qgraphicsitem_cast<Transition*>(l_arc->getTargetItem()))->getName()==l_transition->getName())
-                {
-                    l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getSourceItem())->getName());
+                    Arcus *l_arc=qgraphicsitem_cast<Arcus*>(i);
+                    if(l_arc->getSourceItem()->type()==Transition::Type)
+                    {
+                        if((qgraphicsitem_cast<Transition*>(l_arc->getSourceItem()))->getName()==l_transition->getName())
+                        {
+                            l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getTargetItem())->getName());
+                        }
+                    }
+                    else
+                    {
+                        if((qgraphicsitem_cast<Transition*>(l_arc->getTargetItem()))->getName()==l_transition->getName())
+                        {
+                            l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getSourceItem())->getName());
+                        }
+                    }
                 }
             }
         }
+        else
+        {
+            if(item->type()==Arcus::Type)
+            {
+                Arcus *l_arc=qgraphicsitem_cast<Arcus*>(item);
+                if(l_arc->getSourceItem()->type()==Transition::Type)
+                {
+                    if((qgraphicsitem_cast<Transition*>(l_arc->getSourceItem()))->getName()==l_transition->getName())
+                    {
+                        l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getTargetItem())->getName());
+                    }
+                }
+                else
+                {
+                    if((qgraphicsitem_cast<Transition*>(l_arc->getTargetItem()))->getName()==l_transition->getName())
+                    {
+                        l_vPlaces.push_back(qgraphicsitem_cast<Place*>(l_arc->getSourceItem())->getName());
+                    }
+                }
+            }
+        }
+
     }
 
 
 
 
 
-//	//zyc
-//	/*
-//	l_vPlaces.push_back(QString("X1"));
-//	l_vPlaces.push_back(QString("X2"));
-//	l_vPlaces.push_back(QString("X3"));
-//	l_vPlaces.push_back(QString("X4"));
-//	l_vPlaces.push_back(QString("X5"));*/
+    //	//zyc
+    //	/*
+    //	l_vPlaces.push_back(QString("X1"));
+    //	l_vPlaces.push_back(QString("X2"));
+    //	l_vPlaces.push_back(QString("X3"));
+    //	l_vPlaces.push_back(QString("X4"));
+    //	l_vPlaces.push_back(QString("X5"));*/
 
     arcEditDialog->setlPlaces(l_vPlaces);
-//	//zyc
-//    arcEditDialog->setFIS_a(arc->getFISStruct());//非&,m_FIS_a,
-//    arcEditDialog->SetFISStruct(arc->GetFISStruct());//将获得的m_fis传输,&,m_pFIS
-//	//arcEditDialog->setRuleSet(arc->GetRuleSet());
+    //	//zyc
+    //    arcEditDialog->setFIS_a(arc->getFISStruct());//非&,m_FIS_a,
+    //    arcEditDialog->SetFISStruct(arc->GetFISStruct());//将获得的m_fis传输,&,m_pFIS
+    //	//arcEditDialog->setRuleSet(arc->GetRuleSet());
 
     //set color
     arcEditDialog->m_graphicsEditTab->setPenColor(arc->getPenColor());
@@ -792,30 +973,30 @@ void PetriTabWidget::arcDoubleClicked (QGraphicsItem* item)
     if (arcEditDialog->result() == QDialog::Rejected) return;
 
 
-//	/* update the arc's weight */
+    //	/* update the arc's weight */
     if(arcEditDialog->result() == QDialog::Accepted)
-//		//arc->setWeight(arcEditDialog->inputWeight->text().toDouble());
+        //		//arc->setWeight(arcEditDialog->inputWeight->text().toDouble());
     {
         arc->setWeight(arcEditDialog->inputWeight->text().toDouble());
-//		//zyc
-//		arc->createRuleSet();
-//        if(arc->getFISStruct().m_sFISName.size())
-//            arc->setExpression(QString::fromStdString(arc->getFISStruct().m_sFISName));
+        //		//zyc
+        //		arc->createRuleSet();
+        //        if(arc->getFISStruct().m_sFISName.size())
+        //            arc->setExpression(QString::fromStdString(arc->getFISStruct().m_sFISName));
     }
-//	//lf
-//	arcEditDialog->SetFISStruct(arc->GetFISStruct());
-//	//arc->f_setExperssion(arcEditDialog->m_experssionEdit->text());
+    //	//lf
+    //	arcEditDialog->SetFISStruct(arc->GetFISStruct());
+    //	//arc->f_setExperssion(arcEditDialog->m_experssionEdit->text());
 
-//	/*if(!arcEditDialog->m_showExperssion->isChecked())
-//	{
-//		arc->f_setLabel_1();
-//	}
-//	else
-//	{
-//		arc->f_setLabel_2();
-//	}*/
+    //	/*if(!arcEditDialog->m_showExperssion->isChecked())
+    //	{
+    //		arc->f_setLabel_1();
+    //	}
+    //	else
+    //	{
+    //		arc->f_setLabel_2();
+    //	}*/
 
-//	//set color
+    //	//set color
     arc->setPenColor(arcEditDialog->m_graphicsEditTab->getPenColor());
     arc->setBrushColor(arcEditDialog->m_graphicsEditTab->getBrushColor());
 }
