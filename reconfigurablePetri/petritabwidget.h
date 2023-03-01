@@ -73,6 +73,20 @@ public:
     //绑定组件
     void unbindComponent();
     void bindComponent();
+
+    //组件
+    //id
+    void setImportComponentId_AND_classsifyComponenet();
+    void setElementId();
+    //其余初始化
+    QVector<Component*> getcom_arry();
+    QList<Connector*> init_cl();
+
+    //组件
+    ComponentList*com_list;
+    QVector<Component*>com_arry;
+    QMap<QString,int>type_count;
+
 signals:
 
     void canRedoChange (bool canRedo);
@@ -119,6 +133,7 @@ private:
     PTNet *mynet;//赋值给undostack
 
     RuleManager ruleManager;
+
 };
 
 #endif // PETRITABWIDGET_H

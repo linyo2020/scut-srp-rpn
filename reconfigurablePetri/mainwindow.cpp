@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
       createMenuBar();
       createDocks ();
       createStatusBar ();
+      connect(this,&MainWindow::passComponnetController,tabWidget,&TabWidget::setComponent);
       createComponentDock();
       component_controller=new ComponentController();
       //test
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
       //不要调整顺序
+      //PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(tabWidget->currentWidget ());
       connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
       connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
 }
@@ -132,8 +134,9 @@ void MainWindow::createToolBar ()
     animateToolButton->setToolTip(tr("Simulation"));
     //仿真操作要在这个信号上面
     //初始化
-    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,&ComponentList::getPTNScene);
-    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,[&](){
+    //PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(tabWidget->currentWidget ());
+    connect(this->tabWidget,&TabWidget::startSimulation,tabWidget->com_list,&ComponentList::getPTNScene);
+    connect(this->tabWidget,&TabWidget::startSimulation,tabWidget->com_list,[&](){
         tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());
         tabWidget->com_list->initConnector_list(tabWidget->init_cl());
 
@@ -345,7 +348,8 @@ void MainWindow::createComponentDock()
     componentTree=new QTreeWidget();
 
     //---------不要调整下面connect顺序，会报错--------------------
-    newComponent->setText(tr("保存"));
+    newComponent->setText(tr("保存新组件"));
+
     connect(tabWidget,&TabWidget::saveComponentFinished,tabWidget,&TabWidget::setElementId);
     //connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
     //connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
@@ -369,9 +373,9 @@ void MainWindow::createComponentDock()
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(deleteComponent,&QToolButton::clicked,this,[=](){this->deleteComponentTreeNode(componentTree);});
-    addComponent->setText(tr("导入"));
+    addComponent->setText(tr("导入组件"));
     addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
-    connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);//bug
+    connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
     bindComponent->setText(tr("绑定组件"));
     bindComponent->setToolTip(tr("Bbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
@@ -404,12 +408,16 @@ void MainWindow::createComponentDock()
     mywid1->setLayout(VerticalLayout);
     emit passComponnetController(component_controller);
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
-
+    //$
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
-    connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);
-    connect(this,&MainWindow::passComponnetController,this->tabWidget->com_list,&ComponentList::getComponent);
+    connect(addComponentAction,&QAction::triggered,this,[=](){
+
+        this->addEditComponent(componentTree);
+
+        connect(this,&MainWindow::passComponnetController,tabWidget->com_list,&ComponentList::getComponent);
 
     });
+
     componentDock->setWidget(mywid1);
     componentDock->show ();
 }
@@ -456,7 +464,15 @@ void MainWindow::buttonGroupClicked(int id)
          * 测试组件的数据
          */
         //发现：this的component_list无有效数据
-        QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
+
+        //现在
+        ComponentList*comList=tabWidget->getCom_list();
+
+        QVector<Component*>l_vTestComp=comList->getComponentList();
+        //原来
+        //QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
+
+        //
         for(int i=0;i<l_vTestComp.size();i++)
         {
             qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
@@ -478,7 +494,9 @@ void MainWindow::buttonGroupClicked(int id)
             RuleManager ruleManager =tab->getRuleManager();
             view->setPlotId(tab->getId());
             //将com_list传入plot
-            view->setComList(tabWidget->com_list);
+            view->setComList(comList);
+            //view->setComList(tabWidget->com_list);
+
             //将规则管理器传入plot
             view->setRuleManager(ruleManager);
             /*
@@ -505,7 +523,7 @@ void MainWindow::buttonGroupClicked(int id)
 void MainWindow::updateWidgets (int mode)
 {
     bool disable;
-
+    Ptab=tabWidget->getPetritab();
     if(mode == animationMode)
         disable = true;
     else
@@ -621,7 +639,7 @@ void MainWindow::editComponentInfo(QString componentName)
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     QString oldComponentName=currentItem->text(0);
     currentItem->setText(0,componentName);
-    foreach(Component* com,this->tabWidget->getcom_arry())
+    foreach(Component* com,tabWidget->getPetritab()->getcom_arry())
     {
         if(com->getComponentFileName()==oldComponentName)
         {
@@ -643,7 +661,7 @@ void MainWindow::editComponentInfo(QString componentName)
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {
     qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
-     foreach(Component* com,this->tabWidget->getcom_arry())
+     foreach(Component* com,tabWidget->getPetritab()->getcom_arry())
     {
         if(com->getComponentFileName()==componentName)
          {

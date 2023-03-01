@@ -143,7 +143,7 @@ private:
 
     //选项卡式的窗口控件
     TabWidget  * tabWidget;
-
+    PetriTabWidget *Ptab;
     //可拖拉界面的部件
     DockWidget * buttomDock;
     ComponentController *component_controller;

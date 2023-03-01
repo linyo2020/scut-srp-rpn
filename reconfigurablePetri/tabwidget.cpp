@@ -11,7 +11,8 @@ TabWidget::TabWidget(QWidget * parent)
     setMovable (true);
     setTabsClosable(false);
     Component*com=new Component();
-    component_List.push_back(com);
+    //component_List.push_back(com);
+    //$
     com_list=new ComponentList();
     //点击了标签上的关闭按钮 ,移除tab页
     connect (this, &TabWidget::tabCloseRequested,this, &TabWidget::closeTab);
@@ -94,6 +95,7 @@ void TabWidget::print()
 
 }
 
+//useless
 void TabWidget::saveLocalComponent()
 {
     tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
@@ -117,7 +119,7 @@ void TabWidget::saveLocalComponent()
         if(!file.open(QIODevice::WriteOnly))
             QMessageBox::critical(this, "Open Component Error", \
                                   "The Component could not be opened.");
-
+        //!!!这一行代码可能出现问题，应该要使用toXML()
         XmlWriter writer(tab_copy->componentToXml());
         writer.writeXML(&file);
         tab_copy->cleanUndostack();
@@ -205,12 +207,13 @@ void TabWidget::saveAsComponent()
     if(!fileNames.contains(filename))
         fileNames << filename;
 }
-
+//$
 QVector<Component*> TabWidget::getcom_arry()
 {
     return com_arry;
 }
 
+//$
 QList<Connector *> TabWidget::init_cl()
 {
     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
@@ -235,11 +238,12 @@ QStringList TabWidget::getFileNames ()
 
 //bug,需要更改
 //废弃函数
-void TabWidget::setComponentType(QString type)
-{
-    this->component_List[0]->setComponent_type(type);
-    qDebug()<<"component_List[0]_type"<<component_List[0]->getComponent_type();
-}
+//void TabWidget::setComponentType(QString type)
+//{
+//    this->component_List[0]->setComponent_type(type);
+//    qDebug()<<"component_List[0]_type"<<component_List[0]->getComponent_type();
+//}
+
 
 //将网中所有元素的id增加组件前缀
 void TabWidget::setElementId()
@@ -295,6 +299,7 @@ void TabWidget::setElementId()
     //需要将画板上被新分配的id重新写入文件中
     saveComponent();
 }
+
 
 //废弃函数
 // void TabWidget::setImportComponentID()
@@ -662,16 +667,282 @@ void TabWidget::setImportComponentId_AND_classsifyComponenet()
     com_arry.push_back(com);
 }
 
-QString TabWidget::getComponenttype(QString id)
-{
-    QStringList list=id.split("&");
-    return list[0];
-}
+//QString TabWidget::getComponenttype(QString id)
+//{
+//    QStringList list=id.split("&");
+//    return list[0];
+//}
 
 RuleManager &TabWidget::getRuleManager()
 {
     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
     return tab->getRuleManager();
+}
+
+ComponentList*TabWidget::getCom_list()
+{
+    ComponentList*comList=new ComponentList();
+    PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+    PTNscene*s=tab->getSCene();
+
+    comList->getPTNScene(s);
+
+    QMap<QString,int>com_type;//当前画板中有多少个组件以及各个组件的id
+
+    QList<Connector*>l;//connector的列表
+    QVector<Component*>c_list;//当前画板中的组件列表
+    //遍历当前petritab，判断有多少个组件，并分类
+    //connecotr、id.size()==1,的元素直接获取
+    Component*default_itemID=new Component();
+
+    foreach(QGraphicsItem*item,s->items())
+    {
+        if(item->type()==Connector::Type)
+        {
+            Connector*_l=qgraphicsitem_cast<Connector*>(item);
+            l.push_back(_l);
+        }
+        //如果是带上方框
+        else if(item->type()==QGraphicsItemGroup::Type)
+        {
+            foreach(QGraphicsItem*i,item->childItems())
+            {
+                if(i->type()==Place::Type)
+                {
+                    Place*p=qgraphicsitem_cast<Place*>(i);
+                    //当前元素的id已经被设置过
+                    if(p->getId().split("&").size()>1)
+                    {
+                        QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                        if(com_type.contains(comID))
+                        {
+                            com_type[comID]++;
+                        }
+                        else
+                        {
+                            com_type.insert(comID,1);
+                        }
+                    }
+
+                    //默认值的id（p0)
+                    else
+                    {
+                        default_itemID->mynet->AddPlace(p);
+                    }
+                }
+                else if(i->type()==Transition::Type)
+                {
+                    Transition*p=qgraphicsitem_cast<Transition*>(i);
+                    //当前元素的id已经被设置过
+                    if(p->getId().split("&").size()>1)
+                    {
+                        QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                        if(com_type.contains(comID))
+                        {
+                            com_type[comID]++;
+                        }
+                        else
+                        {
+                            com_type.insert(comID,1);
+                        }
+                    }
+
+                    //默认值的id（p0)
+                    else
+                    {
+                        default_itemID->mynet->AddTransition(p);
+                    }
+                }
+                else if(i->type()==Arcus::Type)
+                {
+                    Arcus*p=qgraphicsitem_cast<Arcus*>(i);
+                    //当前元素的id已经被设置过
+                    if(p->getId().split("&").size()>1)
+                    {
+                        QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                        if(com_type.contains(comID))
+                        {
+                            com_type[comID]++;
+                        }
+                        else
+                        {
+                            com_type.insert(comID,1);
+                        }
+                    }
+
+                    //默认值的id（p0)
+                    else
+                    {
+                        default_itemID->mynet->AddArc(p);
+                    }
+                }
+            }
+        }
+        //外侧没有框
+        else
+        {
+            if(item->type()==Place::Type)
+            {
+                Place*p=qgraphicsitem_cast<Place*>(item);
+                //当前元素的id已经被设置过
+                if(p->getId().split("&").size()>1)
+                {
+                    QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                    if(com_type.contains(comID))
+                    {
+                        com_type[comID]++;
+                    }
+                    else
+                    {
+                        com_type.insert(comID,1);
+                    }
+                }
+
+                //默认值的id（p0)
+                else
+                {
+                    default_itemID->mynet->AddPlace(p);
+                }
+            }
+            else if(item->type()==Transition::Type)
+            {
+                Transition*p=qgraphicsitem_cast<Transition*>(item);
+                //当前元素的id已经被设置过
+                if(p->getId().split("&").size()>1)
+                {
+                    QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                    if(com_type.contains(comID))
+                    {
+                        com_type[comID]++;
+                    }
+                    else
+                    {
+                        com_type.insert(comID,1);
+                    }
+                }
+
+                //默认值的id（p0)
+                else
+                {
+                    default_itemID->mynet->AddTransition(p);
+                }
+            }
+            else if(item->type()==Arcus::Type)
+            {
+                Arcus*p=qgraphicsitem_cast<Arcus*>(item);
+                //当前元素的id已经被设置过
+                if(p->getId().split("&").size()>1)
+                {
+                    QString comID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                    if(com_type.contains(comID))
+                    {
+                        com_type[comID]++;
+                    }
+                    else
+                    {
+                        com_type.insert(comID,1);
+                    }
+                }
+
+                //默认值的id（p0)
+                else
+                {
+                    default_itemID->mynet->AddArc(p);
+                }
+            }
+
+        }
+    }
+
+
+    comList->initConnector_list(l);
+    //将画板上的所有元素加入到component*对象
+    //将指针元素转化为xml格式  void Component::transform()
+    //把所有component*对象放入到qvector
+    QList<QString>tl=com_type.keys();
+//    for(int i=0;i<tl.size();i++)
+//    {
+//        qDebug()<<"asfdsadfsadf:   "<<tl[i];
+//    }
+    //int num=tl.size();
+    for(int i=0;i<tl.size();i++)
+    {
+        Component*com=new Component();
+        com->Component_id=tl[i];
+        QString ssid=tl[i];
+        //qDebug()<<"第"<<i<<" id: "<<tl[i];
+        //PTNscene*s=tab->getSCene();
+        foreach(QGraphicsItem*item,s->items())
+        {
+            if(item->type()==QGraphicsItemGroup::Type)
+            {
+                //qDebug()<<"ddddddd";
+                foreach(QGraphicsItem*ii,item->childItems())
+                {
+                    if(ii->type()==Place::Type)
+                    {
+                        Place*p=qgraphicsitem_cast<Place*>(ii);
+                        //qDebug()<<"1.";
+                        if(p->getId().split("&").size()>1)
+                        {
+                            QString CID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                            if(CID==ssid)
+                            {
+                                //qDebug()<<"1."<<"第"<<i<<" place id: "<<p->getId()<<"CID: "<<CID;
+                                com->mynet->AddPlace(p);
+                            }
+                        }
+                    }
+                    else if(ii->type()==Transition::Type)
+                    {
+                        Transition*p=qgraphicsitem_cast<Transition*>(ii);
+                        if(p->getId().split("&").size()>1)
+                        {
+                            QString CID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                            if(CID==ssid)
+                            {
+                                //qDebug()<<"2."<<"第"<<i<<" Transition id: "<<p->getId()<<"CID: "<<CID;
+                                com->mynet->AddTransition(p);
+                            }
+                        }
+                    }
+                    else if(ii->type()==Arcus::Type)
+                    {
+                        Arcus*p=qgraphicsitem_cast<Arcus*>(ii);
+                        if(p->getId().split("&").size()>1)
+                        {
+                            QString CID=p->getId().split("&")[0]+"&"+p->getId().split("&")[1];
+                            if(CID==ssid)
+                            {
+                                //qDebug()<<"3."<<"第"<<i<<" Arcus id: "<<p->getId()<<"CID: "<<CID;
+                                com->mynet->AddArc(p);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+        com->transform();
+//        for(int i=0;i<com->getPlace_ATTRList().size();i++)
+//        {
+//            qDebug()<<"4."<<"第"<<i<<"Placeattr id"<<com->getPlace_ATTRList()[i].id;
+//        }
+        c_list.push_back(com);
+    }
+    if(default_itemID->mynet->ArcList.size()>0)
+    {
+        default_itemID->transform();
+        c_list.push_back(default_itemID);
+    }
+
+
+    //componentController
+
+    comList->getComponent(this->comController);
+    comList->intiCom_list(c_list);
+    return comList;
 }
 
 void TabWidget::saveModel()
@@ -708,10 +979,12 @@ void TabWidget::saveModel()
     emit startSimulation(tab_copy->getSCene());
 }
 
-void TabWidget::gets(PTNscene *scene)
+PetriTabWidget *TabWidget::getPetritab()
 {
-    qDebug()<<"111"<<scene;
+    return qobject_cast<PetriTabWidget*>(currentWidget ());
 }
+
+
 void TabWidget::undo()
 {
     qobject_cast<PetriTabWidget*>(currentWidget ())->undo ();
