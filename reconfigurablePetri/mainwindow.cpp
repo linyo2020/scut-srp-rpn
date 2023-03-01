@@ -139,7 +139,8 @@ void MainWindow::createToolBar ()
     connect(this->tabWidget,&TabWidget::startSimulation,tabWidget->com_list,[&](){
         tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());
         tabWidget->com_list->initConnector_list(tabWidget->init_cl());
-
+        ///将component_controller传入com_list中
+        tabWidget->com_list->setComponentController(component_controller);
     });
     //connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget,&TabWidget::gets);
     connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
@@ -480,6 +481,7 @@ void MainWindow::buttonGroupClicked(int id)
 
 
 
+
         if(!tab->checkNet())
         {
             tab->setMode (normalMode);
@@ -491,7 +493,7 @@ void MainWindow::buttonGroupClicked(int id)
 
             //创建仿真窗口
             Plot* view = new Plot();
-            RuleManager ruleManager =tab->getRuleManager();
+            RuleManager *ruleManager =&tab->getRuleManager();
             view->setPlotId(tab->getId());
             //将com_list传入plot
             view->setComList(comList);
@@ -643,7 +645,7 @@ void MainWindow::editComponentInfo(QString componentName)
     {
         if(com->getComponentFileName()==oldComponentName)
         {
-            com->setID(componentName+com->getID().split("&")[1]);
+            com->setID(componentName+'&'+com->getID().split("&")[1]);
         }
     }
     QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
@@ -660,12 +662,14 @@ void MainWindow::editComponentInfo(QString componentName)
 }
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {
-    qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
-     foreach(Component* com,tabWidget->getPetritab()->getcom_arry())
+
+     //qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
+     foreach(Component* com,this->tabWidget->getcom_arry())
     {
         if(com->getComponentFileName()==componentName)
          {
              com->setStep(componentStep);
+//             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
          }
     }
 }

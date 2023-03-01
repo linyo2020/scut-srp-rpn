@@ -442,6 +442,14 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
 void editRuleLibrary::on_buttonBox_accepted()
 {
    saverule(ui->listWidget->currentRow());
+   int counter=0;
+   for(const auto rule:*tempManager.getRuleList())//清除add后从来未编辑的规则，这些规则值为NULL
+   {
+       if(rule==NULL)
+           tempManager.deleteRule(counter);
+       else
+           counter++;
+   }
    dynamic_cast<PetriTabWidget*>(dynamic_cast<MainWindow*>(this->parent())->getTabwidget()->currentWidget())->setRuleManager(tempManager);
 }
 void editRuleLibrary::saverule(int row)

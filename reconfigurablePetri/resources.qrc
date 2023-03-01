@@ -18,5 +18,6 @@
         <file>images/componentLibrary.png</file>
         <file>images/componentSave.png</file>
         <file>schemas/ptnet.xsd</file>
+        <file>images/connector.png</file>
     </qresource>
 </RCC>

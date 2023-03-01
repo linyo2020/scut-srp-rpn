@@ -1324,7 +1324,7 @@ void Plot::setComList(ComponentList*list)
     m_com_list=list;
 }
 
-void Plot::setRuleManager(RuleManager&ruleManager)
+void Plot::setRuleManager(RuleManager*ruleManager)
 {
     m_ruleManager=ruleManager;
 }

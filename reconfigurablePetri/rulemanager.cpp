@@ -8,15 +8,17 @@ RuleManager::RuleManager()
 
 RuleManager::RuleManager(const RuleManager &other)
 {
-    for(const auto& eachRule:other.ruleList)
+    for(const auto eachRule:other.ruleList)
         ruleList.push_back(eachRule->clone());
     m_componentList=other.m_componentList;//仅持有指针，不管理对象内存
 }
 
 RuleManager &RuleManager::operator=(const RuleManager &other)
 {
+    for(auto eachRule:ruleList)
+        delete eachRule;
     ruleList.clear();
-    for(const auto& eachRule:other.ruleList)
+    for(const auto eachRule:other.ruleList)
         ruleList.push_back(eachRule->clone());
     m_componentList=other.m_componentList;//仅持有指针，不管理对象内存
     return *this;
@@ -27,13 +29,18 @@ RuleManager::RuleManager(RuleManager &&other)
     ruleList=std::forward<QList<BaseRule*>&&>(other.ruleList);
     m_componentList=other.m_componentList;
     other.m_componentList=nullptr;
+    other.ruleList.clear();
 }
 
 RuleManager &RuleManager::operator=(RuleManager &&other)
 {
+    for(auto eachRule:ruleList)
+        delete eachRule;
+    ruleList.clear();
     ruleList=std::forward<QList<BaseRule*>&&>(other.ruleList);
     m_componentList=other.m_componentList;
     other.m_componentList=nullptr;
+    other.ruleList.clear();
     return *this;
 }
 

@@ -30,7 +30,7 @@ QString findCompId(QString const s)
     return l_stringList[0]+"&"+l_stringList[1];
 }
 
-SimulationController::SimulationController(ComponentList*list,RuleManager&ruleManager,Plot*gui,
+SimulationController::SimulationController(ComponentList*list,RuleManager*ruleManager,Plot*gui,
                                            double start,double end,double step)
 {
 
@@ -285,7 +285,7 @@ void SimulationController::run()
         for(int i = 0;i<l_length;i++)
         {
             //输出组件id
-            qDebug()<<l_vComponent[i]->getID();
+            qDebug()<<l_vComponent[i]->getID()<<" 's step : "<<l_vComponent[i]->getStep();
             //输出库所和token值
             QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
             for(int i=0;i<l_placeAttrList.size();i++)
@@ -297,24 +297,24 @@ void SimulationController::run()
 
     //测试m_compList的addNewComponent
         //addNewComponent有问题
-    qDebug()<<"add "<<m_compList->addNewComponent(QString("C3"));
-    //再次输出组件信息
-    l_vComponent=m_compList->getComponentList();
-    l_length=l_vComponent.size();
-    for(int i = 0;i<l_length;i++)
-    {
-        //输出组件id
-        qDebug()<<l_vComponent[i]->getID();
-        //输出库所和token值
-        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
-        for(int i=0;i<l_placeAttrList.size();i++)
-        {
-            qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
-        }
-    }
+//    qDebug()<<"add "<<m_compList->addNewComponent(QString("C3"));
+//    //再次输出组件信息
+//    l_vComponent=m_compList->getComponentList();
+//    l_length=l_vComponent.size();
+//    for(int i = 0;i<l_length;i++)
+//    {
+//        //输出组件id
+//        qDebug()<<l_vComponent[i]->getID();
+//        //输出库所和token值
+//        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+//        for(int i=0;i<l_placeAttrList.size();i++)
+//        {
+//            qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+//        }
+//    }
 
     //初始化规则管理器
-    m_ruleManager.initRule(m_compList);
+    m_ruleManager->initRule(m_compList);
 }
 
 void SimulationController::slotAddGraph(string s)
