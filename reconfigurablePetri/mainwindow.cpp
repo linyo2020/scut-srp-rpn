@@ -627,7 +627,6 @@ void MainWindow::openEditComponent()
     editComponent* editComponentDialog=new editComponent(this);
     editComponentDialog->show();
     connect(editComponentDialog,&editComponent::editComponentInfo,this,&MainWindow::editComponentInfo);
-    connect(editComponentDialog,&editComponent::editComponentStep,this,&MainWindow::editComponentStep);
 }
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
@@ -636,43 +635,300 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
     emit addComponentController(component_path);
 
 }
-void MainWindow::editComponentInfo(QString componentName)
+void MainWindow::editComponentInfo(QString componentName,double componentStep)
 {
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     QString oldComponentName=currentItem->text(0);
-    currentItem->setText(0,componentName);
-    foreach(Component* com,tabWidget->getPetritab()->getcom_arry())
-    {
-        if(com->getComponentFileName()==oldComponentName)
-        {
-            com->setID(componentName+'&'+com->getID().split("&")[1]);
-        }
-    }
-    QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
-    while(iterator.hasNext())
-    {
-        iterator.next();
-        if(oldComponentName==iterator.key())
-        {
-            this->component_controller->itemsFile[componentName]=iterator.value();
-            this->component_controller->itemsFile.remove(oldComponentName);
-            break;
-        }
-    }
-}
-void MainWindow::editComponentStep(QString componentName,double componentStep)
-{
+    if(componentName!="")
+    {   //每修改一次就重新扫描页面上的元素
+        PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget());
+        PTNscene*s=tab->getSCene();
+        Component*com=new Component();
+        QStringList tabIDList=tab->getId().split("&");
 
-     //qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
-     foreach(Component* com,this->tabWidget->getcom_arry())
-    {
-        if(com->getComponentFileName()==componentName)
-         {
-             com->setStep(componentStep);
-//             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
-         }
+        //qDebug()<<"list[0] is type :"<<tabIDList[0];
+        //QString comType=tabIDList[0];
+        tab->type_count.insert(componentName,tab->type_count[oldComponentName]);
+        tab->type_count.remove(oldComponentName);
+        QString s1=QString::number(tab->type_count[componentName]);
+        //qDebug()<<"s1:"<<tab->getId()<<": "<<s1;
+        tab->setId(componentName+"&"+s1);
+        //qDebug()<<"5:"<<tab->getId()<<": "<<tab->getId();
+        //对于所有原始组件中的元素而言，原始id的格式 一定是 type&C1&p0/t0
+        int count=0;
+
+        foreach(QGraphicsItem * item , s->items())
+        {
+            count+=1;
+            if(item->type()==QGraphicsItemGroup::Type)
+            {
+
+                foreach(QGraphicsItem*i,item->childItems())
+                {
+                    if(i->type() == Place::Type)
+                    {
+                        Place * place = qgraphicsitem_cast<Place*>(i);
+                        QStringList list=place->getId().split("&");
+                        //qDebug()<<"6: "<<tab->getId()<<": "<<place->getId();
+                        //qDebug()<<"7:"<<tab->getId()<<": "<<place->isInComponent();
+                        //这个元素已经被包含在组件内了
+                        if(place->isInComponent())
+                        {
+                            //qDebug()<<"10:"<<tab->getId()<<": "<<place->getId();
+                            continue;
+                        }
+                        else
+                        {
+
+                            //设置id
+                            QString newId=componentName+"&"+s1+"&"+list[2];
+                            //qDebug()<<"8:"<<tab->getId()<<": "<<newId;
+                            place->setPlaceID(newId);
+                            place->setIncomponent(true);
+                            com->mynet->AddPlace(place);
+
+
+                        }
+                    }
+
+                    else if(i->type() == Transition::Type)
+                    {
+                        Transition * trans = qgraphicsitem_cast<Transition*>(i);
+                        QStringList list=trans->getId().split("&");
+                        //qDebug()<<"11"<<trans->getId();
+                        //qDebug()<<"14"<<tab->getId()<<": "<<trans->isInComponent();
+                        //这个元素已经被包含在组件内了
+                        if(trans->isInComponent())
+                        {
+                            //qDebug()<<"12"<<tab->getId()<<": "<<trans->getId();
+                            continue;
+                        }
+                        else
+                        {
+
+                            //设置id
+                            QString newId=componentName+"&"+s1+"&"+list[2];
+                            //qDebug()<<"9:"<<tab->getId()<<": "<<newId;
+                            trans->setID(newId);
+                            trans->setIncomponent(true);
+                            com->mynet->AddTransition(trans);
+
+
+                        }
+                    }
+                    else if(i->type() == Arcus::Type)
+                    {
+                        Arcus * arc = qgraphicsitem_cast<Arcus*>(i);
+                        QStringList list=arc->getId().split("&");
+                        //qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
+                        //qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();
+                        //这个元素已经被包含在组件内了
+                        if(arc->isInComponent())
+                        {
+                            //qDebug()<<"17"<<tab->getId()<<": "<<arc->isInComponent();
+                            continue;
+                        }
+                        else
+                        {
+
+                            //设置id
+                            QString newId=componentName+"&"+s1+"&"+list[2];
+                            QString source=arc->getSourceId();
+                            QStringList sl=source.split("&");
+
+                            QString target=arc->getTargetId();
+                            QStringList gl=target.split("&");
+
+                            arc->setsourceId(componentName+"&"+s1+"&"+sl[2]);
+                            arc->setTargetId(componentName+"&"+s1+"&"+gl[2]);
+                            //qDebug()<<"18:"<<tab->getId()<<": "<<newId;
+                            arc->setID(newId);
+                            arc->setIncomponent(true);
+                            com->mynet->AddArc(arc);
+                        }
+                    }
+                }
+
+
+            }
+            else
+            {
+                if(item->type() == Place::Type)
+                {
+                    Place * place = qgraphicsitem_cast<Place*>(item);
+                    QStringList list=place->getId().split("&");
+                    //qDebug()<<"6: "<<tab->getId()<<": "<<place->getId();
+                    //qDebug()<<"7:"<<tab->getId()<<": "<<place->isInComponent();
+                    //这个元素已经被包含在组件内了
+                    if(place->isInComponent())
+                    {
+                        //qDebug()<<"10:"<<tab->getId()<<": "<<place->getId();
+                        continue;
+                    }
+                    else
+                    {
+
+                        //设置id
+                        QString newId=componentName+"&"+s1+"&"+list[2];
+                        //qDebug()<<"8:"<<tab->getId()<<": "<<newId;
+                        place->setPlaceID(newId);
+                        place->setIncomponent(true);
+                        com->mynet->AddPlace(place);
+
+
+                    }
+                }
+                else if(item->type() == Transition::Type)
+                {
+                    Transition * trans = qgraphicsitem_cast<Transition*>(item);
+                    QStringList list=trans->getId().split("&");
+                    //qDebug()<<"11"<<trans->getId();
+                    //qDebug()<<"14"<<tab->getId()<<": "<<trans->isInComponent();
+                    //这个元素已经被包含在组件内了
+                    if(trans->isInComponent())
+                    {
+                        //qDebug()<<"12"<<tab->getId()<<": "<<trans->getId();
+                        continue;
+                    }
+                    else
+                    {
+
+                        //设置id
+                        QString newId=componentName+"&"+s1+"&"+list[2];
+                        //qDebug()<<"9:"<<tab->getId()<<": "<<newId;
+                        trans->setID(newId);
+                        trans->setIncomponent(true);
+                        com->mynet->AddTransition(trans);
+
+
+                    }
+                }
+                else if(item->type() == Arcus::Type)
+                {
+                    Arcus * arc = qgraphicsitem_cast<Arcus*>(item);
+                    QStringList list=arc->getId().split("&");
+                    //qDebug()<<"15: "<<tab->getId()<<": "<<arc->getId();
+                    //qDebug()<<"16 "<<tab->getId()<<": "<<arc->isInComponent();
+                    //这个元素已经被包含在组件内了
+                    if(arc->isInComponent())
+                    {
+                        //qDebug()<<"17"<<tab->getId()<<": "<<arc->isInComponent();
+                        continue;
+                    }
+                    else
+                    {
+
+                        //设置id
+                        QString newId=componentName+"&"+s1+"&"+list[2];
+                        QString source=arc->getSourceId();
+                        QStringList sl=source.split("&");
+
+                        QString target=arc->getTargetId();
+                        QStringList gl=target.split("&");
+
+                        arc->setsourceId(componentName+"&"+s1+"&"+sl[2]);
+                        arc->setTargetId(componentName+"&"+s1+"&"+gl[2]);
+                        //qDebug()<<"18:"<<tab->getId()<<": "<<newId;
+                        arc->setID(newId);
+                        arc->setIncomponent(true);
+                        com->mynet->AddArc(arc);
+                    }
+                }
+
+
+            }
+        }
+
+        com->setID(tab->getId());
+        //qDebug()<<"13"<<com->getID();
+        com->transform();
+        for(int i=0;i<tab->getcom_arry().size();i++)
+        {
+            if(tab->getcom_arry().at(i)->getComponentFileName()==oldComponentName)
+            {
+                tab->com_arry.remove(i);
+            }
+        }
+
+        tab->com_arry.push_back(com);
+
+        currentItem->setText(0,componentName);
+        foreach(Component* com,this->tabWidget->getPetritab()->getcom_arry())
+        {
+            if(com->getComponentFileName()==oldComponentName)
+            {
+                com->setID(componentName+'&'+com->getID().split("&")[1]);
+            }
+        }
+        foreach(Component* com,this->tabWidget->getcom_arry())
+        {
+            if(com->getComponentFileName()==oldComponentName)
+            {
+                com->setStep(componentStep);
+                //             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
+            }
+        }
+        QMapIterator<QString,QString>iterator1(this->component_controller->itemsFile);
+        while(iterator1.hasNext())
+        {
+            iterator1.next();
+            if(oldComponentName==iterator1.key())
+            {
+                this->component_controller->itemsFile.insert(componentName,iterator1.value());
+                this->component_controller->itemsFile.remove(oldComponentName);
+                break;
+            }
+        }
+        QMapIterator<QString,double>iterator2(this->component_controller->step_change);
+        while(iterator2.hasNext())
+        {
+            iterator2.next();
+            if(oldComponentName==iterator2.key())
+            {
+                this->component_controller->step_change.insert(componentName,componentStep);
+                this->component_controller->step_change.remove(oldComponentName);
+                break;
+            }
+        }
+        QMapIterator<QString,QString>iterator3(this->component_controller->comname_change);
+        while(iterator3.hasNext())
+        {
+            iterator3.next();
+            if(oldComponentName==iterator3.key())
+            {
+                this->component_controller->comname_change.insert(componentName,oldComponentName);
+                break;
+            }
+        }
+
     }
+    else
+    {
+
+        foreach(Component* com,this->tabWidget->getcom_arry())
+        {
+            if(com->getComponentFileName()==oldComponentName)
+            {
+                com->setStep(componentStep);
+                //             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
+            }
+        }
+        QMapIterator<QString,double>iterator2(this->component_controller->step_change);
+        while(iterator2.hasNext())
+        {
+            iterator2.next();
+            if(oldComponentName==iterator2.key())
+            {
+                this->component_controller->step_change.remove(oldComponentName);
+                this->component_controller->step_change.insert(oldComponentName,componentStep);
+                break;
+            }
+        }
+    }
+
+
 }
+
 TabWidget* MainWindow::getTabwidget()
 {
     return tabWidget;
