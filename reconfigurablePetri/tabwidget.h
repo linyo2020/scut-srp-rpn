@@ -78,6 +78,8 @@ public:
     ComponentList*getCom_list();
 
 
+    int getWidgetCount();
+
     void saveModel();
 
     //之前遗留的变量

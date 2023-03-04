@@ -112,7 +112,7 @@ Component * ComponentController::getComponent(QString filename)
         iterator.next();
         if(filename==iterator.key())
         {
-//            qDebug()<<iterator.key();
+            //            qDebug()<<iterator.key();
             QFile file(iterator.value());
             file.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -197,7 +197,7 @@ Component * ComponentController::getComponent(QString filename)
                     }
 
                 }
-                            }
+            }
         }
     }
     /***
