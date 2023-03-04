@@ -503,6 +503,7 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         addXML_transitions (page.transitionNodes);
         addXML_arcs (page.arcs);
         addXML_connectors(page.connector);
+
     }
 
 }

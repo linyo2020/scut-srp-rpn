@@ -21,6 +21,7 @@ public:
     Component * getComponent(QString filename);
     QList<PAGE_ATTR> getXMLpages(QString filename);
     PTNET_ATTR getPTnet(QString filename);
+    double getStep(QString filename,QString ID);
 
     //通过读取文件，读取type数量
     void ReadListFile(QString str="./list.txt");
@@ -29,7 +30,8 @@ public:
     QMap<QString,int>type_list;
     QMap<QString,QString> itemsFile;
     QMap<QTreeWidgetItem *,QString> TreeWiditems;
-
+    QMap<QString,double>step_change;
+    QMap<QString,QString>comname_change;
 
 private slots:
     void on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item); //通过右键菜单添加槽函数

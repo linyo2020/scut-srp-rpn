@@ -12,10 +12,9 @@ editComponent::editComponent(QWidget *parent) :
 void editComponent::on_buttonBox_accepted()
 {
     QString componentName=ui->ComponentName->text();
-    emit editComponentInfo(componentName);
     QString Step=ui->ComponentStep->text();
     double componentStep=Step.toDouble();
-    emit editComponentStep(componentName,componentStep);
+    emit editComponentInfo(componentName,componentStep);
 
 }
 

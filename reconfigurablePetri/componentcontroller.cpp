@@ -212,6 +212,51 @@ Component * ComponentController::getComponent(QString filename)
 
     return com;
 }
+double ComponentController::getStep(QString filename,QString ID)
+{
+    QMapIterator<QString,double>iterator1(step_change);
+    while(iterator1.hasNext())
+    {
+        iterator1.next();
+        if(filename==iterator1.key())
+            return iterator1.value();
+    }
+    QMapIterator<QString,QString>iterator2(itemsFile);
+    while(iterator2.hasNext())
+    {
+        iterator2.next();
+        if(filename==iterator2.key())
+        {
+            QFile file(iterator2.value());
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            //![3] parse xml file
+            file.seek(0);
+            QTextStream textstream(&file);
+            textstream.setCodec("utf-8");
+            QString xmlContent = textstream.readAll();
+            file.close();
+
+            XmlParser parser;
+            parser.parseXML(xmlContent);
+
+            PTNET_ATTR net = parser.getXML_net ();
+            QList<PAGE_ATTR> page=net.pages;
+
+            foreach(PAGE_ATTR p,page)
+            {
+                foreach(COMPONENT_ATTR c,p.componentList)
+                {
+                    if(c.id==ID)
+                        return c.step;
+                }
+            }
+
+        }
+    }
+    //输出默认值
+    return 0.1;
+}
 
 double ComponentController::getToken(QString filename,QString ID)
 {

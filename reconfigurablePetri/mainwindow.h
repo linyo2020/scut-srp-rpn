@@ -167,8 +167,7 @@ private:
     void createComponentDock();
 
     //组件库信息
-    void editComponentInfo(QString componentName);
-    void editComponentStep(QString componentName,double componentStep);
+    void editComponentInfo(QString componentName,double componentStep);
 
 
 
