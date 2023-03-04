@@ -945,6 +945,11 @@ ComponentList*TabWidget::getCom_list()
     return comList;
 }
 
+int TabWidget::getWidgetCount()
+{
+    return this->nets_indexes;
+}
+
 void TabWidget::saveModel()
 {
     tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());

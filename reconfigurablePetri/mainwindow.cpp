@@ -428,6 +428,7 @@ void MainWindow::componentPopMenu()
     componentEditMenu->exec(QCursor::pos());
 }
 
+
 void MainWindow::Tex(QString tex)
 {
     qDebug()<<tex;
@@ -468,18 +469,36 @@ void MainWindow::buttonGroupClicked(int id)
 
         //现在
         ComponentList*comList=tabWidget->getCom_list();
-
         QVector<Component*>l_vTestComp=comList->getComponentList();
+
         //原来
         //QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
 
         //
-        for(int i=0;i<l_vTestComp.size();i++)
-        {
-            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
-        }
+//        for(int i=0;i<l_vTestComp.size();i++)
+//        {
+//            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+//        }
 
+//        for(int i=0;i<l_vTestComp.size();i++)
+//        {
+//            qDebug()<<"sdlkfsdf";
+//            for(int j=0;j<l_vTestComp[i]->getArc_ATTRList().size();j++)
+//            {
+//                qDebug()<<l_vTestComp[i]->getArc_ATTRList()[j].id;
+//            }
+//            for(int p=0;p<l_vTestComp[i]->getPlace_ATTRList().size();p++)
+//            {
+//                qDebug()<<l_vTestComp[i]->getPlace_ATTRList()[p].id;
+//            }
+//            for(int t=0;t<l_vTestComp[i]->getTransition_ATTRList().size();t++)
+//            {
+//                qDebug()<<l_vTestComp[i]->getTransition_ATTRList()[t].id;
+//            }
+//            qDebug()<<"sdlkfsdf";
+//        }
 
+        //QWidget *QTabWidget::widget(int index) const
 
 
         if(!tab->checkNet())
@@ -548,8 +567,22 @@ void MainWindow::updateWidgets (int mode)
     removeToolButton->setDisabled(disable);
     exportMenuAct->setDisabled(disable);
 
-    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget());
-
+    //qDebug()<<"change page";
+//    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget());
+//    PTNscene*s=tab->getSCene();
+//    foreach(QGraphicsItem *item,s->items())
+//    {
+//        if(item->type()==Place::Type)
+//        {
+//            Place*p=qgraphicsitem_cast<Place*>(item);
+//            qDebug()<<p->getId();
+//        }
+//        else if(item->type()==Transition::Type)
+//        {
+//            Transition*p=qgraphicsitem_cast<Transition*>(item);
+//            qDebug()<<p->getId();
+//        }
+//    }
     if (mode != animationMode)
     {
 //        redoToolButton->setEnabled(tab->canRedo());
