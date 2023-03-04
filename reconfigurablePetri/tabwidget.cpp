@@ -679,7 +679,7 @@ RuleManager &TabWidget::getRuleManager()
     return tab->getRuleManager();
 }
 
-ComponentList*TabWidget::getCom_list()
+ComponentList*TabWidget::getCom_list(QMap<QString,double>step_change)
 {
     ComponentList*comList=new ComponentList();
     PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
@@ -869,6 +869,10 @@ ComponentList*TabWidget::getCom_list()
     {
         Component*com=new Component();
         com->Component_id=tl[i];
+        if(step_change.contains(com->Component_id.split("&")[0]))
+        {
+            com->setStep(step_change[com->Component_id.split("&")[0]]);
+        }
         QString ssid=tl[i];
         //qDebug()<<"第"<<i<<" id: "<<tl[i];
         //PTNscene*s=tab->getSCene();

@@ -75,7 +75,7 @@ public:
     RuleManager &getRuleManager();
 
     //2023.3.1为了解决每个页面都有各自的组件列表容器
-    ComponentList*getCom_list();
+    ComponentList*getCom_list(QMap<QString,double>step_change);
 
 
     int getWidgetCount();

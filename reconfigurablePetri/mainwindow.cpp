@@ -468,9 +468,9 @@ void MainWindow::buttonGroupClicked(int id)
         //发现：this的component_list无有效数据
 
         //现在
-        ComponentList*comList=tabWidget->getCom_list();
+        ComponentList*comList=tabWidget->getCom_list(this->component_controller->step_change);
         QVector<Component*>l_vTestComp=comList->getComponentList();
-
+        //qDebug()<<"step :"<<l_vTestComp[0]->getStep();
         //原来
         //QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
 
@@ -670,13 +670,15 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
 }
 void MainWindow::editComponentInfo(QString componentName,double componentStep)
 {
+    //QMap comname_change的逻辑有问题，无法正确使用，但是目前这个变量不重要
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     QString oldComponentName=currentItem->text(0);
     //修改名字和step
     if(componentName!=""&&componentStep!=-1)
     {
         currentItem->setText(0,componentName);
-        foreach(Component* com,this->tabWidget->getPetritab()->getcom_arry())
+        QVector<Component*>com_a=this->tabWidget->getcom_arry();
+        foreach(Component* com,com_a)
         {
             if(com->getComponentFileName()==oldComponentName)
             {
@@ -696,12 +698,13 @@ void MainWindow::editComponentInfo(QString componentName,double componentStep)
             }
         }
         QMapIterator<QString,double>iterator2(this->component_controller->step_change);
+        this->component_controller->step_change.insert(componentName,componentStep);
+        qDebug()<<"name and step change"<<"componentName :"<<componentName<<" step: "<<this->component_controller->step_change[componentName];
         while(iterator2.hasNext())
         {
             iterator2.next();
             if(oldComponentName==iterator2.key())
             {
-                this->component_controller->step_change.insert(componentName,componentStep);
                 this->component_controller->step_change.remove(oldComponentName);
                 break;
             }
@@ -719,10 +722,11 @@ void MainWindow::editComponentInfo(QString componentName,double componentStep)
 
     }
     //修改名字不改step
+    //逻辑是错误的，但是目前这个分支不重要
     else if(componentName!=""&&componentStep==-1)
     {
         currentItem->setText(0,componentName);
-        foreach(Component* com,this->tabWidget->getPetritab()->getcom_arry())
+        foreach(Component* com,this->tabWidget->getcom_arry())
         {
             if(com->getComponentFileName()==oldComponentName)
             {
@@ -755,7 +759,7 @@ void MainWindow::editComponentInfo(QString componentName,double componentStep)
     else if(componentName==""&&componentStep!=-1)
     {
 
-        foreach(Component* com,this->tabWidget->getPetritab()->getcom_arry())
+        foreach(Component* com,this->tabWidget->getcom_arry())
         {
             if(com->getComponentFileName()==oldComponentName)
             {
@@ -764,16 +768,9 @@ void MainWindow::editComponentInfo(QString componentName,double componentStep)
             }
         }
         QMapIterator<QString,double>iterator2(this->component_controller->step_change);
-        while(iterator2.hasNext())
-        {
-            iterator2.next();
-            if(oldComponentName==iterator2.key())
-            {
-                this->component_controller->step_change.remove(oldComponentName);
-                this->component_controller->step_change.insert(oldComponentName,componentStep);
-                break;
-            }
-        }
+        this->component_controller->step_change[oldComponentName]=componentStep;
+        qDebug()<<"only change step"<<"oldComponentName :"<<oldComponentName<<" step :"<<this->component_controller->step_change[oldComponentName];
+
     }
 
 }
