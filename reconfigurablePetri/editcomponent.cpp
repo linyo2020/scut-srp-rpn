@@ -13,7 +13,11 @@ void editComponent::on_buttonBox_accepted()
 {
     QString componentName=ui->ComponentName->text();
     QString Step=ui->ComponentStep->text();
-    double componentStep=Step.toDouble();
+    double componentStep;
+    if(Step!="")
+        componentStep=Step.toDouble();
+    else
+        componentStep=-1;
     emit editComponentInfo(componentName,componentStep);
 
 }
