@@ -553,3 +553,24 @@ bool Transition::collidesWithItem ( const QGraphicsItem * other, Qt::ItemSelecti
     return path1.intersects(this->shape());
 
 }
+
+Transition::Transition(const TRANSITION_ATTR &transition,int count)
+{
+    //组件内变迁的id格式为 A&tn ,其中A为组件类型，n为该变迁在组件内的标号
+    QString transitionId=transition.id.split('&')[0]+'&'+QString::number(count)+'&'+transition.id.split('&')[1];
+    id = transitionId;
+    m_comment = transition.comment;
+    self_function = transition.self_function;
+    m_brushColor = transition.brushColor;
+    m_penColor = transition.penColor;
+    show = transition.show;
+    if(transition.name.isEmpty())
+       name = id;
+    else
+       name = transition.name;
+
+    createTransition();
+
+    label->setPos(transition.offsetx, transition.offsety);
+    if(show)setLabel_2();
+}

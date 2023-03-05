@@ -20,14 +20,14 @@
 
 class TabWidget : public QTabWidget
 {
-    Q_OBJECT
+     Q_OBJECT
 public:
-    explicit TabWidget (QWidget * parent = 0);
+     explicit TabWidget (QWidget * parent = 0);
     /*
      * QTabWidget是带标签页的窗口，可以存储多个子窗口，
      * 每个子窗口的显示可以通过对应的标签index进行切换。
      */
-    bool validateXml(QFile& file, MessageHandler &messageHandler);
+     bool validateXml(QFile& file, MessageHandler &messageHandler);
     //槽函数
     void closeTab(int index);//关闭子窗口
     void removeItems ();
@@ -57,39 +57,28 @@ public:
     void saveComponent ();
     void saveAsComponent ();
     //点击仿真按钮时执行的保存操作
-    void saveLocalComponent();
+    //void saveLocalComponent();
     //仿真结束后重新读取本地保存文件
-    void openLocalComponent();
+    //void openLocalComponent();
+    //还没写
+    //把复合组件的内容写到Scene
+    void writeToScene(CompoundComponent* comp_com,PTNscene*scene);
     //获取组件名
     QStringList getFileNames ();
     QVector<Component*> getcom_arry();
     QList<Connector*> init_cl();
     //关于组件id的设置
-    //void setComponentType(QString type);
+    void setComponentType(QString type);
     void setElementId();
     int componentTypeNum;
-    //void setImportComponentID();
-    //bool componentIdEdited(QString ori_ID);
+    void setImportComponentID();
+    bool componentIdEdited(QString ori_ID);
     void setImportComponentId_AND_classsifyComponenet();
-    //QString getComponenttype(QString id);
+    QString getComponenttype(QString id);
     RuleManager &getRuleManager();
 
-    //2023.3.1为了解决每个页面都有各自的组件列表容器
-    ComponentList*getCom_list(QMap<QString,double>step_change);
-
-
-    int getWidgetCount();
-
     void saveModel();
-
-    //之前遗留的变量
-    ComponentList*com_list;
-
-    PetriTabWidget* getPetritab();
-
-
-    void setComponent(ComponentController *comController){this->comController=comController;}
-
+    void gets(PTNscene*scene);
 signals:
     void addComponentTreeNode (QString componentName,QString componentPath);
     void canRedoChange (bool canRedo);
@@ -108,15 +97,12 @@ protected:
 private:
     int nets_indexes;
     QStringList fileNames;
-    //QVector<Component*>component_List;//bug
-
+    QVector<Component*>component_List;//bug
+    ComponentList*com_list;
     QVector<Component*>com_arry;
     QMap<QString,int>type_count;
-    ComponentController*comController;
     //todo，保存的Pertritabwidget复制
     PetriTabWidget*tab_copy;
-
-
 };
 
 #endif // TABWIDGET_H

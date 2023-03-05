@@ -8,6 +8,7 @@
 #include"ptnscene.h"
 #include"QDateTime"
   #include <QtGlobal>
+#include <QGraphicsView>
 #include"ODESolver/ODEsolver.h"
 class Component: public QObject
 {
@@ -22,6 +23,8 @@ public:
      * @author lwy
      */
     Component(Component*);
+    //2023.03.03
+    Component(PTNscene*scene,QGraphicsView*m_View,COMPONENT_ATTR componentAttr,int count);
     //The unique identity of the component unit
 
     QString Component_id;//该数据的获取方式:type+唯一编号\系统读取控件xml文件时读取
@@ -132,6 +135,9 @@ private:
     QList<TRANSITION_ATTR> transitionList;
     QList<ARC_ATTR> arcList;
 
+    //2023.03.03
+    PTNscene*m_Scene;
+    QGraphicsView * m_View;
 
 };
 

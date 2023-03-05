@@ -16,7 +16,8 @@ class Place : public QGraphicsEllipseItem
     Place(const PLACE_ATTR &place);
     //用于控件计算的place
     Place(const QString &id,const QPointF &position);
-
+    //2023.03.03
+    Place(const PLACE_ATTR &place,int count);
 
 
     ~Place ();

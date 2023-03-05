@@ -48,6 +48,23 @@ Arcus::Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
     updatePosition();
 }
 
+Arcus::Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
+    QPainterPath paintpath, const ARC_ATTR &arc,int count)
+{
+    sourceItem = item1;
+    targetItem = item2;
+    setPath(paintpath);
+    source_id = arc.source.split('&')[0]+'&'+QString::number(count)+'&'+arc.source.split('&')[1];
+    target_id = arc.target.split('&')[0]+'&'+QString::number(count)+'&'+arc.target.split('&')[1];
+    weight = arc.weight;
+    id = arc.id.split('&')[0]+'&'+QString::number(count)+'&'+arc.id.split('&')[1];
+    m_brushColor = arc.brushColor;
+    m_penColor = arc.penColor;
+
+    createArc();
+    updatePosition();
+}
+
 Arcus::Arcus()
 {
     label=new QGraphicsSimpleTextItem();

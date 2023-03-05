@@ -35,7 +35,11 @@ public:
     void addXML_connectors(const QList <CONNECTOR_ATTR> &connectors);
 
     //组件
-    void from_Xml_Component (const QList<PAGE_ATTR> &pages);
+    void from_Xml_Component (const COMPONENT_ATTR &componentAttr);
+    void from_Xml_Component (const COMPONENT_ATTR &componentAttr,int count);
+    void addXML_placesOfComp (const QList <PLACE_ATTR> &places,int count);
+    void addXML_transitionsOfComp (const QList <TRANSITION_ATTR> &transitions,int count);
+    void addXML_arcsOfComp (const QList <ARC_ATTR> &arcs,int count);
     void unbindComponent();
     void bindComponent();
 

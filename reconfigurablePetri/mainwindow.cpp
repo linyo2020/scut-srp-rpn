@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
       createMenuBar();
       createDocks ();
       createStatusBar ();
-      connect(this,&MainWindow::passComponnetController,tabWidget,&TabWidget::setComponent);
       createComponentDock();
       component_controller=new ComponentController();
       //test
@@ -33,8 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
       connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
       //不要调整顺序
-      //PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(tabWidget->currentWidget ());
-      connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
+//      connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
       connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
 }
 
@@ -134,16 +132,15 @@ void MainWindow::createToolBar ()
     animateToolButton->setToolTip(tr("Simulation"));
     //仿真操作要在这个信号上面
     //初始化
-    //PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(tabWidget->currentWidget ());
-    connect(this->tabWidget,&TabWidget::startSimulation,tabWidget->com_list,&ComponentList::getPTNScene);
-    connect(this->tabWidget,&TabWidget::startSimulation,tabWidget->com_list,[&](){
-        tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());
-        tabWidget->com_list->initConnector_list(tabWidget->init_cl());
+//    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,&ComponentList::getPTNScene);
+//    connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget->com_list,[&](){
+//        tabWidget->com_list->intiCom_list(tabWidget->getcom_arry());
+//        tabWidget->com_list->initConnector_list(tabWidget->init_cl());
         ///将component_controller传入com_list中
-        tabWidget->com_list->setComponentController(component_controller);
-    });
+//        tabWidget->com_list->setComponentController(component_controller);
+//    });
     //connect(this->tabWidget,&TabWidget::startSimulation,this->tabWidget,&TabWidget::gets);
-    connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
+//    connect(animateToolButton,&QToolButton::clicked,this,[=](){this->tabWidget->saveModel();});
     //connect(animateToolButton,&QToolButton::clicked,this,[=](){emit passCom_arry(this->tabWidget->getcom_arry());});
     //connect(this,&MainWindow::passCom_arry,compound_component_list,&CompoundComponentList::getCompoundComponentList);
 
@@ -349,8 +346,7 @@ void MainWindow::createComponentDock()
     componentTree=new QTreeWidget();
 
     //---------不要调整下面connect顺序，会报错--------------------
-    newComponent->setText(tr("保存新组件"));
-
+    newComponent->setText(tr("保存"));
     connect(tabWidget,&TabWidget::saveComponentFinished,tabWidget,&TabWidget::setElementId);
     //connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
     //connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
@@ -374,9 +370,9 @@ void MainWindow::createComponentDock()
     deleteComponent->setText(tr("删除"));
     deleteComponent->setToolTip(tr("Delete a component <span style=\"color:gray;\">Ctrl+O</span>"));
     connect(deleteComponent,&QToolButton::clicked,this,[=](){this->deleteComponentTreeNode(componentTree);});
-    addComponent->setText(tr("导入组件"));
+    addComponent->setText(tr("导入"));
     addComponent->setToolTip(tr("Open and add a component <span style=\"color:gray;\">Ctrl+O</span>"));
-    connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
+    connect(this,&MainWindow::importComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);//bug
     connect(addComponent,&QToolButton::clicked,this,[=](){this->openComponent();});
     bindComponent->setText(tr("绑定组件"));
     bindComponent->setToolTip(tr("Bbind  a component <span style=\"color:gray;\">Ctrl+O</span>"));
@@ -409,16 +405,12 @@ void MainWindow::createComponentDock()
     mywid1->setLayout(VerticalLayout);
     emit passComponnetController(component_controller);
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
-    //$
+
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
-    connect(addComponentAction,&QAction::triggered,this,[=](){
-
-        this->addEditComponent(componentTree);
-
-        connect(this,&MainWindow::passComponnetController,tabWidget->com_list,&ComponentList::getComponent);
+    connect(addComponentAction,&QAction::triggered,this,[=](){this->addEditComponent(componentTree);
+//    connect(this,&MainWindow::passComponnetController,this->tabWidget->com_list,&ComponentList::getComponent);
 
     });
-
     componentDock->setWidget(mywid1);
     componentDock->show ();
 }
@@ -427,7 +419,6 @@ void MainWindow::componentPopMenu()
 {
     componentEditMenu->exec(QCursor::pos());
 }
-
 
 void MainWindow::Tex(QString tex)
 {
@@ -466,39 +457,22 @@ void MainWindow::buttonGroupClicked(int id)
          * 测试组件的数据
          */
         //发现：this的component_list无有效数据
-
-        //现在
-        ComponentList*comList=tabWidget->getCom_list(this->component_controller->step_change);
-        QVector<Component*>l_vTestComp=comList->getComponentList();
-        //qDebug()<<"step :"<<l_vTestComp[0]->getStep();
-        //原来
-        //QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
-
-        //
+//        QVector<Component*>l_vTestComp=tabWidget->com_list->getComponentList();
+//        for(int i=0;i<l_vTestComp.size();i++)
+//        {
+//            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+//        }
+//        QVector<Component*>l_vTestComp=tabWidget->getcom_arry();
 //        for(int i=0;i<l_vTestComp.size();i++)
 //        {
 //            qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
 //        }
 
-//        for(int i=0;i<l_vTestComp.size();i++)
-//        {
-//            qDebug()<<"sdlkfsdf";
-//            for(int j=0;j<l_vTestComp[i]->getArc_ATTRList().size();j++)
-//            {
-//                qDebug()<<l_vTestComp[i]->getArc_ATTRList()[j].id;
-//            }
-//            for(int p=0;p<l_vTestComp[i]->getPlace_ATTRList().size();p++)
-//            {
-//                qDebug()<<l_vTestComp[i]->getPlace_ATTRList()[p].id;
-//            }
-//            for(int t=0;t<l_vTestComp[i]->getTransition_ATTRList().size();t++)
-//            {
-//                qDebug()<<l_vTestComp[i]->getTransition_ATTRList()[t].id;
-//            }
-//            qDebug()<<"sdlkfsdf";
-//        }
-
-        //QWidget *QTabWidget::widget(int index) const
+//                QVector<Component*>l_vTestComp=tab->getCompVector();
+//                for(int i=0;i<l_vTestComp.size();i++)
+//                {
+//                    qDebug()<<l_vTestComp[i]->getID()<<" 's step is "<<l_vTestComp[i]->getStep();
+//                }
 
 
         if(!tab->checkNet())
@@ -514,10 +488,12 @@ void MainWindow::buttonGroupClicked(int id)
             Plot* view = new Plot();
             RuleManager *ruleManager =&tab->getRuleManager();
             view->setPlotId(tab->getId());
-            //将com_list传入plot
-            view->setComList(comList);
-            //view->setComList(tabWidget->com_list);
 
+
+            //将当前页面的componentList传入plot
+            tab->setConnector_AttrList(tabWidget->init_cl());
+            tab->setComponentController(component_controller);
+            view->setComList(tab->getComponentList());
             //将规则管理器传入plot
             view->setRuleManager(ruleManager);
             /*
@@ -534,7 +510,7 @@ void MainWindow::buttonGroupClicked(int id)
             }*/
             view->show();
          }
-        tabWidget->openLocalComponent();
+//        tabWidget->openLocalComponent();
     }
 
     tab->setMode (id);
@@ -544,7 +520,7 @@ void MainWindow::buttonGroupClicked(int id)
 void MainWindow::updateWidgets (int mode)
 {
     bool disable;
-    Ptab=tabWidget->getPetritab();
+
     if(mode == animationMode)
         disable = true;
     else
@@ -567,22 +543,8 @@ void MainWindow::updateWidgets (int mode)
     removeToolButton->setDisabled(disable);
     exportMenuAct->setDisabled(disable);
 
-    //qDebug()<<"change page";
-//    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget());
-//    PTNscene*s=tab->getSCene();
-//    foreach(QGraphicsItem *item,s->items())
-//    {
-//        if(item->type()==Place::Type)
-//        {
-//            Place*p=qgraphicsitem_cast<Place*>(item);
-//            qDebug()<<p->getId();
-//        }
-//        else if(item->type()==Transition::Type)
-//        {
-//            Transition*p=qgraphicsitem_cast<Transition*>(item);
-//            qDebug()<<p->getId();
-//        }
-//    }
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->currentWidget());
+
     if (mode != animationMode)
     {
 //        redoToolButton->setEnabled(tab->canRedo());
@@ -600,7 +562,15 @@ void MainWindow::updateWidgets (int mode)
 /*子窗口切换 */
 void MainWindow::tabChanged(int index)
 {
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(tabWidget->widget(index));
+    int mode = tab->getMode();
+    //graphDock->setGraph(tab->getGraphVis());
+    updateWidgets (mode);
 
+    QAbstractButton * button = buttonGroup->button (mode);
+    button->setChecked(true);
+
+    slider->setValue(tab->scaleValue());
 }
 
 
@@ -660,6 +630,7 @@ void MainWindow::openEditComponent()
     editComponent* editComponentDialog=new editComponent(this);
     editComponentDialog->show();
     connect(editComponentDialog,&editComponent::editComponentInfo,this,&MainWindow::editComponentInfo);
+    connect(editComponentDialog,&editComponent::editComponentStep,this,&MainWindow::editComponentStep);
 }
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
@@ -668,113 +639,51 @@ void MainWindow::addEditComponent(QTreeWidget* tree)
     emit addComponentController(component_path);
 
 }
-void MainWindow::editComponentInfo(QString componentName,double componentStep)
+void MainWindow::editComponentInfo(QString componentName)
 {
-    //QMap comname_change的逻辑有问题，无法正确使用，但是目前这个变量不重要
     QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
     QString oldComponentName=currentItem->text(0);
-    //修改名字和step
-    if(componentName!=""&&componentStep!=-1)
+    currentItem->setText(0,componentName);
+//    foreach(Component* com,this->tabWidget->getcom_arry())
+//    {
+//        if(com->getComponentFileName()==oldComponentName)
+//        {
+//            com->setID(componentName+'&'+com->getID().split("&")[1]);
+//        }
+//    }
+    for(int i=0;i<tabWidget->count();i++)
     {
-        currentItem->setText(0,componentName);
-        QVector<Component*>com_a=this->tabWidget->getcom_arry();
-        foreach(Component* com,com_a)
-        {
-            if(com->getComponentFileName()==oldComponentName)
-            {
-                com->setID(componentName+'&'+com->getID().split("&")[1]);
-                com->setStep(componentStep);
-            }
-        }
-        QMapIterator<QString,QString>iterator1(this->component_controller->itemsFile);
-        while(iterator1.hasNext())
-        {
-            iterator1.next();
-            if(oldComponentName==iterator1.key())
-            {
-                this->component_controller->itemsFile.insert(componentName,iterator1.value());
-                this->component_controller->itemsFile.remove(oldComponentName);
-                break;
-            }
-        }
-        QMapIterator<QString,double>iterator2(this->component_controller->step_change);
-        this->component_controller->step_change.insert(componentName,componentStep);
-        qDebug()<<"name and step change"<<"componentName :"<<componentName<<" step: "<<this->component_controller->step_change[componentName];
-        while(iterator2.hasNext())
-        {
-            iterator2.next();
-            if(oldComponentName==iterator2.key())
-            {
-                this->component_controller->step_change.remove(oldComponentName);
-                break;
-            }
-        }
-        QMapIterator<QString,QString>iterator3(this->component_controller->comname_change);
-        while(iterator3.hasNext())
-        {
-            iterator3.next();
-            if(oldComponentName==iterator3.key())
-            {
-                this->component_controller->comname_change.insert(componentName,oldComponentName);
-                break;
-            }
-        }
-
+        PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(tabWidget->widget(i));
+        l_petriTab->editComponentID(oldComponentName,componentName);
     }
-    //修改名字不改step
-    //逻辑是错误的，但是目前这个分支不重要
-    else if(componentName!=""&&componentStep==-1)
+    QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
+    while(iterator.hasNext())
     {
-        currentItem->setText(0,componentName);
-        foreach(Component* com,this->tabWidget->getcom_arry())
+        iterator.next();
+        if(oldComponentName==iterator.key())
         {
-            if(com->getComponentFileName()==oldComponentName)
-            {
-                com->setID(componentName+'&'+com->getID().split("&")[1]);
-            }
-        }
-        QMapIterator<QString,QString>iterator1(this->component_controller->itemsFile);
-        while(iterator1.hasNext())
-        {
-            iterator1.next();
-            if(oldComponentName==iterator1.key())
-            {
-                this->component_controller->itemsFile.insert(componentName,iterator1.value());
-                this->component_controller->itemsFile.remove(oldComponentName);
-                break;
-            }
-        }
-        QMapIterator<QString,QString>iterator3(this->component_controller->comname_change);
-        while(iterator3.hasNext())
-        {
-            iterator3.next();
-            if(oldComponentName==iterator3.key())
-            {
-                this->component_controller->comname_change.insert(componentName,oldComponentName);
-                break;
-            }
+            this->component_controller->itemsFile[componentName]=iterator.value();
+            this->component_controller->itemsFile.remove(oldComponentName);
+            break;
         }
     }
-    //修改step不改名字
-    else if(componentName==""&&componentStep!=-1)
-    {
-
-        foreach(Component* com,this->tabWidget->getcom_arry())
-        {
-            if(com->getComponentFileName()==oldComponentName)
-            {
-                com->setStep(componentStep);
-                //             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
-            }
-        }
-        QMapIterator<QString,double>iterator2(this->component_controller->step_change);
-        this->component_controller->step_change[oldComponentName]=componentStep;
-        qDebug()<<"only change step"<<"oldComponentName :"<<oldComponentName<<" step :"<<this->component_controller->step_change[oldComponentName];
-
-    }
-
 }
-
+void MainWindow::editComponentStep(QString componentName,double componentStep)
+{
+//     foreach(Component* com,this->tabWidget->getcom_arry())
+//    {
+//        if(com->getComponentFileName()==componentName)
+//         {
+//             com->setStep(componentStep);
+////             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
+//         }
+//    }
+    for(int i=0;i<tabWidget->count();i++)
+    {
+        PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(tabWidget->widget(i));
+        l_petriTab->editComponentStep(componentName,componentStep);
+    }
+}
 TabWidget* MainWindow::getTabwidget()
 {
     return tabWidget;

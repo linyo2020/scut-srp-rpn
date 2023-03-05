@@ -15,7 +15,6 @@
 #include <vector>
 #include"ptnet.h"
 #include"rulemanager.h"
-
 class PetriTabWidget : public QWidget
 {
     Q_OBJECT
@@ -65,28 +64,25 @@ public:
     void arcDoubleClicked (QGraphicsItem* item);
     void setName(QString);
     void setId(QString);
-    void setComponent(const PTNET_ATTR &ptnet, const QString& file);
+    void addComponent(const PTNET_ATTR &ptnet);
     //bool arcnoclicked=true;
-    void PushBack(Component*com);
     QString getComponentType(int i);
     int getComponentSize();
     //绑定组件
     void unbindComponent();
     void bindComponent();
-
-    //组件
-    //id
-    void setImportComponentId_AND_classsifyComponenet();
-    void setElementId();
-    //其余初始化
-    QVector<Component*> getcom_arry();
-    QList<Connector*> init_cl();
-
-    //组件
-    ComponentList*com_list;
-    QVector<Component*>com_arry;
-    QMap<QString,int>type_count;
-
+    //lwy 2023.3.3
+    QVector<Component*> getCompVector();
+    /**
+     * @brief getComponentList
+     * @return
+     */
+    ComponentList*getComponentList();
+    //2023.03.04
+    void setComponentController(ComponentController*);
+    void setConnector_AttrList(QList<Connector*>l);
+    void editComponentStep(QString componentName,double componentStep);
+    void editComponentID(QString oldName,QString newName);
 signals:
 
     void canRedoChange (bool canRedo);
@@ -108,7 +104,7 @@ private:
     QString id, name;
 
     PTNscene * scene;
-    QVector<Component*>component_vector;
+//    QVector<Component*>component_vector;
     QGraphicsView * view;
     UndoStack  * undostack;
 //    GraphVisualizer * graphVis;
@@ -133,7 +129,10 @@ private:
     PTNet *mynet;//赋值给undostack
 
     RuleManager ruleManager;
-
+    /**
+     * @brief componentlist
+     */
+    ComponentList*componentlist;
 };
 
 #endif // PETRITABWIDGET_H

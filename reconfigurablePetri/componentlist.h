@@ -19,6 +19,9 @@ public:
      */
     ComponentList(ComponentList*);
 
+    //2023.03.03
+    ComponentList(PTNscene * scene,QGraphicsView * view);
+
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
 
@@ -60,10 +63,10 @@ public:
     const QList<Connector*> getConnectorList();
     void push_back_connectorList(Connector*c);
     //修改组件步长
-    void setComponentStep(QString ComponentID,double step);
+    void setComponentStep(QString ComponentName,double step);
 
     void getComponent(ComponentController *comController){this->comController=comController;}
-    void getPTNScene(PTNscene * scene){Scene=scene;}
+    void getPTNScene(PTNscene * scene){m_Scene=scene;}
     void intiCom_list(QVector<Component*>c_list){com_list=c_list;}
     void initConnector_list(QList<Connector*>l)
         {   connectList=l;
@@ -103,6 +106,11 @@ public:
      * @return
      */
     bool setComponentController(ComponentController*);
+    //2023.03.03
+    void addComponents(QList<COMPONENT_ATTR>componentlist);
+    //2023.03.04
+    void editComponentID(QString oldID,QString newID);
+    QString addComponent(COMPONENT_ATTR componentAttr);
 private:
     //func
     //如果未找到返回nullptr
@@ -134,14 +142,19 @@ private:
     //没用了
     //-----------------------------
     QMap<QString,PTNscene*>garbage;
-    PTNscene*Scene;
+
+
+    //2023.03.03
+    PTNscene*m_Scene;
+    QGraphicsView * m_View;
 
     /**
      * @brief m_vConnector
      * @author lwy
      */
     QList<CONNECTOR_ATTR>m_lConnector;
-
+    QList<COMPONENT_ATTR>m_lComponentAttr;
+    QMap<QString,int>m_mComp2Count;
 };
 
 #endif // COMPONENTLIST_H

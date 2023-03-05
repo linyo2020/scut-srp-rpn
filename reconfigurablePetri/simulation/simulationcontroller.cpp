@@ -282,39 +282,46 @@ void SimulationController::run()
         QVector<Component*> l_vComponent=m_compList->getComponentList();
         int l_length=l_vComponent.size();
 
-        for(int i = 0;i<l_length;i++)
-        {
-            //输出组件id
-            qDebug()<<l_vComponent[i]->getID()<<" 's step : "<<l_vComponent[i]->getStep();
-            //输出库所和token值
-            QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
-            for(int i=0;i<l_placeAttrList.size();i++)
-            {
-                qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
-            }
-        }
+//        for(int i = 0;i<l_length;i++)
+//        {
+//            //输出组件id
+//            qDebug()<<l_vComponent[i]->getID()<<" 's step : "<<l_vComponent[i]->getStep();
+//            //输出库所和token值
+//            QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+//            for(int i=0;i<l_placeAttrList.size();i++)
+//            {
+//                qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+//            }
+//        }
+
+        //测试获取的connector信息
+//        QList<CONNECTOR_ATTR>l_connectorList=m_compList->getConnectorAttrList();
+//        for( int i = 0; i < l_connectorList.size();i++)
+//        {
+//            qDebug()<<"connector "<<i<<" is from "<<l_connectorList[i].source<<" to "<<l_connectorList[i].source;
+//        }
 
 
     //测试m_compList的addNewComponent
         //addNewComponent有问题
-//    qDebug()<<"add "<<m_compList->addNewComponent(QString("C3"));
-//    //再次输出组件信息
-//    l_vComponent=m_compList->getComponentList();
-//    l_length=l_vComponent.size();
-//    for(int i = 0;i<l_length;i++)
-//    {
-//        //输出组件id
-//        qDebug()<<l_vComponent[i]->getID();
-//        //输出库所和token值
-//        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
-//        for(int i=0;i<l_placeAttrList.size();i++)
-//        {
-//            qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
-//        }
-//    }
+    qDebug()<<"add "<<m_compList->addNewComponent(QString("230304C3"));
+    //再次输出组件信息
+    l_vComponent=m_compList->getComponentList();
+    l_length=l_vComponent.size();
+    for(int i = 0;i<l_length;i++)
+    {
+        //输出组件id
+        qDebug()<<l_vComponent[i]->getID();
+        //输出库所和token值
+        QList<PLACE_ATTR>l_placeAttrList=l_vComponent[i]->getPlace_ATTRList();
+        for(int i=0;i<l_placeAttrList.size();i++)
+        {
+            qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+        }
+    }
 
     //初始化规则管理器
-    m_ruleManager->initRule(m_compList);
+//    m_ruleManager->initRule(m_compList);
 }
 
 void SimulationController::slotAddGraph(string s)

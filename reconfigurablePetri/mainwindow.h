@@ -143,7 +143,7 @@ private:
 
     //选项卡式的窗口控件
     TabWidget  * tabWidget;
-    PetriTabWidget *Ptab;
+
     //可拖拉界面的部件
     DockWidget * buttomDock;
     ComponentController *component_controller;
@@ -167,7 +167,8 @@ private:
     void createComponentDock();
 
     //组件库信息
-    void editComponentInfo(QString componentName,double componentStep);
+    void editComponentInfo(QString componentName);
+    void editComponentStep(QString componentName,double componentStep);
 
 
 

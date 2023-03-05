@@ -2,7 +2,8 @@
 
 ComponentList::ComponentList()
 {
-    Scene=new PTNscene();
+    m_Scene=new PTNscene();
+    m_View=nullptr;
     comController=new ComponentController();
 
 }
@@ -756,7 +757,7 @@ Transition *ComponentList::getcertainTransition(QString tranID)
 //        }
 //    }
 
-    foreach(QGraphicsItem*item,this->Scene->items())
+    foreach(QGraphicsItem*item,this->m_Scene->items())
     {
         if(item->type()==QGraphicsItemGroup::Type)
         {
@@ -789,6 +790,11 @@ Transition *ComponentList::getcertainTransition(QString tranID)
 
 QString ComponentList::addNewComponent(QString Filename)
 {
+      QList<COMPONENT_ATTR> compAttrList= comController->getCompAttrList(Filename);
+      if(compAttrList.isEmpty())
+          return QString("errorName");
+      return addComponent(compAttrList[0]);
+
 //    Component*com=this->OriginComponent(Filename);
 //    setnewComponentIDinSimulation(com);
 
@@ -806,80 +812,80 @@ QString ComponentList::addNewComponent(QString Filename)
 //    }
 
 //    return com->getID();
-    Component*com=this->OriginComponent(Filename);
+//    Component*com=this->OriginComponent(Filename);
 
     /***
      * 测试com
      * 结果：originCompent函数结果不正确
      */
-    QList<PLACE_ATTR>l_placeAttrList=com->getPlace_ATTRList();
-    for(int i=0;i<l_placeAttrList.size();i++)
-    {
-        qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
-    }
+//    QList<PLACE_ATTR>l_placeAttrList=com->getPlace_ATTRList();
+//    for(int i=0;i<l_placeAttrList.size();i++)
+//    {
+//        qDebug()<<l_placeAttrList[i].id<<" : "<<l_placeAttrList[i].initmark;
+//    }
 
 
-    this->setnewComponentIDinSimulation(com);
-    this->com_list.push_back(com);
-    foreach(PLACE_ATTR pl,com->getPlace_ATTRList())
-    {
-        Place * place=new Place(pl);
-        com->mynet->AddPlace(place);
-    }
-    foreach(TRANSITION_ATTR tr,com->getTransition_ATTRList())
-    {
-        Transition *trans=new Transition(tr);
-        com->mynet->AddTransition(trans);
-    }
-    foreach(ARC_ATTR a,com->getArc_ATTRList())
-    {
-        QGraphicsItem * sourceItem = 0;
-        QGraphicsItem * targetItem = 0;
-        foreach(Place * place,com->mynet->PlaceList)
-        {
-            if(place->getId() == a.source)
-            {
-                sourceItem = place;
-                continue;
+//    this->setnewComponentIDinSimulation(com);
+//    this->com_list.push_back(com);
+//    foreach(PLACE_ATTR pl,com->getPlace_ATTRList())
+//    {
+//        Place * place=new Place(pl);
+//        com->mynet->AddPlace(place);
+//    }
+//    foreach(TRANSITION_ATTR tr,com->getTransition_ATTRList())
+//    {
+//        Transition *trans=new Transition(tr);
+//        com->mynet->AddTransition(trans);
+//    }
+//    foreach(ARC_ATTR a,com->getArc_ATTRList())
+//    {
+//        QGraphicsItem * sourceItem = 0;
+//        QGraphicsItem * targetItem = 0;
+//        foreach(Place * place,com->mynet->PlaceList)
+//        {
+//            if(place->getId() == a.source)
+//            {
+//                sourceItem = place;
+//                continue;
 
-            }
-            if(place->getId() == a.target)
-            {
-                targetItem = place;
-                continue;
-            }
-        }
-        foreach(Transition * transition,com->mynet->TransitionList)
-        {
-            if(transition->getId() == a.source)
-            {
-                sourceItem = transition;
-                continue;}
-            if(transition->getId() == a.target)
-            {
-                targetItem = transition;
-                continue;
-            }
-        }
-        QPainterPath path(sourceItem->boundingRect().center());
+//            }
+//            if(place->getId() == a.target)
+//            {
+//                targetItem = place;
+//                continue;
+//            }
+//        }
+//        foreach(Transition * transition,com->mynet->TransitionList)
+//        {
+//            if(transition->getId() == a.source)
+//            {
+//                sourceItem = transition;
+//                continue;}
+//            if(transition->getId() == a.target)
+//            {
+//                targetItem = transition;
+//                continue;
+//            }
+//        }
+//        QPainterPath path(sourceItem->boundingRect().center());
 
-        foreach(QPointF p, a.points)
-            path.lineTo(p);
+//        foreach(QPointF p, a.points)
+//            path.lineTo(p);
 
-        path.lineTo(targetItem->boundingRect ().center());
-        Arcus * arc = new Arcus(sourceItem, targetItem, path, a);
-        if(sourceItem->type() == Place::Type)
-            qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
-        else if(sourceItem->type() == Transition::Type)
-            qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
-        if(targetItem->type() == Place::Type)
-            qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
-        else if(targetItem->type() == Transition::Type)
-            qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
-        com->mynet->AddArc(arc);
+//        path.lineTo(targetItem->boundingRect ().center());
+//        Arcus * arc = new Arcus(sourceItem, targetItem, path, a);
+//        if(sourceItem->type() == Place::Type)
+//            qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
+//        else if(sourceItem->type() == Transition::Type)
+//            qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
+//        if(targetItem->type() == Place::Type)
+//            qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
+//        else if(targetItem->type() == Transition::Type)
+//            qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
+//        com->mynet->AddArc(arc);
 
-    }
-    return  com->getID();
+
+//    return  com->getID();
 }
 
 const QList<Connector *> ComponentList::getConnectorList()
@@ -895,7 +901,7 @@ void ComponentList::push_back_connectorList(Connector *c)
 
 void ComponentList::deleteArc(QString placeId, QString transitionID)
 {
-    foreach(QGraphicsItem*item,this->Scene->items())
+    foreach(QGraphicsItem*item,this->m_Scene->items())
     {
         if(item->type()==QGraphicsItemGroup::Type)
         {
@@ -904,7 +910,7 @@ void ComponentList::deleteArc(QString placeId, QString transitionID)
                 Arcus*a=qgraphicsitem_cast<Arcus*>(i);
                 if((a->getSourceId()==placeId&&a->getTargetId()==transitionID)||(a->getSourceId()==transitionID&&a->getTargetId()==placeId))
                 {
-                    this->Scene->removeItem(a);
+                    this->m_Scene->removeItem(a);
                     break;
                 }
             }
@@ -914,7 +920,7 @@ void ComponentList::deleteArc(QString placeId, QString transitionID)
             Arcus*a=qgraphicsitem_cast<Arcus*>(item);
             if((a->getSourceId()==placeId&&a->getTargetId()==transitionID)||(a->getSourceId()==transitionID&&a->getTargetId()==placeId))
             {
-                this->Scene->removeItem(a);
+                this->m_Scene->removeItem(a);
                 break;
             }
         }
@@ -1586,11 +1592,11 @@ QVector<Component*> ComponentList::getComponentList()
     return com_list;
 }
 
-void ComponentList::setComponentStep(QString ComponentID,double step)
+void ComponentList::setComponentStep(QString ComponentName,double step)
 {
     for(int i=0;i<com_list.size();i++)
     {
-        if(com_list[i]->getID()==ComponentID)
+        if(com_list[i]->getID().split('&')[0]==ComponentName)
         {
             com_list[i]->setStep(step);
         }
@@ -1599,9 +1605,12 @@ void ComponentList::setComponentStep(QString ComponentID,double step)
 
 ComponentList::ComponentList(ComponentList* source)
 {
-    Scene=source->Scene;
+//    Scene=source->Scene;待处理
+    m_Scene=new PTNscene();
+    m_View=new QGraphicsView();
     comController=source->comController;
-//    m_lConnector=source->m_lConnector;
+    m_lConnector=source->m_lConnector;
+    m_mComp2Count=source->m_mComp2Count;
     Component*p;
     for(unsigned int i = 0; i < source->com_list.size();i++)
     {
@@ -1609,10 +1618,10 @@ ComponentList::ComponentList(ComponentList* source)
         com_list.push_back(p);
         p=nullptr;
     }
-    for(unsigned int i = 0; i< source->connectList.size();i++)
-    {
-        m_lConnector.push_back(source->connectList[i]->toXml());
-    }
+//    for(unsigned int i = 0; i< source->connectList.size();i++)
+//    {
+//        m_lConnector.push_back(source->connectList[i]->toXml());
+//    }
 }
 
 QList<CONNECTOR_ATTR> ComponentList::getConnectorAttrList()
@@ -1657,4 +1666,68 @@ bool ComponentList::setComponentController(ComponentController*scr)
         return false;
     comController=scr;
     return true;
+}
+
+ComponentList::ComponentList(PTNscene * scene,QGraphicsView * view)
+{
+   m_Scene=scene;
+   m_View=view;
+   m_mComp2Count.clear();
+}
+
+void ComponentList::addComponents(QList<COMPONENT_ATTR>componentlist)
+{
+    foreach(COMPONENT_ATTR componentAttr,componentlist)
+    {
+        QString name=componentAttr.name;
+        int temp=0;
+        //如果为旧组件
+        if(m_mComp2Count.contains(name))
+        {
+            temp=m_mComp2Count.value(componentAttr.name);
+        }
+        else
+        {
+            //保存新组件的结构信息
+            m_lComponentAttr.push_back(componentAttr);
+        }
+        com_list.push_back( new Component(m_Scene,m_View,componentAttr,temp));
+        //更新组件信息
+        temp++;
+        m_mComp2Count[name]=temp;
+    }
+}
+
+QString ComponentList::addComponent(COMPONENT_ATTR componentAttr)
+{
+        QString name=componentAttr.name;
+        int temp=0;
+        //如果为旧组件
+        if(m_mComp2Count.contains(name))
+        {
+            temp=m_mComp2Count.value(componentAttr.name);
+        }
+        else
+        {
+            //保存新组件的结构信息
+            m_lComponentAttr.push_back(componentAttr);
+        }
+        com_list.push_back( new Component(m_Scene,m_View,componentAttr,temp));
+        //更新组件信息
+        temp++;
+        m_mComp2Count[name]=temp;
+        return name+'&'+QString::number(temp--);
+}
+
+void ComponentList::editComponentID(QString oldName,QString newName)
+{
+//    QStringList compID;
+//    for(int i=0;i<com_list.size();i++)
+//    {
+//        compID=com_list[i]->getID().split('&');
+//        if(compID[0]==oldID)
+//        {
+//            com_list[i]->setID(newID+'&'+compID[1]);
+//        }
+//    }
 }

@@ -655,3 +655,36 @@ Place::~Place ()
     delete label;
 }
 
+Place::Place(const PLACE_ATTR &place,int count)
+{
+    //组件内库所的id格式为 A&pn ,其中A为组件类型，n为该库所在组件内的标号
+    QString placeId=place.id.split('&')[0]+'&'+QString::number(count)+'&'+place.id.split('&')[1];
+    id = placeId;
+
+    if(place.name.isNull())
+        name = id;
+    else
+        name = place.name;
+
+    tokens = place.initmark;
+
+    capacity = place.capacity;
+
+    m_comment = place.comment;
+
+    m_brushColor = place.brushColor;
+
+    m_penColor = place.penColor;
+
+    show = place.show;
+
+    createPlace();
+
+    label->setPos(place.offsetx, place.offsety);
+
+    if(show)setLabel_2();
+
+    inputPort=place.inputPort;
+    outputPort=place.outputPort;
+    isCompoundPort=place.isCompoundPort;
+}

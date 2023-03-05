@@ -503,11 +503,10 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         addXML_transitions (page.transitionNodes);
         addXML_arcs (page.arcs);
         addXML_connectors(page.connector);
-
     }
 
 }
-void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
+void PTNscene::from_Xml_Component (const COMPONENT_ATTR &componentAttr)
 {
     //特殊类型的复合 item
     auto *pGroup = new QGraphicsItemGroup();
@@ -517,12 +516,11 @@ void PTNscene::from_Xml_Component (const QList<PAGE_ATTR> &pages)
 
     foreach(auto item,selectedItems())
         item->setSelected(0);
-    foreach (PAGE_ATTR page, pages)
-    {
-        addXML_places (page.placeNodes);
-        addXML_transitions (page.transitionNodes);
-        addXML_arcs (page.arcs);
-    }
+
+
+    addXML_places (componentAttr.placeNodes);
+    addXML_transitions (componentAttr.transitionNodes);
+    addXML_arcs (componentAttr.arcs);
 
     foreach (auto *item, selectedItems())
     {
@@ -868,3 +866,164 @@ QMap<QString, QString> PTNscene::getPlacesNames ()
 
 //  return relations;
 //}
+
+void PTNscene::addXML_placesOfComp (const QList <PLACE_ATTR> &places,int count)
+{
+    QStringList names;
+    QList<int> indexes;
+    QRegExp rx("^p[0-9]+$");
+
+    foreach (PLACE_ATTR place, places)
+    {
+        Place * item = new Place (place,count);
+        item->setSelected(1);
+        addItem(item);
+
+        item->setPos (place.x, place.y);
+        names << place.name;
+
+        if(place.id.contains(rx))
+        {
+            QString str = place.id.remove(0,1);
+            indexes << str.toInt();
+        }
+    }
+
+    if(!indexes.isEmpty())
+    {
+        qSort(indexes.begin(), indexes.end());
+        places_indexs = indexes.last() + 1;
+    }
+
+    emit nodesInserted(names);
+
+}
+void PTNscene::addXML_transitionsOfComp (const QList <TRANSITION_ATTR> &transitions,int count)
+{
+    QStringList names;
+    QList<int> indexes;
+    QRegExp rx("^t[0-9]+$");
+
+    foreach (TRANSITION_ATTR transition, transitions)
+    {
+        Transition * item = new Transition (transition,count);
+        item->setSelected(1);
+        addItem(item);
+
+
+        item->setPos (transition.x, transition.y);
+        item->setRotation(transition.rotation);
+        names << transition.name;
+
+        if(transition.id.contains(rx))
+        {
+            QString str = transition.id.remove(0,1);
+            indexes << str.toInt();
+        }
+    }
+
+    if(!indexes.isEmpty())
+    {
+        qSort(indexes.begin(), indexes.end());
+        transitions_indexs = indexes.last() + 1;
+    }
+
+    emit nodesInserted(names);
+}
+void PTNscene::addXML_arcsOfComp (const QList <ARC_ATTR> &arcs,int count)
+{
+    QList<int> indexes;
+    QRegExp rx("^a[0-9]+$");
+
+    QList<QGraphicsItem *> nodes = items ();
+    QGraphicsItem * sourceItem = 0;
+    QGraphicsItem * targetItem = 0;
+
+    foreach(ARC_ATTR xmlarc, arcs)
+    {
+        QString l_source=xmlarc.source.split('&')[0]+'&'+QString::number(count)+'&'+xmlarc.source.split('&')[1];
+        QString l_target=xmlarc.target.split('&')[0]+'&'+QString::number(count)+'&'+xmlarc.target.split('&')[1];
+        foreach(QGraphicsItem * node, nodes)
+        {
+            if(node->type() == Place::Type)
+            {
+                Place * place = qgraphicsitem_cast<Place*>(node);
+
+                if(place->getId() ==l_source)
+                {sourceItem = place;continue;}
+                if(place->getId() ==l_target)
+                {targetItem = place;continue;}
+            }
+            if(node->type() == Transition::Type)
+            {
+                Transition * transition = qgraphicsitem_cast<Transition*>(node);
+
+                if(transition->getId() == l_source)
+                {sourceItem = transition;continue;}
+                if(transition->getId() == l_target)
+                {targetItem = transition;continue;}
+            }
+        }
+
+        QPainterPath path(sourceItem->boundingRect().center());
+
+        foreach(QPointF p, xmlarc.points)
+            path.lineTo(p);
+
+        path.lineTo(targetItem->boundingRect ().center());
+
+        Arcus * arc = new Arcus(sourceItem, targetItem, path, xmlarc,count);
+        addItem(arc);
+
+
+        if(sourceItem->type() == Place::Type)
+            qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(arc);
+        else if(sourceItem->type() == Transition::Type)
+            qgraphicsitem_cast<Transition*>(sourceItem)->addOutputArc(arc);
+        if(targetItem->type() == Place::Type)
+            qgraphicsitem_cast<Place*>(targetItem)->addInputArc(arc);
+        else if(targetItem->type() == Transition::Type)
+            qgraphicsitem_cast<Transition*>(targetItem)->addInputArc(arc);
+
+        if(xmlarc.id.contains(rx))
+        {
+            QString str = xmlarc.id.remove(0,1);
+            indexes << str.toInt();
+        }
+    }
+
+    if(!indexes.isEmpty())
+    {
+        qSort(indexes.begin(), indexes.end());
+        arcs_indexs = indexes.last() + 1;
+    }
+
+}
+
+ void PTNscene::from_Xml_Component (const COMPONENT_ATTR &componentAttr,int count)
+ {
+         //特殊类型的复合 item
+         auto *pGroup = new QGraphicsItemGroup();
+         pGroup->setFlags( QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable| QGraphicsItem::ItemIsFocusable);
+         pGroup->setHandlesChildEvents(false);
+         pGroup->setZValue(1);
+
+         foreach(auto item,selectedItems())
+             item->setSelected(0);
+
+
+         addXML_placesOfComp (componentAttr.placeNodes,count);
+         addXML_transitionsOfComp (componentAttr.transitionNodes,count);
+         addXML_arcsOfComp(componentAttr.arcs,count);
+
+         foreach (auto *item, selectedItems())
+         {
+             item->setSelected(0);
+             pGroup->addToGroup(item);
+
+         }
+         auto *pRect = new QGraphicsRectItem();
+         pRect->setRect(pGroup->boundingRect());
+         pGroup->addToGroup(pRect);
+         addItem(pGroup);
+ }

@@ -26,6 +26,8 @@ class Arcus : public QGraphicsPathItem
 
     Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
         QPainterPath paintpath, const ARC_ATTR &arc);
+    Arcus(QGraphicsItem * item1, QGraphicsItem * item2,
+        QPainterPath paintpath, const ARC_ATTR &arc,int count);
 
     Arcus();
 
