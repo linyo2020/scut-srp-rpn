@@ -9,7 +9,7 @@ public:
     TimeRule(const QString& name,const QString& comment,const QList<QList<CONDITION> >&conditionList,const QList<BaseOperation*>&operationList);
     TimeRule(const TimeRule&)=delete;
     TimeRule& operator=(const TimeRule&)=delete;
-    virtual ~TimeRule();
+    virtual ~TimeRule()=default;
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual TimeRule *clone() const override;

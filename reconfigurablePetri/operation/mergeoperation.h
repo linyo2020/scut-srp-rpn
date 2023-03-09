@@ -10,7 +10,7 @@ public:
     MergeOperation(const QString& portId_1,const QString& portId_2);
     MergeOperation(const MergeOperation&)=delete;
     MergeOperation& operator=(const MergeOperation&)=delete;
-    virtual ~MergeOperation();
+    virtual ~MergeOperation()=default;
     virtual void execOperation(ComponentList*) const override;
     virtual MergeOperation* clone() const override;
     virtual OperationType getType()const override{return type;}

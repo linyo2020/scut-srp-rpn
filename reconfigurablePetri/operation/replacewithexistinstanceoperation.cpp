@@ -2,12 +2,7 @@
 
 
 ReplaceWithExistInstanceOperation::ReplaceWithExistInstanceOperation(const QString& componentIdToReplace,const QString& componentIdToAdd,const QList<QPair<QString, QString> >& mergePortList)
-    :oldComponentId(componentIdToReplace),newComponentId(componentIdToAdd),mergePortList(std::move(mergePortList))
-{
-
-}
-
-ReplaceWithExistInstanceOperation::~ReplaceWithExistInstanceOperation()
+    :oldComponentId(componentIdToReplace),newComponentId(componentIdToAdd),mergePortList(mergePortList)
 {
 
 }

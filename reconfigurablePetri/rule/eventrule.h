@@ -9,7 +9,7 @@ public:
     EventRule(const QString& name,const QString& comment,const QList<QList<CONDITION> >& conditionList,const QList<BaseOperation*>& operationList);
     EventRule(const EventRule&)=delete;
     EventRule& operator=(const EventRule&)=delete;
-    virtual ~EventRule();
+    virtual ~EventRule()=default;
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual EventRule *clone() const override;

@@ -6,9 +6,6 @@ DeleteOperation::DeleteOperation(const QString& componentId)
 
 }
 
-DeleteOperation::~DeleteOperation()
-{}
-
 void DeleteOperation::execOperation(ComponentList* componentList) const
 {
     componentList->deleteComponent(ComponentInstanceToDelete);

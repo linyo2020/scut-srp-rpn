@@ -6,11 +6,6 @@ SeperateOperation::SeperateOperation(const QString& compoundPortId_1,const QStri
 
 }
 
-SeperateOperation::~SeperateOperation()
-{
-
-}
-
 void SeperateOperation::execOperation(ComponentList* componentList) const
 {
     componentList->deleteConnect(portToSeperate_1,portToSeperate_2);

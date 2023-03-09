@@ -3,6 +3,7 @@
 
 struct OPERATION_ATTR;
 
+class AddAndMergeOperation;
 class AddOperation;
 class BaseOperation;
 class DeleteOperation;

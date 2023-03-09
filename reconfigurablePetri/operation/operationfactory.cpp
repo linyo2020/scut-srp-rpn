@@ -1,4 +1,5 @@
 #include "operationfactory.h"
+#include "addandmergeoperation.h"
 #include "addoperation.h"
 #include "baseoperation.h"
 #include "deleteoperation.h"
@@ -44,6 +45,10 @@ BaseOperation *OperationFactory::fromXML(const OPERATION_ATTR &operation)
         if(argNum!=2)
             return nullptr;
         return new SeperateOperation(operation.arguments[0],operation.arguments[1]);
+    case ADD_AND_MERGE_OPERATION:
+        if(argNum!=1)
+            return nullptr;
+        return new AddAndMergeOperation(operation.arguments[0],operation.portsToMerge);
     default:
         return nullptr;
     }

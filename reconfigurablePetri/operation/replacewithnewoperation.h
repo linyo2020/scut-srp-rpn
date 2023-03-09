@@ -16,7 +16,7 @@ public:
     ReplaceWithNewOperation(const QString& componentIdToReplace,const QString& componentNameToAdd,const QList<QPair<QString,QString> >& mergePortList);
     ReplaceWithNewOperation(const ReplaceWithNewOperation&)=delete;
     ReplaceWithNewOperation& operator=(const ReplaceWithNewOperation&)=delete;
-    virtual ~ReplaceWithNewOperation();
+    virtual ~ReplaceWithNewOperation()=default;
     virtual void execOperation(ComponentList*) const override;
     virtual ReplaceWithNewOperation *clone() const override;
     virtual OperationType getType()const override{return type;}

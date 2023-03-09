@@ -9,7 +9,7 @@ public:
     StateRule(const QString& name,const QString& comment,const QList<QList<CONDITION> >& conditionList,const QList<BaseOperation*>& operationList);
     StateRule(const StateRule&)=delete;
     StateRule& operator=(const StateRule&)=delete;
-    virtual ~StateRule();
+    virtual ~StateRule()=default;
     virtual bool isSatisfy(ComponentList*,const RULE_RUNTIME_INFOMATION&)override;
     virtual void initRule()override;
     virtual StateRule* clone() const override;

@@ -9,7 +9,7 @@ public:
     RecoverOperation(const QString& componentId);//传入实例id,往网中恢复实例，不合并任何端口，传入已有组件实例id的add操作
     RecoverOperation(const RecoverOperation&)=delete;
     RecoverOperation& operator=(const RecoverOperation&)=delete;
-    virtual ~RecoverOperation();
+    virtual ~RecoverOperation()=default;
     virtual void execOperation(ComponentList*) const override;
     virtual RecoverOperation* clone() const override;
     virtual OperationType getType()const override{return type;}

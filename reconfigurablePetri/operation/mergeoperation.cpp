@@ -6,11 +6,6 @@ MergeOperation::MergeOperation(const QString& portId_1,const QString& portId_2)
 
 }
 
-MergeOperation::~MergeOperation()
-{
-
-}
-
 void MergeOperation::execOperation(ComponentList* componentList) const
 {
     componentList->addComponentPort(portId1,portId2);

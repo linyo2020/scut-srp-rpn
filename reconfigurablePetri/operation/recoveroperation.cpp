@@ -6,11 +6,6 @@ RecoverOperation::RecoverOperation(const QString& componentId)
 
 }
 
-RecoverOperation::~RecoverOperation()
-{
-
-}
-
 void RecoverOperation::execOperation(ComponentList* componentList) const
 {
     componentList->recoverComponent(componentInstanceId);

@@ -1,12 +1,7 @@
 #include "replacewithnewoperation.h"
 
 ReplaceWithNewOperation::ReplaceWithNewOperation(const QString& componentIdToReplace,const QString& componentNameToAdd,const QList<QPair<QString, QString> >& mergePortList)
-    :oldComponentId(componentIdToReplace),newComponentName(componentNameToAdd),mergePortList(std::move(mergePortList))
-{
-
-}
-
-ReplaceWithNewOperation::~ReplaceWithNewOperation()
+    :oldComponentId(componentIdToReplace),newComponentName(componentNameToAdd),mergePortList(mergePortList)
 {
 
 }

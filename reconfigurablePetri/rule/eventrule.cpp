@@ -7,11 +7,6 @@ EventRule::EventRule(const QString& name, const QString& comment, const QList<QL
 
 }
 
-EventRule::~EventRule()
-{
-
-}
-
 bool EventRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
     Q_UNUSED(runtimeInfo);

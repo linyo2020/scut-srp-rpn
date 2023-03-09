@@ -6,11 +6,6 @@ AddOperation::AddOperation(const QString& componentName)
 
 }
 
-AddOperation::~AddOperation()
-{
-
-}
-
 void AddOperation::execOperation(ComponentList* componentList) const
 {
     componentList->addNewComponent(newComponentName);

@@ -7,11 +7,6 @@ StateRule::StateRule(const QString& name, const QString& comment, const QList<QL
 
 }
 
-StateRule::~StateRule()
-{
-
-}
-
 bool StateRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMATION& runtimeInfo)
 {
     Q_UNUSED(runtimeInfo);

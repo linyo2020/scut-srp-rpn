@@ -88,7 +88,8 @@ SOURCES += \
     simulation/mineventheap.cpp \
     simulation/disjsets.cpp \
     rule/rulefactory.cpp \
-    operation/operationfactory.cpp
+    operation/operationfactory.cpp \
+    operation/addandmergeoperation.cpp
 
 
 HEADERS += \
@@ -159,7 +160,8 @@ HEADERS += \
     simulation/mineventheap.h \
     simulation/disjsets.h \
     rule/rulefactory.h \
-    operation/operationfactory.h
+    operation/operationfactory.h \
+    operation/addandmergeoperation.h
 
 
 # Default rules for deployment.

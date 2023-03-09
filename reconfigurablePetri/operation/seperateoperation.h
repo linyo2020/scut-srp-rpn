@@ -11,7 +11,7 @@ public:
     SeperateOperation(const QString& compoundPortId_1,const QString& compoundPortId_2);
     SeperateOperation(const SeperateOperation&)=delete;
     SeperateOperation& operator=(const SeperateOperation&)=delete;
-    virtual ~SeperateOperation();
+    virtual ~SeperateOperation()=default;
     virtual void execOperation(ComponentList*) const override;
     virtual SeperateOperation *clone() const override;
     virtual OperationType getType()const override{return type;}

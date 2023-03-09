@@ -11,7 +11,7 @@ public:
     DeleteOperation(const QString& componentId);
     DeleteOperation(const DeleteOperation&)=delete;
     DeleteOperation& operator=(const DeleteOperation&)=delete;
-    virtual ~DeleteOperation();
+    virtual ~DeleteOperation()=default;
     virtual void execOperation(ComponentList*) const override;
     virtual DeleteOperation* clone() const override;
     virtual OperationType getType()const override{return type;}
