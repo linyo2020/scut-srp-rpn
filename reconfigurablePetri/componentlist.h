@@ -111,6 +111,11 @@ public:
     //2023.03.04
     void editComponentID(QString oldID,QString newID);
     QString addComponent(COMPONENT_ATTR componentAttr);
+    /**
+     * @brief checkConnectorAttrList
+     * 若connector上连接了无效的id，则将该connector删掉
+     */
+    void checkConnectorAttrList();
 private:
     //func
     //如果未找到返回nullptr

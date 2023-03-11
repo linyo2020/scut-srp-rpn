@@ -367,4 +367,6 @@ QList<COMPONENT_ATTR> ComponentController::getCompAttrList(QString filename)
             return net.pages[0].componentList;
         }
     }
+    QList<COMPONENT_ATTR>result;
+    return result;
 }

@@ -732,7 +732,7 @@ Component::Component(PTNscene*scene,QGraphicsView*view,COMPONENT_ATTR componentA
     m_Scene->from_Xml_Component (componentAttr);
     // 为视图设置场景
     m_View->centerOn(m_Scene->itemsBoundingRect().center());
-    qDebug()<<"component "<<Component_id<<" 's count is "<<count;
+//    qDebug()<<"component "<<Component_id<<" 's count is "<<count;
 }
 
 

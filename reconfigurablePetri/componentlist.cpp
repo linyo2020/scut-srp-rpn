@@ -1612,7 +1612,7 @@ ComponentList::ComponentList(ComponentList* source)
     m_lConnector=source->m_lConnector;
     m_mComp2Count=source->m_mComp2Count;
     Component*p;
-    for(unsigned int i = 0; i < source->com_list.size();i++)
+    for(int i = 0; i < source->com_list.size();i++)
     {
         p=new Component(source->com_list[i]);
         com_list.push_back(p);
@@ -1730,4 +1730,23 @@ void ComponentList::editComponentID(QString oldName,QString newName)
 //            com_list[i]->setID(newID+'&'+compID[1]);
 //        }
 //    }
+}
+
+void ComponentList::checkConnectorAttrList()
+{
+    QList<CONNECTOR_ATTR> result;
+    QString sourceCompId,targetCompId;
+    for(int i=0;i<m_lConnector.size();i++)
+    {
+        sourceCompId=m_lConnector[i].source.split('&')[0];
+        targetCompId=m_lConnector[i].target.split('&')[0];
+        if(m_mComp2Count.contains(sourceCompId)&&m_mComp2Count.contains(targetCompId))
+        {
+            result<<m_lConnector[i];
+        }
+        else {
+            qDebug()<<"connector from "<<m_lConnector[i].source<<" to "<<m_lConnector[i].target<<" is invalid";
+        }
+    }
+    m_lConnector=result;
 }

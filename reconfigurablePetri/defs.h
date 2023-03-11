@@ -13,7 +13,7 @@
 #define transition_width 30
 #define transition_heigh 29
 #define default_step 0.1
-
+#define COMP_NUM_MAX 999
 typedef QMap<QString, double> Marking;
 
 enum{normalMode=0, animationMode=1, addPlaceMode=2, \

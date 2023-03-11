@@ -589,7 +589,7 @@ void MainWindow::openComponent()
         statusBar->showMessage("Component loaded and opened.", 1000);
     else
         statusBar->showMessage("Component was not opened.", 1000);
-    emit importComponentFinished();
+//    emit importComponentFinished();
 }
 void MainWindow::unbindingComponent()
 {
