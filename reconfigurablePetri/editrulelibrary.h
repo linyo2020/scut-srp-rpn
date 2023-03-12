@@ -53,6 +53,7 @@ private:
     QList<BaseOperation*> getoperation();
     void setoperation(BaseRule*);
     void saverule(int);
+    void setconnection(bool,const QString&,const QString&);
 };
 
 #endif // EDITRULELIBRARY_H

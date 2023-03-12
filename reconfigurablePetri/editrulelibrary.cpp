@@ -8,6 +8,7 @@
 #include"rule/eventrule.h"
 #include"rule/staterule.h"
 #include"operation/addoperation.h"
+#include"operation/addandmergeoperation.h"
 #include"operation/baseoperation.h"
 #include"operation/deleteoperation.h"
 #include"operation/mergeoperation.h"
@@ -322,10 +323,15 @@ QList<BaseOperation*> editRuleLibrary::getoperation()
 {
     QList<BaseOperation*> operation;
     QString type=ui->actionTypeComboBox->currentText();
+    QList<QPair<QString, QString> > * mergelist=NULL;
     if(type=="add")
     {
         if(ui->actionSubtypeComboBox->currentText()=="new")
-            operation.push_back(new AddOperation(ui->target1LineEdit->text()));
+        {
+            AddAndMergeOperation* newoperation=new AddAndMergeOperation(ui->target1LineEdit->text(),{});
+            operation.push_back(newoperation);
+            mergelist=newoperation->getMergeList();
+        }
         else
             operation.push_back(new RecoverOperation(ui->target1LineEdit->text()));
     }
@@ -333,7 +339,11 @@ QList<BaseOperation*> editRuleLibrary::getoperation()
         operation.push_back(new DeleteOperation(ui->target1LineEdit->text()));
     else {
         if(ui->actionSubtypeComboBox->currentText()=="new")
-            operation.push_back(new ReplaceWithNewOperation(ui->target1LineEdit->text(),ui->target2LineEdit->text(),{}));
+        {
+            ReplaceWithNewOperation* newoperation=new ReplaceWithNewOperation(ui->target1LineEdit->text(),ui->target2LineEdit->text(),{});
+            operation.push_back(newoperation);
+            mergelist=newoperation->getMergeList();
+        }
         else
             operation.push_back(new ReplaceWithExistInstanceOperation(ui->target1LineEdit->text(),ui->target2LineEdit->text(),{}));
     }
@@ -342,7 +352,12 @@ QList<BaseOperation*> editRuleLibrary::getoperation()
         QString type=groupbox->findChild<QComboBox*>(QString(),Qt::FindDirectChildrenOnly)->currentText();
         QList<QLineEdit*> list=groupbox->findChildren<QLineEdit*>(QString(),Qt::FindDirectChildrenOnly);
         if(type=="connect")
-            operation.push_back(new MergeOperation(list[0]->text(),list[1]->text()));
+        {
+            if(mergelist!=NULL&&(list[0]->text().split('&')[0]=="NEW_COMPONENT_ID"||list[1]->text().split('&')[0]=="NEW_COMPONENT_ID"))
+                mergelist->push_back({list[0]->text(),list[1]->text()});
+            else
+                operation.push_back(new MergeOperation(list[0]->text(),list[1]->text()));
+        }
         else
             operation.push_back(new SeperateOperation(list[0]->text(),list[1]->text()));
     }
@@ -360,6 +375,15 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
                ui->actionSubtypeComboBox->setCurrentText("new");
                ui->target1LineEdit->setText(*(operation->getArguments()[0]));
                break;
+           case ADD_AND_MERGE_OPERATION:
+               {
+                ui->actionTypeComboBox->setCurrentText("add");
+               ui->actionSubtypeComboBox->setCurrentText("new");
+               ui->target1LineEdit->setText(*(operation->getArguments()[0]));
+               for(QPair<QString,QString>&pairs:*dynamic_cast<AddAndMergeOperation*>(operation)->getMergeList())
+                   setconnection(1,pairs.first,pairs.second);
+               break;
+       }
            case RECOVER_OPERATION:
                ui->actionTypeComboBox->setCurrentText("add");
                ui->actionSubtypeComboBox->setCurrentText("old");
@@ -374,6 +398,8 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
                 ui->actionSubtypeComboBox->setCurrentText("new");
                 ui->target1LineEdit->setText(*(operation->getArguments()[0]));
                 ui->target2LineEdit->setText(*(operation->getArguments()[1]));
+                for(QPair<QString,QString>&pairs:*dynamic_cast<ReplaceWithNewOperation*>(operation)->getMergeList())
+                    setconnection(1,pairs.first,pairs.second);
                 break;
            case REPLACE_WITH_EXIST_OPERATION:
                ui->actionTypeComboBox->setCurrentText("update");
@@ -383,62 +409,43 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
                break;
            case MERGE_OPERATION:
                {
-               QGridLayout* connectionGridLayout=dynamic_cast<QGridLayout*>(ui->connectionGridFrame->layout());
-               QGroupBox* ruleGroupBox=new QGroupBox;
-               QGridLayout* groupBoxLayout=new QGridLayout;
-               QComboBox* connectionType=new QComboBox;
-               connectionType->addItem(tr("connect"));
-               connectionType->addItem(tr("disconnect"));
-               connectionType->setCurrentText("connect");
-               QLineEdit* connectionSource=new QLineEdit;
-               connectionSource->setText(*(operation->getArguments()[0]));
-               QLabel* connectionAndLabel=new QLabel;
-               connectionAndLabel->setText(tr("and"));
-               QLineEdit* connectionTarget=new QLineEdit;
-               connectionTarget->setText(*(operation->getArguments()[1]));
-               QPushButton* deleteRulePushButton=new QPushButton;
-               deleteRulePushButton->setText(tr("delete"));
-               groupBoxLayout->addWidget(connectionType,0,0);
-               groupBoxLayout->addWidget(connectionSource,0,1,1,3);
-               groupBoxLayout->addWidget(connectionAndLabel,1,0);
-               groupBoxLayout->addWidget(connectionTarget,1,1,1,3);
-               groupBoxLayout->addWidget(deleteRulePushButton,2,3);
-               ruleGroupBox->setLayout(groupBoxLayout);
-               connectionGridLayout->addWidget(ruleGroupBox,connectionGridLayout->rowCount(),0,1,connectionGridLayout->columnCount());
-               connect(deleteRulePushButton,&QPushButton::clicked,ruleGroupBox,&QGroupBox::deleteLater);
+               setconnection(1,*(operation->getArguments()[0]),*(operation->getArguments()[1]));
                break;
        }
        case SEPERATE_OPERATION:
        {
-           QGridLayout* connectionGridLayout=dynamic_cast<QGridLayout*>(ui->connectionGridFrame->layout());
-           QGroupBox* ruleGroupBox=new QGroupBox;
-           QGridLayout* groupBoxLayout=new QGridLayout;
-           QComboBox* connectionType=new QComboBox;
-           connectionType->addItem(tr("connect"));
-           connectionType->addItem(tr("disconnect"));
-           connectionType->setCurrentText("disconnect");
-           QLineEdit* connectionSource=new QLineEdit;
-           connectionSource->setText(*(operation->getArguments()[0]));
-           QLabel* connectionAndLabel=new QLabel;
-           connectionAndLabel->setText(tr("and"));
-           QLineEdit* connectionTarget=new QLineEdit;
-           connectionTarget->setText(*(operation->getArguments()[1]));
-           QPushButton* deleteRulePushButton=new QPushButton;
-           deleteRulePushButton->setText(tr("delete"));
-           groupBoxLayout->addWidget(connectionType,0,0);
-           groupBoxLayout->addWidget(connectionSource,0,1,1,3);
-           groupBoxLayout->addWidget(connectionAndLabel,1,0);
-           groupBoxLayout->addWidget(connectionTarget,1,1,1,3);
-           groupBoxLayout->addWidget(deleteRulePushButton,2,3);
-           ruleGroupBox->setLayout(groupBoxLayout);
-           connectionGridLayout->addWidget(ruleGroupBox,connectionGridLayout->rowCount(),0,1,connectionGridLayout->columnCount());
-           connect(deleteRulePushButton,&QPushButton::clicked,ruleGroupBox,&QGroupBox::deleteLater);
+           setconnection(0,*(operation->getArguments()[0]),*(operation->getArguments()[1]));
            break;
        }
        }
    }
 }
-
+void editRuleLibrary::setconnection(bool isconnect, const QString & source, const QString & target)
+{
+    QGridLayout* connectionGridLayout=dynamic_cast<QGridLayout*>(ui->connectionGridFrame->layout());
+    QGroupBox* ruleGroupBox=new QGroupBox;
+    QGridLayout* groupBoxLayout=new QGridLayout;
+    QComboBox* connectionType=new QComboBox;
+    connectionType->addItem(tr("connect"));
+    connectionType->addItem(tr("disconnect"));
+    connectionType->setCurrentIndex(!isconnect);
+    QLineEdit* connectionSource=new QLineEdit;
+    connectionSource->setText(source);
+    QLabel* connectionAndLabel=new QLabel;
+    connectionAndLabel->setText(tr("and"));
+    QLineEdit* connectionTarget=new QLineEdit;
+    connectionTarget->setText(target);
+    QPushButton* deleteRulePushButton=new QPushButton;
+    deleteRulePushButton->setText(tr("delete"));
+    groupBoxLayout->addWidget(connectionType,0,0);
+    groupBoxLayout->addWidget(connectionSource,0,1,1,3);
+    groupBoxLayout->addWidget(connectionAndLabel,1,0);
+    groupBoxLayout->addWidget(connectionTarget,1,1,1,3);
+    groupBoxLayout->addWidget(deleteRulePushButton,2,3);
+    ruleGroupBox->setLayout(groupBoxLayout);
+    connectionGridLayout->addWidget(ruleGroupBox,connectionGridLayout->rowCount(),0,1,connectionGridLayout->columnCount());
+    connect(deleteRulePushButton,&QPushButton::clicked,ruleGroupBox,&QGroupBox::deleteLater);
+}
 void editRuleLibrary::on_buttonBox_accepted()
 {
    saverule(ui->listWidget->currentRow());
