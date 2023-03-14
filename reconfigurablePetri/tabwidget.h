@@ -40,8 +40,9 @@ public:
     bool open (MessageHandler &messageHandler);
     //打开组件
     bool openComponent (MessageHandler &messageHandler);
+    bool addComponent(COMPONENT_ATTR component_Attr);
     //添加组件
-    void addComponent (QString componentPath);
+    void addExistedComponent (QString componentName);
     //解除组件，绑定组件
     void unbindComponent();
     void bindComponent();
@@ -77,19 +78,25 @@ public:
     QString getComponenttype(QString id);
     RuleManager &getRuleManager();
 
-    void saveModel();
+    //2023.03.14
+    bool isComponentUsed(QString componentName);
+
+//    void saveModel();
     void gets(PTNscene*scene);
 signals:
-    void addComponentTreeNode (QString componentName,QString componentPath);
+//    void addComponentTreeNode (QString componentName,QString componentPath);
     void canRedoChange (bool canRedo);
     void canUndoChange (bool canUndo);
     void tabChanged (int index);
     void errorMessage (const QString &msg);
-    void ElementIdEditFinished();
-    void addComponentFinished();
-    void saveComponentFinished();
-    void startSimulation(PTNscene*scene);
-    void finishSimulation();
+    //2023.0313
+//    void addComponentTreeNode(COMPONENT_ATTR componentAttr);
+    void addComponentTreeNode(QString componentName);
+//    void ElementIdEditFinished();
+//    void addComponentFinished();
+//    void saveComponentFinished();
+//    void startSimulation(PTNscene*scene);
+//    void finishSimulation();
 protected:
     //连接具体页面的信号和槽，用于传递Undo，Redo，netChanged，error信息
     void connectSignalAndSlot(PetriTabWidget * tab);
@@ -103,6 +110,8 @@ private:
     QMap<QString,int>type_count;
     //todo，保存的Pertritabwidget复制
     PetriTabWidget*tab_copy;
+    //2023.03.13
+    QMap<QString,COMPONENT_ATTR>m_mCompName2Attr;
 };
 
 #endif // TABWIDGET_H

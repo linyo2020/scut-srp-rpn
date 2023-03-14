@@ -1675,6 +1675,13 @@ ComponentList::ComponentList(PTNscene * scene,QGraphicsView * view)
    m_mComp2Count.clear();
 }
 
+ComponentList::ComponentList(PTNscene * scene,QGraphicsView * view,QMap<QString,int>Comp2Count)
+{
+   m_Scene=scene;
+   m_View=view;
+   m_mComp2Count=Comp2Count;
+}
+
 void ComponentList::addComponents(QList<COMPONENT_ATTR>componentlist)
 {
     foreach(COMPONENT_ATTR componentAttr,componentlist)
@@ -1718,7 +1725,10 @@ QString ComponentList::addComponent(COMPONENT_ATTR componentAttr)
         m_mComp2Count[name]=temp;
         return name+'&'+QString::number(temp--);
 }
-
+void ComponentList::addComponent(Component* component)
+{
+    com_list.push_back(component);
+}
 void ComponentList::editComponentID(QString oldName,QString newName)
 {
 //    QStringList compID;
@@ -1749,4 +1759,16 @@ void ComponentList::checkConnectorAttrList()
         }
     }
     m_lConnector=result;
+}
+
+bool ComponentList::containComponent(QString componentName)
+{
+    foreach(Component* component,com_list)
+    {
+        if(component->getFileName()==componentName)
+        {
+            return true;
+        }
+    }
+    return false;
 }

@@ -32,10 +32,13 @@ public:
     //2023.03.04
     QList<COMPONENT_ATTR> getCompAttrList(QString filename);
 
+
 private slots:
     void on_treeWidget_Dev_itemChanged(QTreeWidgetItem *item); //通过右键菜单添加槽函数
     void slotCustomContextMenu(const QPoint &);
-
+private:
+    //2023.03.13
+    QMap<QString,COMPONENT_ATTR>m_mCompName2Attr;
 
 };
 

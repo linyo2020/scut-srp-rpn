@@ -25,6 +25,8 @@ public:
     Component(Component*);
     //2023.03.03
     Component(PTNscene*scene,QGraphicsView*m_View,COMPONENT_ATTR componentAttr,int count);
+    //2023.03.14
+    Component(COMPONENT_ATTR componentAttr);
     //The unique identity of the component unit
 
     QString Component_id;//该数据的获取方式:type+唯一编号\系统读取控件xml文件时读取

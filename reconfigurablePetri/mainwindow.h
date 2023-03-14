@@ -49,7 +49,8 @@ public:
     void openComponent ();
     void about();
     void openRuleLibrary();
-    void setComponentTreeNode(QString componentName,QString currentPath);
+//    void setComponentTreeNode(QString componentName,QString currentPath);
+    void setComponentTreeNode(QString componentName);
     void deleteComponentTreeNode(QTreeWidget* tree);
     void openEditComponent();
     void addEditComponent(QTreeWidget* tree);
@@ -61,7 +62,7 @@ public:
     TabWidget* getTabwidget();
 
 signals:
-    void addComponentController(QString componentPath);
+    void addExistedComponent(QString componentPath);
     void passComponnetController(ComponentController *ComponentController);
     void passCom_arry(QVector<Component*>com_arry);
 private:
@@ -146,7 +147,7 @@ private:
 
     //可拖拉界面的部件
     DockWidget * buttomDock;
-    ComponentController *component_controller;
+//    ComponentController *component_controller;
 
     //用于缩放的滑动条
     QSlider  * slider;

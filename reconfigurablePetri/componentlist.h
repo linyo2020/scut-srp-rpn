@@ -21,7 +21,8 @@ public:
 
     //2023.03.03
     ComponentList(PTNscene * scene,QGraphicsView * view);
-
+    //2023.03.14
+    ComponentList(PTNscene * scene,QGraphicsView * view,QMap<QString,int>Comp2Count);
     //根据传入ID获取Place，包括普通端口，复合端口，普通节点
     Place* getCertainPlace(QString PlaceID);//田俊杰
 
@@ -111,11 +112,15 @@ public:
     //2023.03.04
     void editComponentID(QString oldID,QString newID);
     QString addComponent(COMPONENT_ATTR componentAttr);
+    //2023.03.14
+    void addComponent(Component* component);
     /**
      * @brief checkConnectorAttrList
      * 若connector上连接了无效的id，则将该connector删掉
      */
     void checkConnectorAttrList();
+    //2023.03.14
+    bool containComponent(QString componentName);
 private:
     //func
     //如果未找到返回nullptr

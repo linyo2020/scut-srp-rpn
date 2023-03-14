@@ -11,7 +11,7 @@ PetriTabWidget::PetriTabWidget(const QString &id, QWidget * parent)
     componentlist=new ComponentList(scene,view);
 }
 
-PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
+PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file,QMap<QString,int>Comp2Count)
 {
     id = ptnet.id;
     name = ptnet.name;
@@ -19,26 +19,36 @@ PetriTabWidget::PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file)
 
     createTab ();
 
-    // xml(待处理)
-    scene->from_Xml (ptnet.pages);
-    view->centerOn(scene->itemsBoundingRect().center());
-
     if(!ptnet.pages.empty())
         ruleManager=(ptnet.pages[0].rules);
     else
         ruleManager=RuleManager();
 
     //初始化组件列表类
+    componentlist=new ComponentList(scene,view,Comp2Count);
+    // xml(待处理)
+    scene->from_Xml (ptnet.pages);
+    view->centerOn(scene->itemsBoundingRect().center());
+    foreach(COMPONENT_ATTR component,ptnet.pages[0].componentList)
+    {
+        componentlist->addComponent(new Component(component));
+    }
+}
+PetriTabWidget::PetriTabWidget(const QString& ID,const QString& Name, const QString& file)
+{
+    id =ID;
+    name=Name;
+    filename = file;
+    createTab ();
     componentlist=new ComponentList(scene,view);
 }
-
 //添加组件
-void PetriTabWidget::addComponent(const PTNET_ATTR &ptnet)
+void PetriTabWidget::addComponent(const COMPONENT_ATTR &componentAttr)
 {
-    id = ptnet.id;
-    name = ptnet.name;
+//    id = ptnet.id;
+//    name = ptnet.name;
 
-    componentlist->addComponents(ptnet.pages[0].componentList);
+    componentlist->addComponent(componentAttr);
     // xml （待处理
 //    scene->from_Xml_Component (ptnet.pages);
 
@@ -262,47 +272,85 @@ PTNET_ATTR PetriTabWidget::toXml() const
     {
         if(item->type()==QGraphicsItemGroup::Type)
         {
-            foreach(QGraphicsItem*i,item->childItems())
-            {
-                if(i->type() == Place::Type)
-                {
-                    page.placeNodes << qgraphicsitem_cast<Place*>(i)->toXml();
-                    continue;
-                }
-                if(i->type() == Transition::Type)
-                {
-                    page.transitionNodes << qgraphicsitem_cast<Transition*>(i)->toXml();
-                    continue;
-                }
-                if(i->type() == Arcus::Type)
-                {
-                    page.arcs << qgraphicsitem_cast<Arcus*>(i)->toXml();
-                    continue;
-                }
-                if(i->type()==Connector::Type)
-                {
-                    page.connector << qgraphicsitem_cast<Connector*>(i)->toXml();
-                    continue;
-                }
-            }
+              COMPONENT_ATTR l_component;
+              QList<QGraphicsItem*>items=item->childItems();
+              int l_length=items.size();
+              QStringList l_itemName;
+              if(items[0]->type() == Place::Type)
+              {
+                  l_itemName=qgraphicsitem_cast<Place*>(items[0])->getId().split('&');
+                  l_component.name=l_itemName[0];
+                  l_component.id=l_itemName[0]+'&'+l_itemName[1];
+              }
+              else if(items[0]->type() == Transition::Type)
+              {
+                  l_itemName=qgraphicsitem_cast<Transition*>(items[0])->getId().split('&');
+                  l_component.name=l_itemName[0];
+                  l_component.id=l_itemName[0]+'&'+l_itemName[1];
+              }
+              else if(items[0]->type() == Arcus::Type)
+              {
+                  l_itemName=qgraphicsitem_cast<Arcus*>(items[0])->getId().split('&');
+                  l_component.name=l_itemName[0];
+                  l_component.id=l_itemName[0]+'&'+l_itemName[1];
+              }
+              for(int i=0;i<l_length;i++)
+              {
+                  if(items[i]->type() == Place::Type)
+                  {
+                      l_component.placeNodes << qgraphicsitem_cast<Place*>(items[i])->toXml();
+                  }
+                  else if(items[i]->type() == Transition::Type)
+                  {
+                      l_component.transitionNodes<<qgraphicsitem_cast<Transition*>(items[i])->toXml();
+                  }
+                  else if(items[i]->type() == Arcus::Type)
+                  {
+                      l_component.arcs<<qgraphicsitem_cast<Arcus*>(items[i])->toXml();
+                  }
+              }
+              page.componentList<<l_component;
+//            foreach(QGraphicsItem*i,item->childItems())
+//            {
+//                if(i->type() == Place::Type)
+//                {
+//                    page.placeNodes << qgraphicsitem_cast<Place*>(i)->toXml();
+//                    continue;
+//                }
+//                if(i->type() == Transition::Type)
+//                {
+//                    page.transitionNodes << qgraphicsitem_cast<Transition*>(i)->toXml();
+//                    continue;
+//                }
+//                if(i->type() == Arcus::Type)
+//                {
+//                    page.arcs << qgraphicsitem_cast<Arcus*>(i)->toXml();
+//                    continue;
+//                }
+////                if(i->type()==Connector::Type)
+////                {
+////                    page.connector << qgraphicsitem_cast<Connector*>(i)->toXml();
+////                    continue;
+////                }
+//            }
         }
         else
         {
-            if(item->type() == Place::Type)
-            {
-                page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
-                continue;
-            }
-            if(item->type() == Transition::Type)
-            {
-                page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
-                continue;
-            }
-            if(item->type() == Arcus::Type)
-            {
-                page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
-                continue;
-            }
+//            if(item->type() == Place::Type)
+//            {
+//                page.placeNodes << qgraphicsitem_cast<Place*>(item)->toXml();
+//                continue;
+//            }
+//            if(item->type() == Transition::Type)
+//            {
+//                page.transitionNodes << qgraphicsitem_cast<Transition*>(item)->toXml();
+//                continue;
+//            }
+//            if(item->type() == Arcus::Type)
+//            {
+//                page.arcs << qgraphicsitem_cast<Arcus*>(item)->toXml();
+//                continue;
+//            }
             if(item->type()==Connector::Type)
             {
                 page.connector << qgraphicsitem_cast<Connector*>(item)->toXml();
@@ -331,9 +379,9 @@ PTNET_ATTR PetriTabWidget::componentToXml() const
     component.step=default_step;
     page.id = "page0";
     page.name = name;
-    int arc_count=1;
-    int place_count=1;
-    int transition_count=1;
+    int arc_count=0;
+    int place_count=0;
+    int transition_count=0;
     QVector<QGraphicsItem*>l_vArcItem;
 
     QMap<QString,QString>l_mOldID2NewID;
@@ -1095,4 +1143,14 @@ void PetriTabWidget::editComponentStep(QString componentName,double componentSte
 void PetriTabWidget::editComponentID(QString oldName,QString newName)
 {
     componentlist->editComponentID(oldName,newName);
+}
+
+bool PetriTabWidget::containComponent(QString componentName)
+{
+    return componentlist->containComponent(componentName);
+}
+
+void PetriTabWidget::addConnector(QList<CONNECTOR_ATTR>l_connectorAttr)
+{
+    scene->addXML_connectors(l_connectorAttr);
 }

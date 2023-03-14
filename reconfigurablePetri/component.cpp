@@ -736,7 +736,16 @@ Component::Component(PTNscene*scene,QGraphicsView*view,COMPONENT_ATTR componentA
 }
 
 
-
+Component::Component(COMPONENT_ATTR componentAttr)
+{
+    m_step=componentAttr.step;
+    Component_id=componentAttr.id;
+    placeList=componentAttr.placeNodes;
+    transitionList=componentAttr.transitionNodes;
+    arcList=componentAttr.arcs;
+    m_Scene=NULL;
+    m_View=NULL;
+}
 
 
 

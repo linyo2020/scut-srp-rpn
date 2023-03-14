@@ -13,6 +13,7 @@ TabWidget::TabWidget(QWidget * parent)
     Component*com=new Component();
     component_List.push_back(com);
     com_list=new ComponentList();
+    m_mCompName2Attr.clear();
     //点击了标签上的关闭按钮 ,移除tab页
     connect (this, &TabWidget::tabCloseRequested,this, &TabWidget::closeTab);
 
@@ -674,39 +675,39 @@ RuleManager &TabWidget::getRuleManager()
     return tab->getRuleManager();
 }
 
-void TabWidget::saveModel()
-{
-    tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
-    QString filename = tab_copy->getFilename();
-    int count=0;
-    int c=0;
-    if(filename.isNull())
-    {
-        count++;
+//void TabWidget::saveModel()
+//{
+//    tab_copy = qobject_cast<PetriTabWidget*>(currentWidget());
+//    QString filename = tab_copy->getFilename();
+//    int count=0;
+//    int c=0;
+//    if(filename.isNull())
+//    {
+//        count++;
 
-        saveAsComponent();
-        qDebug()<<"if(filename.isNull())"<<"  :"<<count;
-    }
+//        saveAsComponent();
+//        qDebug()<<"if(filename.isNull())"<<"  :"<<count;
+//    }
 
-    else
-    {
-        c++;
-        qDebug()<<"else"<<"  :"<<c;
-        qDebug()<<"fail";
-        QFile file(filename);
+//    else
+//    {
+//        c++;
+//        qDebug()<<"else"<<"  :"<<c;
+//        qDebug()<<"fail";
+//        QFile file(filename);
 
-        if(!file.open(QIODevice::WriteOnly))
-            QMessageBox::critical(this, "Open Component Error", \
-                                  "The Component could not be opened.");
+//        if(!file.open(QIODevice::WriteOnly))
+//            QMessageBox::critical(this, "Open Component Error", \
+//                                  "The Component could not be opened.");
 
-        XmlWriter writer(tab_copy->toXml());
-        writer.writeXML(&file);
-        tab_copy->cleanUndostack();
-    }
-    qDebug()<<"startSimulation emit";
+//        XmlWriter writer(tab_copy->toXml());
+//        writer.writeXML(&file);
+//        tab_copy->cleanUndostack();
+//    }
+//    qDebug()<<"startSimulation emit";
 
-    emit startSimulation(tab_copy->getSCene());
-}
+//    emit startSimulation(tab_copy->getSCene());
+//}
 
 void TabWidget::gets(PTNscene *scene)
 {
@@ -801,15 +802,172 @@ bool TabWidget::open (MessageHandler &messageHandler)
 
     //![4] ok :)
     PTNET_ATTR net = parser.getXML_net ();
-    //set ID
-    //---------
+    QList<COMPONENT_ATTR>compAttrList=net.pages[0].componentList;
+    QList<CONNECTOR_ATTR>connectAttrList=net.pages[0].connector;
+    QList<COMPONENT_ATTR>newCompAttrList;
+    QList<CONNECTOR_ATTR>newConnectAttrList;
+    QMap<QString,int>Comp2Count;
+    QMap<QString,QString>CompID2NewCompID;
 
+    PetriTabWidget * tab = new PetriTabWidget(net.id,net.name,filename);
+    if(!net.pages[0].rules.empty())
+        tab->setRuleManager(RuleManager(net.pages[0].rules));
+    else tab->setRuleManager(RuleManager());
 
-    //----------
-    PetriTabWidget * tab = new PetriTabWidget(net, filename);
     addTab(tab,fi.fileName());
     connectSignalAndSlot(tab);
     setTabToolTip(currentIndex(), filename);
+    setCurrentWidget(tab);
+    /**
+    *todo:将文件的组件编号进行调整以及和设置组件库
+    */
+    foreach(COMPONENT_ATTR component,compAttrList)
+    {
+        COMPONENT_ATTR tempComponentAttr;
+        QString compName=component.name;
+        QString compID=component.id;
+        //检查组件库
+        int temp=0;
+        if(!Comp2Count.contains(compName))
+        {
+            if(m_mCompName2Attr.contains(compName))
+            {
+                QMessageBox::StandardButton sameNameMessage=QMessageBox::question(
+                    this,"Open Component","组件库中已经存在组件"+compName+",是否要替换它？",QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+                if(sameNameMessage!=QMessageBox::Yes)
+                {
+                    if(isComponentUsed(compName))
+                    {
+                        QMessageBox::critical(this,"Warning!","该组件正在被使用，无法被替换！");
+                    }
+                }
+                else
+                {
+                    //修改组件信息以避免组件重复
+                    //!未完成
+
+        //            int count=1;
+        //            QString newCompName;
+        //            do{
+        //                newCompName=componentName+"(副本"+QString::number(count)+')';
+        //                count++;
+        //            }while(m_mCompName2Attr.contains(newCompName));
+        //            componentName=newCompName;
+        //            component.name=componentName;
+        //            QString oldId;
+        //            component.id=componentName;
+                     return false;
+                }
+            }
+            tempComponentAttr.id=compName;
+            tempComponentAttr.name=compName;
+            tempComponentAttr.step=component.step;
+            tempComponentAttr.type=component.type;
+            foreach(PLACE_ATTR place,component.placeNodes)
+            {
+                   place.id=compName+'&'+place.id.split('&')[2];
+                   tempComponentAttr.placeNodes<<place;
+            }
+            foreach(TRANSITION_ATTR transition,component.transitionNodes)
+            {
+                    transition.id=compName+'&'+transition.id.split('&')[2];
+                    tempComponentAttr.transitionNodes<<transition;
+            }
+            foreach(ARC_ATTR arc,component.arcs)
+            {
+                    arc.id=compName+'&'+arc.id.split('&')[2];
+                    arc.source=compName+'&'+arc.source.split('&')[2];
+                    arc.target=compName+'&'+arc.target.split('&')[2];
+                    tempComponentAttr.arcs<<arc;
+            }
+            m_mCompName2Attr[compName]=tempComponentAttr;
+
+            emit addComponentTreeNode(compName);
+        }
+        else{
+            temp=Comp2Count.value(compName);
+            tempComponentAttr=m_mCompName2Attr.value(compName);
+        }
+        Comp2Count[compName]=temp+1;
+        CompID2NewCompID[compID]=compName+'&'+QString::number(temp);
+        tab->addComponent(tempComponentAttr);
+    }
+
+    foreach(CONNECTOR_ATTR connector,connectAttrList)
+    {
+        QStringList tempCompID=connector.source.split('&');
+        QString oldCompID=tempCompID[0]+'&'+tempCompID[1];
+        if(CompID2NewCompID.contains(oldCompID))
+        {
+            connector.source=CompID2NewCompID.value(oldCompID)+'&'+tempCompID[2];
+        }
+        tempCompID=connector.target.split('&');
+        oldCompID=tempCompID[0]+'&'+tempCompID[1];
+        if(CompID2NewCompID.contains(oldCompID))
+        {
+            connector.target=CompID2NewCompID.value(oldCompID)+'&'+tempCompID[2];
+        }
+        newConnectAttrList<<connector;
+    }
+    tab->addConnector(newConnectAttrList);
+//        //
+//        int temp=0;
+//        if(Comp2Count.contains(compName))
+//            temp=Comp2Count[compName];
+
+//        Comp2Count[compName]=temp+1;
+//        CompID2NewCompID[compID]=compName+'&'+QString::number(temp);
+//        //将改组件的编号修改为temp的数值
+//        foreach(PLACE_ATTR place,component.placeNodes)
+//        {
+//            QStringList tempID=place.id.split('&');
+//            place.id=tempID[0]+'&'+QString::number(temp)+'&'+tempID[2];
+//            tempComponentAttr.placeNodes<<place;
+//        }
+//        foreach(TRANSITION_ATTR transition,component.transitionNodes)
+//        {
+//            QStringList tempID=transition.id.split('&');
+//            transition.id=tempID[0]+'&'+QString::number(temp)+'&'+tempID[2];
+//            tempComponentAttr.transitionNodes<<transition;
+//        }
+//        foreach(ARC_ATTR arc,component.arcs)
+//        {
+//            QStringList tempID=arc.id.split('&');
+//            arc.id=tempID[0]+'&'+QString::number(temp)+'&'+tempID[2];
+//            tempID=arc.source.split('&');
+//            arc.source=tempID[0]+'&'+QString::number(temp)+'&'+tempID[2];
+//            tempID=arc.target.split('&');
+//            arc.target=tempID[0]+'&'+QString::number(temp)+'&'+tempID[2];
+//            tempComponentAttr.arcs<<arc;
+//        }
+//        tempComponentAttr.id=
+//        newCompAttrList<<tempComponentAttr;
+//    }
+//    //更新connector中source和target的id
+//    foreach(CONNECTOR_ATTR connector,connectAttrList)
+//    {
+//        QStringList tempCompID=connector.source.split('&');
+//        QString oldCompID=tempCompID[0]+'&'+tempCompID[1];
+//        if(CompID2NewCompID.contains(oldCompID))
+//        {
+//            connector.source=CompID2NewCompID.value(oldCompID)+'&'+tempCompID[2];
+//        }
+//        tempCompID=connector.target.split('&');
+//        oldCompID=tempCompID[0]+'&'+tempCompID[1];
+//        if(CompID2NewCompID.contains(oldCompID))
+//        {
+//            connector.target=CompID2NewCompID.value(oldCompID)+'&'+tempCompID[2];
+//        }
+//        newConnectAttrList<<connector;
+//    }
+//    net.pages[0].componentList=newCompAttrList;
+//    net.pages[0].connector=newConnectAttrList;
+
+//    for(int i=0;i<compAttrList.size();i++)
+//    {
+//        addComponent(compAttrList[i]);
+//    }
+
 
     return true;
 }
@@ -817,18 +975,19 @@ bool TabWidget::open (MessageHandler &messageHandler)
 bool TabWidget::openComponent(MessageHandler &messageHandler)
 {
     //![0] get Component name
-    QString componentName = QFileDialog::getOpenFileName(this,
+    QString fileName = QFileDialog::getOpenFileName(this,
                                                          tr("Open PNML Document"), QDir::currentPath(),
                                                          tr("Petri Net Files (*.pnml)"));
 
-    if(componentName.isNull())
+    if(fileName.isNull())
         return false;
 
     //![1]
 
-    QFile file(componentName);
+    QFile file(fileName);
     QFileInfo fi(file);
-    emit addComponentTreeNode(fi.baseName(),componentName);
+//    emit addComponentTreeNode(fi.baseName(),componentName);
+    QString componentName=fi.baseName();
 
     //![2] validate xml file
     if(!validateXml(file, messageHandler))
@@ -851,32 +1010,88 @@ bool TabWidget::openComponent(MessageHandler &messageHandler)
 
     //![4] ok :)
     PTNET_ATTR net = parser.getXML_net ();
-    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
-    tab->addComponent(net);
+    COMPONENT_ATTR component=net.pages[0].componentList[0];
+    if(component.name!=componentName)
+    {
+        QMessageBox::critical(this,"Warning!","组件文件格式不对");
+        return false;
+    }
+    return addComponent(component);
+}
+bool TabWidget::addComponent(COMPONENT_ATTR component_Attr)
+{
+    QString componentName=component_Attr.name;
+    if(m_mCompName2Attr.contains(componentName))
+    {
+        QMessageBox::StandardButton sameNameMessage=QMessageBox::question(
+                    this,"Open Component","组件库中已经存在组件"+componentName+",是否要替换它？",QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if(sameNameMessage!=QMessageBox::Yes)
+        {
+            if(isComponentUsed(componentName))
+            {
+                QMessageBox::critical(this,"Warning!","该组件正在被使用，无法被替换！");
+                return false;
+            }
+        }
+        else
+        {
+            //修改组件信息以避免组件重复
+            //!未完成
 
+//            int count=1;
+//            QString newCompName;
+//            do{
+//                newCompName=componentName+"(副本"+QString::number(count)+')';
+//                count++;
+//            }while(m_mCompName2Attr.contains(newCompName));
+//            componentName=newCompName;
+//            component.name=componentName;
+//            QString oldId;
+//            component.id=componentName;
+             return false;
+        }
+    }
+    m_mCompName2Attr[componentName]=component_Attr;
+    PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
+    tab->addComponent(component_Attr);
+    emit addComponentTreeNode(componentName);
     return true;
 }
-//添加已有组件
-void TabWidget::addComponent(QString componentPath)
+bool TabWidget::isComponentUsed(QString componentName)
 {
-    QFile file(componentPath);
-    QFileInfo fi(file);
+    for(int i=0;i<this->count();i++)
+    {
+        PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(this->widget(i));
+        if(l_petriTab->containComponent(componentName))
+            return true;
+    }
+    return false;
+}
+//添加已有组件
+void TabWidget::addExistedComponent(QString componentName)
+{
+//    QFile file(componentPath);
+//    QFileInfo fi(file);
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+//    file.open(QIODevice::ReadOnly | QIODevice::Text);
 
-    //![3] parse xml file
-    file.seek(0);
-    QTextStream textstream(&file);
-    textstream.setCodec("utf-8");
-    QString xmlContent = textstream.readAll();
-    file.close();
+//    //![3] parse xml file
+//    file.seek(0);
+//    QTextStream textstream(&file);
+//    textstream.setCodec("utf-8");
+//    QString xmlContent = textstream.readAll();
+//    file.close();
 
-    XmlParser parser;
-    parser.parseXML(xmlContent);
+//    XmlParser parser;
+//    parser.parseXML(xmlContent);
 
-    PTNET_ATTR net = parser.getXML_net ();
+//    PTNET_ATTR net = parser.getXML_net ();
     PetriTabWidget * tab = qobject_cast<PetriTabWidget*>(currentWidget());
-    tab->addComponent(net);
+    if(m_mCompName2Attr.contains(componentName))
+        tab->addComponent(m_mCompName2Attr.value(componentName));
+    else {
+        qDebug()<<"m_mCompName2Attr of tabWidget in mainwindow doesn't contain "+componentName;
+    }
 //    emit addComponentFinished();
 }
 void TabWidget::unbindComponent( )
@@ -978,3 +1193,24 @@ void TabWidget::zoom (int val)
     qobject_cast<PetriTabWidget*>(currentWidget ())->scaleView (val);
 }
 
+//void TabWidget::addComponentTreeNode(QTreeWidget *newTree,QString component_name)
+//{
+//    bool flag=1;
+//    //遍历treeWidget
+//    QTreeWidgetItemIterator it(newTree);
+//    while (*it) {
+//        if((*it)->text(0)==component_name)
+//        {
+//            flag=0;
+//        }
+//        ++it;
+//    }
+//    if(flag)
+//    {
+//        QTreeWidgetItem *Item = new QTreeWidgetItem(newTree);
+//        Item->setText(0,component_name);
+//        Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
+//        Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+//        //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
+//    }
+//}

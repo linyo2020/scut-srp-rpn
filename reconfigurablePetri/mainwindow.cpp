@@ -24,16 +24,17 @@ MainWindow::MainWindow(QWidget *parent)
       createDocks ();
       createStatusBar ();
       createComponentDock();
-      component_controller=new ComponentController();
+//      component_controller=new ComponentController();
       //test
       //component_controller->WriteListFile();
       //component_controller->ReadListFile();
       connect(tabWidget, &TabWidget::currentChanged,this,&MainWindow::tabChanged);
-      connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
+//      connect (tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
+      connect(tabWidget, &TabWidget::addComponentTreeNode,this, &MainWindow::setComponentTreeNode);
       connect(tabWidget,&TabWidget::errorMessage,buttomDock,&DockWidget::showMessage);
       //不要调整顺序
 //      connect(tabWidget,&TabWidget::addComponentFinished,tabWidget,&TabWidget::setImportComponentId_AND_classsifyComponenet);
-      connect(this,&MainWindow::addComponentController,tabWidget,&TabWidget::addComponent);
+      connect(this,&MainWindow::addExistedComponent,tabWidget,&TabWidget::addExistedComponent);
 }
 
 /*
@@ -347,7 +348,7 @@ void MainWindow::createComponentDock()
 
     //---------不要调整下面connect顺序，会报错--------------------
     newComponent->setText(tr("保存"));
-    connect(tabWidget,&TabWidget::saveComponentFinished,tabWidget,&TabWidget::setElementId);
+//    connect(tabWidget,&TabWidget::saveComponentFinished,tabWidget,&TabWidget::setElementId);
     //connect(tabWidget,&TabWidget::ElementIdEditFinished,tabWidget,&TabWidget::saveComponent);
     //connect(editcommenu,&neweditcom::editFinished,editcommenu,[=](){editcommenu->close();});
     //connect(this,&MainWindow::createComponentFinished,this,[=](){
@@ -391,8 +392,16 @@ void MainWindow::createComponentDock()
     componentBar->setAllowedAreas(Qt::TopToolBarArea);
     addToolBar(componentBar);
 
-    component_controller=new ComponentController();
-    component_controller->componentTreeInitial(componentTree);
+//    component_controller=new ComponentController();
+//    component_controller->componentTreeInitial(componentTree);
+    componentTree->clear();
+    //设置表头为空
+    componentTree->headerItem()->setText(0,QString());
+    QStringList hraders;
+    hraders<<"name";
+    //添加树表的表头
+    componentTree->setHeaderLabels(hraders);
+
     componentTree->expandAll();
     componentEditMenu=new QMenu();
     editComponentAction=componentEditMenu->addAction(tr("编辑"));
@@ -403,7 +412,7 @@ void MainWindow::createComponentDock()
     VerticalLayout->addWidget(componentBar);
     VerticalLayout->addWidget(componentTree);
     mywid1->setLayout(VerticalLayout);
-    emit passComponnetController(component_controller);
+//    emit passComponnetController(component_controller);
     connect(componentTree,&QTreeWidget::itemPressed,this,[=](){this->componentPopMenu();});
 
     connect(editComponentAction,&QAction::triggered,this,[=](){this->openEditComponent();});
@@ -492,7 +501,7 @@ void MainWindow::buttonGroupClicked(int id)
 
             //将当前页面的componentList传入plot
             tab->setConnector_AttrList(tabWidget->init_cl());
-            tab->setComponentController(component_controller);
+//            tab->setComponentController(component_controller);
             view->setComList(tab->getComponentList());
             //将规则管理器传入plot
             view->setRuleManager(ruleManager);
@@ -613,15 +622,38 @@ void MainWindow::openRuleLibrary()
     editRuleLibrary editRuleDialog(this);
     editRuleDialog.exec();
 }
-void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
+//void MainWindow::setComponentTreeNode(QString componentName,QString componentPath)
+//{
+//    component_controller->addComponentTreeNode(componentTree,componentName,componentPath);
+//}
+
+void MainWindow::setComponentTreeNode(QString componentName)
 {
-    component_controller->addComponentTreeNode(componentTree,componentName,componentPath);
+    bool flag=1;
+    //遍历treeWidget
+    QTreeWidgetItemIterator it(componentTree);
+    while (*it) {
+        if((*it)->text(0)==componentName)
+        {
+            flag=0;
+        }
+        ++it;
+    }
+    if(flag)
+    {
+        QTreeWidgetItem *Item = new QTreeWidgetItem(componentTree);
+        Item->setText(0,componentName);
+        Item->setCheckState(0,Qt::Unchecked);//添加复选框，默认未勾选
+        Item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+        //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
+    }
 }
 //删除当前组件库浮动窗口上的组件
 void MainWindow::deleteComponentTreeNode(QTreeWidget* tree)
 {
     QTreeWidgetItem * currentItem = tree->currentItem();//获取当前节点
-    component_controller->removeComponentTreeNode(currentItem);
+//    component_controller->removeComponentTreeNode(currentItem);
+    delete currentItem;
 }
 //点击当前组件浮动窗口上的组件弹出编辑窗口，暂时只有修改组件类型和组件名操作，并且未与文件操作联通
 //后期可在编辑界面加入多个merge和delete操作
@@ -635,38 +667,38 @@ void MainWindow::openEditComponent()
 void MainWindow::addEditComponent(QTreeWidget* tree)
 {
     QTreeWidgetItem * currentItem = tree->currentItem();//获取当前节点
-    QString component_path=currentItem->text(1);
-    emit addComponentController(component_path);
+    QString component_name=currentItem->text(0);
+    emit addExistedComponent(component_name);
 
 }
 void MainWindow::editComponentInfo(QString componentName)
 {
-    QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
-    QString oldComponentName=currentItem->text(0);
-    currentItem->setText(0,componentName);
-//    foreach(Component* com,this->tabWidget->getcom_arry())
+//    QTreeWidgetItem * currentItem = componentTree->currentItem();//获取当前节点
+//    QString oldComponentName=currentItem->text(0);
+//    currentItem->setText(0,componentName);
+////    foreach(Component* com,this->tabWidget->getcom_arry())
+////    {
+////        if(com->getComponentFileName()==oldComponentName)
+////        {
+////            com->setID(componentName+'&'+com->getID().split("&")[1]);
+////        }
+////    }
+//    for(int i=0;i<tabWidget->count();i++)
 //    {
-//        if(com->getComponentFileName()==oldComponentName)
+//        PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(tabWidget->widget(i));
+//        l_petriTab->editComponentID(oldComponentName,componentName);
+//    }
+//    QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
+//    while(iterator.hasNext())
+//    {
+//        iterator.next();
+//        if(oldComponentName==iterator.key())
 //        {
-//            com->setID(componentName+'&'+com->getID().split("&")[1]);
+//            this->component_controller->itemsFile[componentName]=iterator.value();
+//            this->component_controller->itemsFile.remove(oldComponentName);
+//            break;
 //        }
 //    }
-    for(int i=0;i<tabWidget->count();i++)
-    {
-        PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(tabWidget->widget(i));
-        l_petriTab->editComponentID(oldComponentName,componentName);
-    }
-    QMapIterator<QString,QString>iterator(this->component_controller->itemsFile);
-    while(iterator.hasNext())
-    {
-        iterator.next();
-        if(oldComponentName==iterator.key())
-        {
-            this->component_controller->itemsFile[componentName]=iterator.value();
-            this->component_controller->itemsFile.remove(oldComponentName);
-            break;
-        }
-    }
 }
 void MainWindow::editComponentStep(QString componentName,double componentStep)
 {

@@ -23,6 +23,8 @@ public:
 
     explicit PetriTabWidget(const QString &id, QWidget * parent = 0);
     PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file);
+    PetriTabWidget(const QString& ID,const QString& Name, const QString& file);
+    PetriTabWidget(const PTNET_ATTR &ptnet, const QString& file,QMap<QString,int>Comp2Count);
     ~PetriTabWidget ();
     QString getId()
     {
@@ -64,7 +66,7 @@ public:
     void arcDoubleClicked (QGraphicsItem* item);
     void setName(QString);
     void setId(QString);
-    void addComponent(const PTNET_ATTR &ptnet);
+    void addComponent(const COMPONENT_ATTR &componentAttr);
     //bool arcnoclicked=true;
     QString getComponentType(int i);
     int getComponentSize();
@@ -83,6 +85,9 @@ public:
     void setConnector_AttrList(QList<Connector*>l);
     void editComponentStep(QString componentName,double componentStep);
     void editComponentID(QString oldName,QString newName);
+    //2023.03.14
+    bool containComponent(QString componentName);
+    void addConnector(QList<CONNECTOR_ATTR>);
 signals:
 
     void canRedoChange (bool canRedo);

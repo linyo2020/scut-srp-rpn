@@ -452,6 +452,8 @@ bool XmlWriter::writeComponent(QXmlStreamWriter &xml, const COMPONENT_ATTR &comp
          if(!writeArc(xml, arc))
             qDebug()<<"Error ...";
     }
+    xml.writeEndElement();
+    /* </component> */
     return true;
 }
 

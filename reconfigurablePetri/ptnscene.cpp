@@ -499,10 +499,14 @@ void PTNscene::from_Xml (const QList<PAGE_ATTR> &pages)
         item->setSelected(0);
     foreach (PAGE_ATTR page, pages)
     {
-        addXML_places (page.placeNodes);
-        addXML_transitions (page.transitionNodes);
-        addXML_arcs (page.arcs);
-        addXML_connectors(page.connector);
+//        addXML_places (page.placeNodes);
+//        addXML_transitions (page.transitionNodes);
+//        addXML_arcs (page.arcs);
+          foreach(COMPONENT_ATTR componentAttr,page.componentList)
+          {
+              from_Xml_Component(componentAttr);
+          }
+          addXML_connectors(page.connector);
     }
 
 }
@@ -748,9 +752,11 @@ void PTNscene::addXML_connectors (const QList <CONNECTOR_ATTR> &connectors)
                 Place * place = qgraphicsitem_cast<Place*>(node);
 
                 if(place->getId() == xmlconnector.source)
-                {sourceItem = place;continue;}
+                {sourceItem = place;
+                    continue;}
                 if(place->getId() == xmlconnector.target)
-                {targetItem = place;continue;}
+                {targetItem = place;
+                    continue;}
             }
         }
         QPointF po=sourceItem->mapToScene(sourceItem->boundingRect().center());
