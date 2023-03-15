@@ -60,7 +60,12 @@ public:
 //    QString addNewComponent(QString Filename);//田俊杰
     //23.03.15
     QString addNewComponent(QString CompName);
-
+    /**
+     * @brief checkComponent 判断某个组件实例是否在列表里
+     * @param ComponentID 格式为 组件种类&序号
+     * @return
+     */
+    bool checkComponent(QString ComponentID);
     QVector<Component*> getComponentList();
 
     const QList<Connector*> getConnectorList();

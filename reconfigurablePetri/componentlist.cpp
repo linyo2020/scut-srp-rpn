@@ -1812,3 +1812,13 @@ void ComponentList::getComponentAttr(QList<COMPONENT_ATTR>compAttrList)
 {
     m_lComponentAttr=compAttrList;
 }
+
+bool ComponentList::checkComponent(QString ComponentID)
+{
+    foreach(Component*component,com_list)
+    {
+        if(component->getID()==ComponentID)
+            return true;
+    }
+    return false;
+}
