@@ -80,6 +80,9 @@ public:
 
     //2023.03.14
     bool isComponentUsed(QString componentName);
+    void updateCompAttrInComList();
+    //23.03.15
+    bool setComponentStep(QString componentName,double step);
 
 //    void saveModel();
     void gets(PTNscene*scene);

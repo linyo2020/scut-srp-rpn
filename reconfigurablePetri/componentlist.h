@@ -57,7 +57,9 @@ public:
     //增加connector操作，sourceID为portID1
     void addComponentPort(QString portID1,QString portID2);//完成
     //遍历文件树，添加到com_list里，记得设置id
-    QString addNewComponent(QString Filename);//田俊杰
+//    QString addNewComponent(QString Filename);//田俊杰
+    //23.03.15
+    QString addNewComponent(QString CompName);
 
     QVector<Component*> getComponentList();
 
@@ -114,6 +116,7 @@ public:
     QString addComponent(COMPONENT_ATTR componentAttr);
     //2023.03.14
     void addComponent(Component* component);
+    QString addComponentInSimulation(COMPONENT_ATTR componentAttr);
     /**
      * @brief checkConnectorAttrList
      * 若connector上连接了无效的id，则将该connector删掉
@@ -121,6 +124,7 @@ public:
     void checkConnectorAttrList();
     //2023.03.14
     bool containComponent(QString componentName);
+    void getComponentAttr(QList<COMPONENT_ATTR>);
 private:
     //func
     //如果未找到返回nullptr

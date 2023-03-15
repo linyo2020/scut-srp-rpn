@@ -502,6 +502,8 @@ void MainWindow::buttonGroupClicked(int id)
             //将当前页面的componentList传入plot
             tab->setConnector_AttrList(tabWidget->init_cl());
 //            tab->setComponentController(component_controller);
+            //将组件库数据传入当前页面的componentList中
+            tabWidget->updateCompAttrInComList();
             view->setComList(tab->getComponentList());
             //将规则管理器传入plot
             view->setRuleManager(ruleManager);
@@ -710,6 +712,7 @@ void MainWindow::editComponentStep(QString componentName,double componentStep)
 ////             qDebug()<<"change component name:"<<componentName<<" and change component step" <<componentStep;
 //         }
 //    }
+    tabWidget->setComponentStep(componentName,componentStep);
     for(int i=0;i<tabWidget->count();i++)
     {
         PetriTabWidget* l_petriTab=qobject_cast<PetriTabWidget*>(tabWidget->widget(i));

@@ -301,7 +301,7 @@ void SimulationController::run()
 //        }
 
 
-    //测试m_compList的addNewComponent
+//    //测试m_compList的addNewComponent
 //    for(int i=0;i<100;i++)
 //        qDebug()<<"add "<<m_compList->addNewComponent(QString("230304C3"));
 //    //再次输出组件信息

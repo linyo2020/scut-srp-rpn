@@ -1214,3 +1214,21 @@ void TabWidget::zoom (int val)
 //        //Qt::ItemIsSelectable表示可选的、Qt::ItemIsUserCheckable项目上是否有复选框
 //    }
 //}
+
+void TabWidget::updateCompAttrInComList()
+{
+    PetriTabWidget*tab=qobject_cast<PetriTabWidget*>(currentWidget ());
+    tab->updateCompAttrInComList(m_mCompName2Attr.values());
+}
+
+bool TabWidget::setComponentStep(QString componentName,double step)
+{
+    if(m_mCompName2Attr.contains(componentName))
+    {
+        COMPONENT_ATTR tempCompAttr=m_mCompName2Attr.value(componentName);
+        tempCompAttr.step=step;
+        m_mCompName2Attr[componentName]=tempCompAttr;
+        return true;
+    }
+    return false;
+}

@@ -1154,3 +1154,7 @@ void PetriTabWidget::addConnector(QList<CONNECTOR_ATTR>l_connectorAttr)
 {
     scene->addXML_connectors(l_connectorAttr);
 }
+void PetriTabWidget::updateCompAttrInComList(QList<COMPONENT_ATTR>compAttrList)
+{
+    componentlist->getComponentAttr(compAttrList);
+}

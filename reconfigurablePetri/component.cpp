@@ -735,7 +735,42 @@ Component::Component(PTNscene*scene,QGraphicsView*view,COMPONENT_ATTR componentA
 //    qDebug()<<"component "<<Component_id<<" 's count is "<<count;
 }
 
-
+Component::Component(COMPONENT_ATTR componentAttr,int count)
+{
+    placeList.clear();
+    transitionList.clear();
+    arcList.clear();
+    QString l_newID,l_oldID;
+    for(int i=0;i<componentAttr.transitionNodes.size();i++)
+    {
+        l_oldID=componentAttr.transitionNodes[i].id;
+        l_newID=l_newID=l_oldID.split('&')[0]+'&'+QString::number(count)+'&'+l_oldID.split('&')[1];
+        componentAttr.transitionNodes[i].id=l_newID;
+    }
+    for(int i=0;i<componentAttr.placeNodes.size();i++)
+    {
+        l_oldID=componentAttr.placeNodes[i].id;
+        l_newID=l_newID=l_oldID.split('&')[0]+'&'+QString::number(count)+'&'+l_oldID.split('&')[1];
+        componentAttr.placeNodes[i].id=l_newID;
+    }
+    for(int i=0;i<componentAttr.arcs.size();i++)
+    {
+        l_oldID=componentAttr.arcs[i].id;
+        l_newID=l_newID=l_oldID.split('&')[0]+'&'+QString::number(count)+'&'+l_oldID.split('&')[1];
+        componentAttr.arcs[i].id=l_newID;
+        l_oldID=componentAttr.arcs[i].source;
+        l_newID=l_newID=l_oldID.split('&')[0]+'&'+QString::number(count)+'&'+l_oldID.split('&')[1];
+        componentAttr.arcs[i].source=l_newID;
+        l_oldID=componentAttr.arcs[i].target;
+        l_newID=l_newID=l_oldID.split('&')[0]+'&'+QString::number(count)+'&'+l_oldID.split('&')[1];
+        componentAttr.arcs[i].target=l_newID;
+    }
+    m_step=componentAttr.step;
+    Component_id=componentAttr.id+'&'+QString::number(count);
+    placeList=componentAttr.placeNodes;
+    transitionList=componentAttr.transitionNodes;
+    arcList=componentAttr.arcs;
+}
 Component::Component(COMPONENT_ATTR componentAttr)
 {
     m_step=componentAttr.step;

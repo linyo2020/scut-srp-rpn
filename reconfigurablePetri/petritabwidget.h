@@ -88,6 +88,7 @@ public:
     //2023.03.14
     bool containComponent(QString componentName);
     void addConnector(QList<CONNECTOR_ATTR>);
+    void updateCompAttrInComList(QList<COMPONENT_ATTR>);
 signals:
 
     void canRedoChange (bool canRedo);
