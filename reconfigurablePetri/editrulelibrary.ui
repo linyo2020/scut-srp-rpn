@@ -70,8 +70,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>551</width>
-             <height>457</height>
+             <width>558</width>
+             <height>477</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -95,8 +95,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>552</width>
-          <height>534</height>
+          <width>575</width>
+          <height>524</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -243,6 +243,11 @@
               <item>
                <property name="text">
                 <string>Global time</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Instance Duration</string>
                </property>
               </item>
              </widget>

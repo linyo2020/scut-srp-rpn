@@ -99,6 +99,21 @@ bool TimeRule::isSatisfy(ComponentList* componentList,const RULE_RUNTIME_INFOMAT
                 }
             }
                 break;
+            case COMPONENT_INSTANCE_EXIST_REACH_DURATION://某个组件实例存在的时长符合比较，组件下场后时长重置
+                if(false==componentList->checkComponent(andCompute.monitorFactor))
+                {
+                    durationCounter=0.0;
+                    andComputeResult&=false;
+                }
+                else
+                {
+                    durationCounter+=step;
+                    if(false==doubleCompare(durationCounter,
+                                            andCompute.monitorFactor.toDouble(),
+                                            andCompute.symbol))
+                        andComputeResult&=false;
+                }
+                break;
             case FIRE_REACH_TIME_DURATION:
                 //TODO:次要需求
                 break;

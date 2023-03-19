@@ -124,6 +124,15 @@ void editRuleLibrary::on_subtypeComboBox_currentIndexChanged(const QString &subt
         ui->ConditionOperatorComboBox->hide();
         ui->conditionUnitLabel->hide();
     }
+    else if(subtype=="Instance Duration")
+    {
+        ui->monitiorObjectLabel->show();
+        ui->monitorObjectLineEdit->show();
+        ui->conditionLabel->hide();
+        ui->conditionValueSpinBox->hide();
+        ui->ConditionOperatorComboBox->hide();
+        ui->conditionUnitLabel->hide();
+    }
     else {
         ui->monitiorObjectLabel->show();
         ui->monitorObjectLineEdit->show();
@@ -252,6 +261,13 @@ CONDITION editRuleLibrary::getcondition()
             QVariant timeValue=ui->timeValueSpinBox->value();
             return CONDITION(TIME_POINT_COMPARE,QString(),timeOperator,timeValue);
         }
+        else if(subtype=="Instance Duration")
+        {
+            QString monitorObject=ui->monitorObjectLineEdit->text();
+            ComparisonSymbol timeOperator=tonum(ui->TimeOperatorComboBox->currentText());
+            QVariant timeValue=ui->timeValueSpinBox->value();
+            return CONDITION(COMPONENT_INSTANCE_EXIST_REACH_DURATION,monitorObject,timeOperator,timeValue);
+        }
     }
     else if(ui->conditionTypeComboBox->currentText()=="event")
     {
@@ -294,6 +310,14 @@ void editRuleLibrary::setcondition(BaseRule * currentrule)
     {
         ui->conditionTypeComboBox->setCurrentText("time");
         ui->subtypeComboBox->setCurrentText("Global time");
+        ui->TimeOperatorComboBox->setCurrentText(tostring(condition.symbol));
+        ui->timeValueSpinBox->setValue(condition.value.toInt());
+    }
+    else if(condition.conditionOption==COMPONENT_INSTANCE_EXIST_REACH_DURATION)
+    {
+        ui->monitorObjectLineEdit->setText(condition.monitorFactor);
+        ui->conditionTypeComboBox->setCurrentText("time");
+        ui->subtypeComboBox->setCurrentText("Instance Duration");
         ui->TimeOperatorComboBox->setCurrentText(tostring(condition.symbol));
         ui->timeValueSpinBox->setValue(condition.value.toInt());
     }

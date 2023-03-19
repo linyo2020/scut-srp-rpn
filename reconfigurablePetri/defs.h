@@ -134,9 +134,11 @@ enum ComparisionType{
     /*事件规则相关类型*/
 
     /*状态规则相关类型*/
-    TOKEN_COMPARE//比较token是否符合范围
+    TOKEN_COMPARE,//比较token是否符合范围
+    /*↑baseline*/
+    COMPONENT_INSTANCE_EXIST_REACH_DURATION//时间规则。某个组件实例存在的时长满足对时间段比较，组件实例从网上移除后时长重置。<当前累计时间><比较符号><被比较的时长>
 };
-constexpr static int MAX_COMPARISION_TYPE=int(TOKEN_COMPARE);
+constexpr static int MAX_COMPARISION_TYPE=int(COMPONENT_INSTANCE_EXIST_REACH_DURATION);
 
 //<监控的因素（token等)><比较符号（大于/小于等）><要比较的数值>
 #pragma pack(push)
