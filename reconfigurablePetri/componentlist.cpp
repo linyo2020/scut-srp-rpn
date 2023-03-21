@@ -1,6 +1,6 @@
 #include "componentlist.h"
 
-#include<random>
+#include<time.h>
 
 ComponentList::ComponentList()
 {
@@ -1394,10 +1394,8 @@ void ComponentList::deleteComponent(QString ComponentID)
         }
         else
         {
-            std::random_device rd;
-            std::default_random_engine engine(rd);
-            std::uniform_int_distribution<> distribution(0,index.size()-1);
-            int remove=distribution(engine);
+            srand(static_cast<unsigned int>(time(0)));
+            int remove=rand()%index.size();
             garbage2.push_back(com_list[index[remove]]);
             com_list.remove(index[remove]);
         }
