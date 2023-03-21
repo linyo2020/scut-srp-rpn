@@ -1,5 +1,7 @@
 #include "componentlist.h"
 
+#include<random>
+
 ComponentList::ComponentList()
 {
     m_Scene=new PTNscene();
@@ -1364,13 +1366,40 @@ void ComponentList::seperateCompoundPort(QString CompoundPortID)
 
 void ComponentList::deleteComponent(QString ComponentID)
 {
-    for(int i=0;i<com_list.size();i++)
+    if(ComponentID.split('&').size()==2)
     {
-        if(com_list[i]->getID()==ComponentID)
+        for(int i=0;i<com_list.size();i++)
         {
-            garbage2.push_back(com_list[i]);
-            com_list.remove(i);
+            if(com_list[i]->getID()==ComponentID)
+            {
+                garbage2.push_back(com_list[i]);
+                com_list.remove(i);
 
+            }
+        }
+    }
+    else if(ComponentID.split('&').size()==1)
+    {
+        QVector<int>index;
+        index.reserve(com_list.size());
+        for(int i=0;i<com_list.size();i++)
+        {
+            if(com_list[i]->getID().split('&')[0]==ComponentID)
+                index.push_back(i);
+        }
+        if(index.size()==1)
+        {
+            garbage2.push_back(com_list[index[0]]);
+            com_list.remove(index[0]);
+        }
+        else
+        {
+            std::random_device rd;
+            std::default_random_engine engine(rd);
+            std::uniform_int_distribution<> distribution(0,index.size()-1);
+            int remove=distribution(engine);
+            garbage2.push_back(com_list[index[remove]]);
+            com_list.remove(index[remove]);
         }
     }
 //    QString Filename=ComponentID.split("&")[0];
