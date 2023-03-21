@@ -43,4 +43,3 @@ OPERATION_ATTR AddAndMergeOperation::toXML() const
     return operation;
 }
 
-const QString AddAndMergeOperation::NEW_COMPONENT_ID=QString("&&&&");

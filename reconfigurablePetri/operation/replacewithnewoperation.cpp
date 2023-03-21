@@ -45,4 +45,3 @@ OPERATION_ATTR ReplaceWithNewOperation::toXML() const
     return operation;
 }
 
-const QString ReplaceWithNewOperation::NEW_COMPONENT_ID=QString("&&&&");

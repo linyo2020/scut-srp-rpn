@@ -378,7 +378,14 @@ QList<BaseOperation*> editRuleLibrary::getoperation()
         if(type=="connect")
         {
             if(mergelist!=NULL&&(list[0]->text().split('&')[0]=="NEW_COMPONENT_ID"||list[1]->text().split('&')[0]=="NEW_COMPONENT_ID"))
-                mergelist->push_back({list[0]->text(),list[1]->text()});
+            {
+                QString port1=list[0]->text(),port2=list[1]->text();
+                if(port1.split('&')[0]=="NEW_COMPONENT_ID")
+                    port1=BaseOperation::NEW_COMPONENT_ID+"&"+port1.split('&')[1];
+                if(port2.split('&')[0]=="NEW_COMPONENT_ID")
+                    port2=BaseOperation::NEW_COMPONENT_ID+"&"+port2.split('&')[1];
+                mergelist->push_back({port1,port2});
+            }
             else
                 operation.push_back(new MergeOperation(list[0]->text(),list[1]->text()));
         }
@@ -405,7 +412,14 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
                ui->actionSubtypeComboBox->setCurrentText("new");
                ui->target1LineEdit->setText(*(operation->getArguments()[0]));
                for(QPair<QString,QString>&pairs:*dynamic_cast<AddAndMergeOperation*>(operation)->getMergeList())
-                   setconnection(1,pairs.first,pairs.second);
+               {
+                   QString port1=pairs.first,port2=pairs.second;
+                   if(port1.startsWith(BaseOperation::NEW_COMPONENT_ID))
+                       port1.replace(0,BaseOperation::NEW_COMPONENT_ID.size(),"NEW_COMPONENT_ID");
+                   if(port2.startsWith(BaseOperation::NEW_COMPONENT_ID))
+                       port2.replace(0,BaseOperation::NEW_COMPONENT_ID.size(),"NEW_COMPONENT_ID");
+                   setconnection(1,port1,port2);
+               }
                break;
        }
            case RECOVER_OPERATION:
@@ -423,7 +437,14 @@ void editRuleLibrary::setoperation(BaseRule * currentrule)
                 ui->target1LineEdit->setText(*(operation->getArguments()[0]));
                 ui->target2LineEdit->setText(*(operation->getArguments()[1]));
                 for(QPair<QString,QString>&pairs:*dynamic_cast<ReplaceWithNewOperation*>(operation)->getMergeList())
-                    setconnection(1,pairs.first,pairs.second);
+                {
+                    QString port1=pairs.first,port2=pairs.second;
+                    if(port1.startsWith(BaseOperation::NEW_COMPONENT_ID))
+                        port1.replace(0,BaseOperation::NEW_COMPONENT_ID.size(),"NEW_COMPONENT_ID");
+                    if(port2.startsWith(BaseOperation::NEW_COMPONENT_ID))
+                        port2.replace(0,BaseOperation::NEW_COMPONENT_ID.size(),"NEW_COMPONENT_ID");
+                    setconnection(1,port1,port2);
+                }
                 break;
            case REPLACE_WITH_EXIST_OPERATION:
                ui->actionTypeComboBox->setCurrentText("update");
