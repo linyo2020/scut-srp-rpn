@@ -617,7 +617,15 @@ void MainWindow::openComponentDock()
 }
 void MainWindow::about()
 {
+    QString Msg(tr("<h3>RPN tool 1.0.0</h3>"\
+                "<h5>Based on Qt 5.9.0 </h5>"\
+                "<p><strong>RPN tool</strong> is a modeler and simulator for reconfiguable Petri nets." \
+                "It uses the standard "\
+                "<a href=\"www.pnml.org\">PNML</a> exanchge format."\
+                "<p><strong>Author:</strong> <a href=\"mailto:liuf_2001@163.com\">Fei Liu, Weiyu Lin, Boren Deng,Junjie Tian, Xiaobin Tang,Xinran Luo,Jiazhan Tan,Tianfang Zhang</a>.</p>"\
+                "China 2023</p>"));
 
+    QMessageBox::about(this, "About RPN tool", Msg);
 }
 void MainWindow::openRuleLibrary()
 {
