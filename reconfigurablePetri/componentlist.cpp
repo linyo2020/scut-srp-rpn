@@ -451,275 +451,27 @@ void ComponentList::setnewComponentIDinSimulation(Component *newComponent)
 
 void ComponentList::addComponentPort(QString portID1, QString portID2)
 {
-    //端口均为place
-//    if(portID1.split("&")[2][0]=="p"&&portID2.split("&")[2][0]=="p")
-//    {
-//        QString placeID=portID1+"+"+portID2;
-//        Place*p1=getCertainPlace(portID1);
-//        Place*p2=getCertainPlace(portID2);
-//        Place *P=new Place();
-//        P->setPlaceID(placeID);
-//        //！！设置name
-//        P->setName(portID1.split("&")[2]+"+"+portID2.split("&")[2]);
-//        P->setCapacity(getCertainPlace(portID1)->getCapacity()+getCertainPlace(portID2)->getCapacity());
-//        P->setTokens(getCertainPlace(portID1)->getTokens()+getCertainPlace(portID2)->getTokens());
-//        P->setInputPort(true);
-//        P->setOutputPort(true);
-//        P->setCompoundPort(true);
-//        P->setcontain_portNum(P->getcontain_portNum()+1);
-//        QString comID1=portID1.split("&")[0]+"&"+portID1.split("&")[1];
-//        QString comID2=portID2.split("&")[0]+"&"+portID2.split("&")[1];
-//        foreach(Arc* a,p1->getinput())
-//        {
-//            a->setTargetId(placeID);
-//            a->setTargetItem(P);
-//        }
-//        foreach(Arc* a,p1->getoutput())
-//        {
-//            a->setsourceId(placeID);
-//            a->setSourceItem(P);
-//        }
-//        foreach(Arc* a,p2->getinput())
-//        {
-//            a->setTargetId(placeID);
-//            a->setTargetItem(P);
-//        }
-//        foreach(Arc* a,p2->getoutput())
-//        {
-//            a->setsourceId(placeID);
-//            a->setSourceItem(P);
-//        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1||com_list[i]->getID()==comID2)
-//            {
-//                com_list[i]->mynet->PlaceList.push_back(P);
-//            }
-//        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
-//            {
-//                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
-//                {
-//                    if(com_list[i]->getPlaceList()[y]->getId()==portID1)
-//                    {
-//                        com_list[i]->mynet->PlaceList.removeAt(y);
-//                    }
-//                }
-//            }
-//            else if(com_list[i]->getID()==comID2)
-//            {
-//                for(int y=0;y<com_list[i]->getPlaceList().size();i++)
-//                {
-//                    if(com_list[i]->getPlaceList()[y]->getId()==portID2)
-//                    {
-//                        com_list[i]->mynet->PlaceList.removeAt(y);
-//                    }
-//                }
-//            }
-//        }
-
-
-
-//        this->Scene->addItem(P);
-
-//        this->Scene->removeItem(p1);
-//        this->Scene->removeItem(p2);
-//    }
-//    //均为transition
-//    else if(portID1.split("&")[2][0]=="t"&&portID2.split("&")[2][0]=="t")
-//    {
-//        Transition*t1=getcertainTransition(portID1);
-//        Transition*t2=getcertainTransition(portID2);
-//        Transition*newTrans=new Transition();
-//        QString transID=t1->getId()+"+"+t2->getId();
-//        newTrans->setID(transID);
-//        //todo
-//        //newTrans->setName();
-
-//        newTrans->setCompoundPort(true);
-//        QString comID1=portID1.split("&")[0]+"&"+portID1.split("&")[1];
-//        QString comID2=portID2.split("&")[0]+"&"+portID2.split("&")[1];
-//        foreach(Arc* a,t1->getinput())
-//        {
-//            a->setTargetId(transID);
-//            a->setTargetItem(newTrans);
-//        }
-//        foreach(Arc* a,t1->getoutput())
-//        {
-//            a->setsourceId(transID);
-//            a->setSourceItem(newTrans);
-//        }
-//        foreach(Arc* a,t2->getinput())
-//        {
-//            a->setTargetId(transID);
-//            a->setTargetItem(newTrans);
-//        }
-//        foreach(Arc* a,t2->getoutput())
-//        {
-//            a->setsourceId(transID);
-//            a->setSourceItem(newTrans);
-//        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1||com_list[i]->getID()==comID2)
-//            {
-//                com_list[i]->mynet->TransitionList.push_back(newTrans);
-//            }
-//        }
-
-//        for(int i=0;i<com_list.size();i++)
-//        {
-//            if(com_list[i]->getID()==comID1)
-//            {
-//                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
-//                {
-//                    if(com_list[i]->getTransitionList()[y]->getId()==portID1)
-//                    {
-//                        com_list[i]->mynet->TransitionList.removeAt(y);
-//                    }
-//                }
-//            }
-//            else if(com_list[i]->getID()==comID2)
-//            {
-//                for(int y=0;y<com_list[i]->getTransitionList().size();i++)
-//                {
-//                    if(com_list[i]->getTransitionList()[y]->getId()==portID2)
-//                    {
-//                        com_list[i]->mynet->TransitionList.removeAt(y);
-//                    }
-//                }
-//            }
-//        }
-
-//        this->Scene->addItem(newTrans);
-
-//        this->Scene->removeItem(t1);
-//        this->Scene->removeItem(t2);
-
-//    }
-
-//    else if(portID1.split("&")[2][0]=="p"&&portID2.split("&")[2][0]=="t")
-//    {
-//        Place*p=getCertainPlace(portID1);
-//        Transition*t=getcertainTransition(portID2);
-//        Arc*a=new Arc();
-//        a->setID(portID1.split("&")[0]+"&"+portID1.split("&")[1]+"+"+portID2.split("&")[0]+"&"+portID2.split("&")[1]+"+"+"N");
-//        a->setTargetId(t->getId());
-//        a->setTargetItem(t);
-//        //t->merge_input.push_back(a);
-//        a->setsourceId(p->getId());
-//        a->setSourceItem(p);
-//        //p->merge_output.push_back(a);
-//        this->Scene->addItem(a);
-//    }
-
-//    else if(portID1.split("&")[2][0]=="t"&&portID2.split("&")[2][0]=="p")
-//    {
-//        Place*p=getCertainPlace(portID2);
-//        Transition*t=getcertainTransition(portID1);
-//        Arc*a=new Arc();
-//        a->setID(portID1.split("&")[0]+"&"+portID1.split("&")[1]+"+"+portID2.split("&")[0]+"&"+portID2.split("&")[1]+"+" + "N");
-//        a->setTargetId(p->getId());
-//        a->setTargetItem(p);
-
-//        //p->merge_input.push_back(a);
-//        a->setsourceId(t->getId());
-//        a->setSourceItem(t);
-//        //t->merge_output.push_back(a);
-//        this->Scene->addItem(a);
-//    }
-
-    if(portID1.split("&")[2][0]=="p"&&portID2.split("&")[2][0]=="p")
+    qDebug()<<"new connector is from"<<portID1<<" to "<<portID2;
+    int flag1=0;
+    int flag2=0;
+    foreach(Component*component,com_list)
     {
-        QGraphicsItem * sourceItem = 0;
-        QGraphicsItem * targetItem = 0;
-        foreach(Component* com,com_list)
+        foreach(PLACE_ATTR place,component->getPlace_ATTRList())
         {
-
-            foreach(Place * place,com->mynet->PlaceList)
-            {
-                if(place->getId() == portID1)
-                {
-                    sourceItem = place;
-                    continue;
-
-                }
-                if(place->getId() == portID2)
-                {
-                    targetItem = place;
-                    continue;
-                }
-            }
-
+            if(place.id==portID1)
+                flag1=1;
+            else if(place.id==portID2)
+                flag2=1;
         }
-        Connector* con=new Connector(sourceItem,portID1,targetItem,portID2,portID1+"+"+portID2);
-        con->setSourceItem(sourceItem);
-        qgraphicsitem_cast<Place*>(sourceItem)->addOutputArc(con);
-        qgraphicsitem_cast<Place*>(targetItem)->addInputArc(con);
-        connectList.append(con);
-        m_lConnector.append(con->toXml());
-//        p->setTokens(p1->getTokens()+p2->getTokens());
-//        p->setCapacity(p1->getCapacity()+p2->getCapacity());
-//        p->setCompoundPort(true);
-//        p->setPlaceID(p1->getId()+"+"+p2->getId());
-//        p->input.append(p1->input);
-//        p->input.append(p2->input);
-//        p->output.append(p1->output);
-//        p->output.append(p2->output);
-//        this->Scene->removeItem(p1);
-//        this->Scene->removeItem(p2);
-//        this->Scene->addItem(p);
-
     }
-//    else if(portID1.split("&")[2][0]=="t"&&portID2.split("&")[2][0]=="t")
-//    {
-//        Transition*p=new Transition();
-//        Transition*p1=getcertainTransition(portID1);
-//        Transition*p2=getcertainTransition(portID2);
-//        p->setCompoundPort(true);
-//        p->setID(p1->getId()+"+"+p2->getId());
-//        p->input.append(p1->input);
-//        p->input.append(p2->input);
-//        p->output.append(p1->output);
-//        p->output.append(p2->output);
-//        this->Scene->removeItem(p1);
-//        this->Scene->removeItem(p2);
-//        this->Scene->addItem(p);
-//    }
-
-//    else
-//    {
-//        Arc*a=new Arc();
-//        if(portID1.split("&")[2][0]=="p")
-//        {
-//            Place*p=getCertainPlace(portID1);
-//            Transition*t=getcertainTransition(portID2);
-//            QString id="N+"+p->getId()+"+"+t->getId();
-//            a->setID(id);
-//            a->setsourceId(p->getId());
-//            a->setSourceItem(p);
-//            a->setTargetId(t->getId());
-//            a->setTargetItem(t);
-//            this->Scene->addItem(a);
-//        }
-//        else
-//        {
-//            Place*p=getCertainPlace(portID2);
-//            Transition*t=getcertainTransition(portID1);
-//            QString id="N+"+t->getId()+"+"+p->getId();
-//            a->setID(id);
-//            a->setsourceId(t->getId());
-//            a->setSourceItem(t);
-//            a->setTargetId(p->getId());
-//            a->setTargetItem(p);
-//            this->Scene->addItem(a);
-//        }
-//    }
+    if(flag1==1&&flag2==1)
+    {
+        CONNECTOR_ATTR newConnectorATTR;
+        newConnectorATTR.source=portID1;
+        newConnectorATTR.target=portID2;
+        newConnectorATTR.id=portID1+'&'+portID2;
+        m_lConnector.push_back(newConnectorATTR);
+    }
 }
 
 //useless
@@ -896,7 +648,9 @@ QString ComponentList::addNewComponent(QString CompName)
     {
         if(compAttr.name==CompName)
         {
-            return addComponentInSimulation(compAttr);
+            QString compID=addComponentInSimulation(compAttr);
+            //qDebug()<<"the new component's id is "<<compID;
+            return compID;
         }
     }
     return QString();
@@ -1784,7 +1538,7 @@ QString ComponentList::addComponentInSimulation(COMPONENT_ATTR componentAttr)
         //更新组件信息
         temp++;
         m_mComp2Count[name]=temp;
-        return name+'&'+QString::number(temp--);
+        return name+'&'+QString::number(--temp);
 }
 
 void ComponentList::addComponent(Component* component)

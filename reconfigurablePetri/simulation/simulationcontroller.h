@@ -64,7 +64,14 @@ public:
 //     * @brief findConnectedPlace
 //     */
 //    void findConnectedPlace(QString);
-
+    /**
+        * @brief setRuleManager
+        */
+       void setRuleManager(RuleManager*);
+       /**
+        * @brief setCompList
+        */
+       void setCompList(ComponentList*);
 signals:
     /**
      * @brief updateui 更新仿真进度条

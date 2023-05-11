@@ -424,7 +424,7 @@ bool SimulationController::sort()
     }
     for(int i = 0; i<s_priorList.size();i++)
     {
-        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<i;
+        qDebug()<<l_vComponent[s_priorList[i]]->getID()<<" 's priority is "<<s_length+1-i;
     }
     return true;
 }
@@ -576,4 +576,14 @@ void SimulationController::updateConnect()
         delete l_pDisjSets;
         m_disjSets=new DisjSets(l_connectorAttrList);
     }
+}
+
+void SimulationController::setRuleManager(RuleManager*ruleManager)
+{
+    m_ruleManager=ruleManager;
+}
+
+void SimulationController::setCompList(ComponentList*componentList)
+{
+    m_compList=componentList;
 }
