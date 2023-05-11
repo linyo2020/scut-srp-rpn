@@ -14,6 +14,9 @@
 #define transition_heigh 29
 #define default_step 0.1
 #define COMP_NUM_MAX 999
+
+const static QString SOFTWARE_VERSION="1.0.1";
+
 typedef QMap<QString, double> Marking;
 
 enum{normalMode=0, animationMode=1, addPlaceMode=2, \
